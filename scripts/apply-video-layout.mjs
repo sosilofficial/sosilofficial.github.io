@@ -31,12 +31,16 @@ const STYLE = `<style id="stable-video-index-style">
     margin-top: 9px;
   }
   .video-split .detail-panel {
-    position: relative;
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow: hidden;
   }
   .video-split .works-video-detail {
-    position: sticky;
-    top: var(--pad);
-    margin: 0 auto;
+    position: relative;
+    top: auto;
+    margin: clamp(28px, 4vh, 44px) auto 0;
   }
 }
 </style>`;
@@ -88,4 +92,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied stable Works video index layout with full-width thumbnails and sticky detail playback.");
+console.log("Applied stable Works video index layout with viewport-fixed detail column.");
