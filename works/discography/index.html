@@ -161,8 +161,8 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: repeat(5, auto);
     grid-auto-flow: column;
-    column-gap: var(--detail-grid-gap);
-    row-gap: 5px;
+    column-gap: clamp(20px, 2.2vw, 34px);
+    row-gap: 6px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -170,10 +170,10 @@
   .release-split .track-list li {
     min-width: 0;
     display: grid;
-    grid-template-columns: 1.65rem minmax(0, 1fr);
+    grid-template-columns: 1.65rem max-content;
     gap: 0 9px;
     padding: 0;
-    font-size: .62rem;
+    font-size: .60rem;
     line-height: 1.46;
     letter-spacing: 0;
   }
@@ -181,6 +181,9 @@
     color: var(--muted);
     opacity: .48;
     font-size: .54rem;
+  }
+  .release-split .track-list li span:last-child {
+    white-space: nowrap;
   }
   .release-split .release-credits-section p {
     margin: 0;
@@ -211,5 +214,19 @@
     font-size: .61rem;
   }
   .release-split .external-links a { border-bottom-color: rgba(17, 21, 27, .5); }
+}
+</style><style id="global-grid-lines-style">
+@media (min-width: 821px) {
+  .side-rail {
+    border-right: 1px solid var(--line) !important;
+  }
+  .split-layout,
+  .info-split {
+    grid-template-columns: var(--index) var(--detail) !important;
+  }
+  .split-layout > .detail-panel,
+  .info-split > .detail-panel {
+    border-left: 1px solid var(--line) !important;
+  }
 }
 </style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography" class="is-active" aria-current="page">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout release-split"><section class="index-panel"><div class="panel-headline"><header class="works-top"><h1>works</h1><nav class="subnav" aria-label="works 하위 메뉴"><a href="/works/discography" class="is-active" aria-current="page">discography</a><a href="/works/videos">video</a><a href="/works/live">live</a><a href="/works/others">others</a></nav></header></div><div class="release-index"><a href="/works/discography/8"><img src="/media/catalog/2026-09-04/a78bfa4e-a48f-4757-9783-26024fff6536.webp" alt="" loading="lazy" decoding="async"><span><strong>몽상은나의조랑말</strong><small>2025.03.17</small></span></a><a href="/works/discography/da-jinaseo"><img src="/media/catalog/da-jinaseo.jpg" alt="" loading="lazy" decoding="async"><span><strong>다 지나서</strong><small>2021.11.24</small></span></a></div></section><section class="detail-panel"></section></div></main></div></body></html>
