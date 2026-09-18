@@ -34,6 +34,26 @@ function setupDetailClose() {
   });
 }
 
+function setupVideoScrollMemory() {
+  const isVideoPage = location.pathname === "/works/videos/" || location.pathname.startsWith("/works/videos/");
+  if (!isVideoPage) return;
+
+  const key = "sosil:works-video-scroll-y";
+  const links = [...document.querySelectorAll('.video-index a[href^="/works/videos/"]')];
+
+  links.forEach((link) => link.addEventListener("click", () => {
+    sessionStorage.setItem(key, String(window.scrollY));
+  }));
+
+  const saved = Number(sessionStorage.getItem(key));
+  if (!Number.isFinite(saved) || saved <= 0) return;
+
+  history.scrollRestoration = "manual";
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => window.scrollTo({ top: saved, left: 0, behavior: "auto" }));
+  });
+}
+
 function setupHomeMotion() {
   const field = document.querySelector("[data-home-motion]");
   const cover = field?.querySelector(".moving-cover");
@@ -97,5 +117,6 @@ function setupHomeMotion() {
 document.addEventListener("DOMContentLoaded", () => {
   setupPanels();
   setupDetailClose();
+  setupVideoScrollMemory();
   setupHomeMotion();
 });
