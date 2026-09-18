@@ -118,7 +118,13 @@ for (const file of walk(ROOT)) {
   } else {
     html = html.replace("</head>", `${STYLE}</head>`);
   }
+  if (file === path.join(ROOT, "contact", "index.html")) {
+    html = html.replace(
+      "for booking, collaboration, video work, or other inquiries.",
+      "for booking, collaboration, video work,<br>or other inquiries."
+    );
+  }
   fs.writeFileSync(file, html);
 }
 
-console.log("Kept Discography-based split lines globally while giving Info a wider biography column.");
+console.log("Kept Discography-based split lines globally, widened the Info biography column, and fixed the Contact line break.");
