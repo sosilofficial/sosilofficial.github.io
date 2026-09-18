@@ -47,8 +47,10 @@ function setupHomeMotion() {
   document.documentElement.style.setProperty("--trail-lifetime", `${config.trailLifetimeMs}ms`);
   document.documentElement.style.setProperty("--jitter", `${config.jitterPx}px`);
 
-  let x = field.clientWidth * .34;
-  let y = field.clientHeight * .42;
+  cover.style.left = "0";
+  cover.style.top = "0";
+  let x = field.clientWidth * .35;
+  let y = field.clientHeight * .32;
   let vx = field.clientWidth / config.speedSeconds;
   let vy = field.clientHeight / (config.speedSeconds * 1.18);
   let lastTime = performance.now();
