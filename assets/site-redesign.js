@@ -34,18 +34,29 @@ function setupDetailClose() {
   });
 }
 
-function setupVideoScrollMemory() {
-  const isVideoPage = location.pathname === "/works/videos/" || location.pathname.startsWith("/works/videos/");
-  if (!isVideoPage) return;
+function setupWorksScrollMemory() {
+  const configs = [
+    {
+      match: (pathname) => pathname === "/works/videos/" || pathname.startsWith("/works/videos/"),
+      selector: '.video-index a[href^="/works/videos/"]',
+      key: "sosil:works-video-scroll-y"
+    },
+    {
+      match: (pathname) => pathname === "/works/discography/" || pathname.startsWith("/works/discography/"),
+      selector: '.release-index a[href^="/works/discography/"]',
+      key: "sosil:works-discography-scroll-y"
+    }
+  ];
 
-  const key = "sosil:works-video-scroll-y";
-  const links = [...document.querySelectorAll('.video-index a[href^="/works/videos/"]')];
+  const config = configs.find(({ match }) => match(location.pathname));
+  if (!config) return;
 
+  const links = [...document.querySelectorAll(config.selector)];
   links.forEach((link) => link.addEventListener("click", () => {
-    sessionStorage.setItem(key, String(window.scrollY));
+    sessionStorage.setItem(config.key, String(window.scrollY));
   }));
 
-  const saved = Number(sessionStorage.getItem(key));
+  const saved = Number(sessionStorage.getItem(config.key));
   if (!Number.isFinite(saved) || saved <= 0) return;
 
   history.scrollRestoration = "manual";
@@ -117,6 +128,6 @@ function setupHomeMotion() {
 document.addEventListener("DOMContentLoaded", () => {
   setupPanels();
   setupDetailClose();
-  setupVideoScrollMemory();
+  setupWorksScrollMemory();
   setupHomeMotion();
 });
