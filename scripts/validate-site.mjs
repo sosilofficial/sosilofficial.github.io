@@ -47,6 +47,11 @@ if (!home.includes('href="/notes"')) failures.push("index.html: Notes navigation
 if (!home.includes('/assets/site-redesign.css') || !home.includes('/assets/site-redesign.js')) failures.push("index.html: 리디자인 자산 연결 오류");
 if (!home.includes('https://www.youtube.com/watch?v=zZtQdgaWjBI')) failures.push("index.html: 홈 앨범 YouTube 링크 오류");
 if (/[←→↗]/.test(home)) failures.push("index.html: 금지된 방향 화살표 UI가 남아 있습니다");
+for (const file of walk(ROOT)) {
+  const html = fs.readFileSync(file, "utf8");
+  if (/[←→↗]/.test(html)) failures.push(`${path.relative(ROOT, file)}: 금지된 방향 화살표 UI가 남아 있습니다`);
+  if (html.includes('class="close-detail"') && !html.includes('<button type="button" class="close-detail"')) failures.push(`${path.relative(ROOT, file)}: 닫기 UI가 button이 아닙니다`);
+}
 
 if (failures.length) throw new Error(`SITE VALIDATION ERROR:\n${[...new Set(failures)].join("\n")}`);
 console.log(`Validated ${walk(ROOT).length} HTML pages, SEO metadata, and local asset paths.`);

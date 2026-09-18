@@ -104,7 +104,7 @@ function subnav(type, active) {
   return `<nav class="subnav" aria-label="${type} 하위 메뉴">${links.map(([label, href]) => `<a href="${href}"${active === label ? ' class="is-active" aria-current="page"' : ""}>${label}</a>`).join("")}</nav>`;
 }
 const split = (indexHtml, detailHtml = "", classes = "") => `<div class="split-layout ${classes}"><section class="index-panel">${indexHtml}</section><section class="detail-panel">${detailHtml}</section></div>`;
-const closeLink = (href, label) => `<a class="close-detail" href="${href}" aria-label="${esc(label)} 닫기">×</a>`;
+const closeLink = (href, label) => `<button type="button" class="close-detail" data-close-url="${href}" aria-label="${esc(label)} 닫기">×</button>`;
 function itemList(items, base, selected = "") {
   if (!items.length) return '<p class="empty-note">more soon.</p>';
   return `<div class="text-index">${items.map((item) => `<a href="${base}/${esc(item.slug)}"${selected === item.slug ? ' class="is-selected" aria-current="page"' : ""}><span>${esc(displayDate(item.date))}</span><strong>${esc(item.title)}</strong></a>`).join("")}</div>`;

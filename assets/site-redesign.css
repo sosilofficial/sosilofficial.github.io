@@ -1,12 +1,23 @@
 :root {
   --bg: #f3f2ed;
-  --ink: #11151b;
-  --muted: #6c7480;
-  --line: rgba(47, 55, 67, .22);
+  --text-primary: #11151b;
+  --text-secondary: #6c7480;
+  --border-subtle: rgba(47, 55, 67, .22);
+  --sidebar-width: 10vw;
+  --index-width: 35fr;
+  --detail-width: 55fr;
+  --space-xs: 5px;
+  --space-sm: 13px;
+  --space-md: 24px;
+  --space-lg: 55px;
+  --space-xl: 89px;
+  --ink: var(--text-primary);
+  --muted: var(--text-secondary);
+  --line: var(--border-subtle);
   --selected: rgba(72, 80, 91, .055);
-  --sidebar: 10vw;
-  --index: 35fr;
-  --detail: 55fr;
+  --sidebar: var(--sidebar-width);
+  --index: var(--index-width);
+  --detail: var(--detail-width);
   --pad: clamp(18px, 2.2vw, 38px);
   --speed: 90s;
   --trail-count: 6;
@@ -80,6 +91,9 @@ h1, h2, strong { font-weight: 400; }
   height: 28px;
   margin: -6px -6px 14px 20px;
   border-radius: 50%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
   font-size: 1.15rem;
 }
 

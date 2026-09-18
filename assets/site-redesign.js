@@ -24,6 +24,16 @@ function setupPanels() {
   if (panels.some((panel) => panel.dataset.panel === initial)) show(initial, false);
 }
 
+function setupDetailClose() {
+  const closeButtons = [...document.querySelectorAll("[data-close-url]")];
+  if (!closeButtons.length) return;
+  const close = () => { window.location.href = closeButtons[0].dataset.closeUrl; };
+  closeButtons.forEach((button) => button.addEventListener("click", close));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") close();
+  });
+}
+
 function setupHomeMotion() {
   const field = document.querySelector("[data-home-motion]");
   const cover = field?.querySelector(".moving-cover");
@@ -84,5 +94,6 @@ function setupHomeMotion() {
 
 document.addEventListener("DOMContentLoaded", () => {
   setupPanels();
+  setupDetailClose();
   setupHomeMotion();
 });
