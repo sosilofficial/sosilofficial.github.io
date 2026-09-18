@@ -4,16 +4,28 @@ import path from "node:path";
 const ROOT = process.cwd();
 const STYLE = `<style id="global-grid-lines-style">
 @media (min-width: 821px) {
-  .side-rail {
-    border-right: 1px solid var(--line) !important;
-  }
   .split-layout,
   .info-split {
-    grid-template-columns: var(--index) var(--detail) !important;
+    position: relative !important;
+    grid-template-columns: minmax(0, 35fr) minmax(0, 55fr) !important;
   }
+
   .split-layout > .detail-panel,
   .info-split > .detail-panel {
-    border-left: 1px solid var(--line) !important;
+    border-left: 0 !important;
+  }
+
+  .split-layout::after,
+  .info-split::after {
+    content: "";
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    bottom: 0;
+    left: 38.8888889%;
+    width: 1px;
+    background: var(--line);
+    pointer-events: none;
   }
 }
 </style>`;
@@ -37,4 +49,4 @@ for (const file of walk(ROOT)) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Unified all desktop vertical dividers to the Discography grid and line style.");
+console.log("Locked every desktop content divider to the exact Discography 35:55 boundary.");
