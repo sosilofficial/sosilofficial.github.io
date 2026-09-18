@@ -31,11 +31,10 @@ const STYLE = `<style id="stable-video-index-style">
     margin-top: 9px;
   }
   .video-split .detail-panel {
-    position: fixed;
+    position: sticky;
     top: 0;
-    right: 0;
-    bottom: 0;
-    width: calc((100vw - max(var(--sidebar), 118px)) * .611111);
+    align-self: start;
+    width: auto;
     height: 100vh;
     overflow: hidden;
     background: var(--bg);
@@ -98,4 +97,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied stable Works video index layout with fixed viewport detail for every video.");
+console.log("Applied stable Works video index layout with grid-aligned sticky detail for every video.");
