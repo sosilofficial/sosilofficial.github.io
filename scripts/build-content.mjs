@@ -87,10 +87,10 @@ function titleFor(name) { return name === "소실 SOSIL" ? "소실 SOSIL — 김
 function head(name, description, route, image = "", detail = false) {
   const title = titleFor(name);
   const canonical = `${ORIGIN}${route === "/" ? "/" : `${route.replace(/\/$/, "")}/`}`;
-  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><link rel="icon" href="/favicon-sosil.svg"><link rel="stylesheet" href="/assets/site-redesign.css?v=20260919-4"><script src="/assets/site-redesign.js?v=20260919-4" defer></script><meta name="description" content="${esc(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${canonical}"><meta property="og:locale" content="ko_KR"><meta property="og:type" content="${detail ? "article" : "website"}"><meta property="og:site_name" content="소실 SOSIL"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}">${image ? `<meta property="og:image" content="${esc(absolute(image))}">` : ""}<meta name="twitter:card" content="summary_large_image">${route === "/" ? '<script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicGroup","name":"소실","alternateName":"Sosil","member":{"@type":"Person","name":"김성빈"},"genre":["slowcore","folk"],"url":"https://sosilofficial.github.io/"}</script>' : ""}</head>`;
+  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><link rel="icon" href="/favicon-sosil.svg"><link rel="stylesheet" href="/assets/site-redesign.css?v=20260919-5"><script src="/assets/site-redesign.js?v=20260919-5" defer></script><meta name="description" content="${esc(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${canonical}"><meta property="og:locale" content="ko_KR"><meta property="og:type" content="${detail ? "article" : "website"}"><meta property="og:site_name" content="소실 SOSIL"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}">${image ? `<meta property="og:image" content="${esc(absolute(image))}">` : ""}<meta name="twitter:card" content="summary_large_image">${route === "/" ? '<script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicGroup","name":"소실","alternateName":"Sosil","member":{"@type":"Person","name":"김성빈"},"genre":["slowcore","folk"],"url":"https://sosilofficial.github.io/"}</script>' : ""}</head>`;
 }
 function shell(active, main, bodyClass = "") {
-  const nav = [["works", "/works"], ["news", "/news"], ["notes", "/notes"], ["archive", "/archive"], ["merch", "/merch"], ["info", "/info"], ["contact", "/contact"]].map(([label, href]) => `<a href="${href}"${active === label ? ' class="is-active" aria-current="page"' : ""}>${label}</a>`).join("");
+  const nav = [["works", "/works/discography"], ["news", "/news"], ["notes", "/notes"], ["archive", "/archive"], ["merch", "/merch"], ["info", "/info"], ["contact", "/contact"]].map(([label, href]) => `<a href="${href}"${active === label ? ' class="is-active" aria-current="page"' : ""}>${label}</a>`).join("");
   return `<body class="${bodyClass}"><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴">${nav}</nav></aside><main class="site-main">${main}</main></div></body></html>`;
 }
 function page(name, description, route, active, main, image = "", detail = false, bodyClass = "") { return `${head(name, description, route, image, detail)}${shell(active, main, bodyClass)}`; }
@@ -109,6 +109,7 @@ function subnav(type, active) {
   const links = type === "works" ? [["discography", "/works/discography"], ["video", "/works/videos"], ["live", "/works/live"], ["others", "/works/others"]] : [["photo", "/archive/photo-video"], ["video", "/archive/videos"], ["text", "/archive/links"]];
   return `<nav class="subnav" aria-label="${type} 하위 메뉴">${links.map(([label, href]) => `<a href="${href}"${active === label ? ' class="is-active" aria-current="page"' : ""}>${label}</a>`).join("")}</nav>`;
 }
+const worksTop = (active) => `<header class="works-top"><h1>works</h1>${subnav("works", active)}</header>`;
 const split = (indexHtml, detailHtml = "", classes = "") => `<div class="split-layout ${classes}"><section class="index-panel">${indexHtml}</section><section class="detail-panel">${detailHtml}</section></div>`;
 const closeLink = (href, label) => `<button type="button" class="close-detail" data-close-url="${href}" aria-label="${esc(label)} 닫기">×</button>`;
 const sampleMark = (item) => item.sample ? '<small class="sample-badge">sample preview</small>' : "";
@@ -153,28 +154,23 @@ const discography = by("works", "discography");
 const workVideos = by("works", "video");
 const live = by("works", "live");
 const others = by("works", "others");
-const worksOverview = `<div class="works-overview">
-  <a href="/works/discography"><span>discography</span>${firstImage(discography[0]) ? `<img src="${esc(firstImage(discography[0]))}" alt="" loading="lazy" decoding="async">` : ""}<small>${discography.length} releases</small></a>
-  <a href="/works/videos"><span>video</span>${firstImage(workVideos[0]) ? `<img src="${esc(firstImage(workVideos[0]))}" alt="" loading="lazy" decoding="async">` : ""}<small>${workVideos.length} records</small></a>
-  <a href="/works/live"><span>live</span><small>history</small></a>
-  <a href="/works/others"><span>others</span>${firstImage(others[0]) ? `<img src="${esc(firstImage(others[0]))}" alt="" loading="lazy" decoding="async">` : ""}<small>${others.length ? `${others.length} records` : "more soon."}</small></a>
-</div>`;
-publish("/works", page("works", worksDescription, "/works", "works", `<div class="wide-page works-landing"><h1>works</h1>${worksOverview}</div>`, firstImage(discography[0])));
 const discGrid = `<div class="release-grid">${discography.map((item) => `<article><a href="/works/discography/${esc(item.slug)}">${firstImage(item) ? `<img src="${esc(firstImage(item))}" alt="${esc(item.title)} 앨범 커버" loading="lazy" decoding="async">` : ""}<span><strong>${esc(item.title)}</strong><small>${esc(displayDate(item.date))}</small></span></a></article>`).join("")}</div>`;
-publish("/works/discography", page("works / discography", worksDescription, "/works/discography", "works", `<div class="wide-page">${subnav("works", "discography")}${discGrid}</div>`, firstImage(discography[0]), true));
+const worksDiscographyLanding = `<div class="wide-page works-section-page">${worksTop("discography")}<p class="section-kicker">discography</p>${discGrid}</div>`;
+publish("/works", page("works", worksDescription, "/works", "works", worksDiscographyLanding, firstImage(discography[0])));
+publish("/works/discography", page("works / discography", worksDescription, "/works/discography", "works", worksDiscographyLanding, firstImage(discography[0]), true));
 for (const item of discography) {
-  const main = split(`<div class="panel-headline">${subnav("works", "discography")}</div>${releaseIndex(discography, item.slug)}`, releaseDetail(item), "release-split");
+  const main = split(`<div class="panel-headline">${worksTop("discography")}</div>${releaseIndex(discography, item.slug)}`, releaseDetail(item), "release-split");
   publish(`/works/discography/${item.slug}`, page(item.title, item.seo_description || item.description || item.title, `/works/discography/${item.slug}`, "works", main, firstImage(item), true));
 }
 
 const videoMeta = (item) => [displayDate(item.date), item.runtime, item.type_label || item.media_type || item.meta].filter(Boolean);
 const workVideoGrid = workVideos.length ? `<div class="work-video-grid">${workVideos.map((item) => `<a href="/works/videos/${esc(item.slug)}">${firstImage(item) ? `<img src="${esc(firstImage(item))}" alt="${esc(item.title)} thumbnail" loading="lazy" decoding="async">` : '<span class="media-placeholder">video</span>'}<span><strong>${esc(item.title)}</strong>${videoMeta(item).map((value) => `<small>${esc(value)}</small>`).join("")}</span></a>`).join("")}</div>` : '<p class="empty-note wide-empty">more soon.</p>';
-publish("/works/videos", page("works / video", worksDescription, "/works/videos", "works", `<div class="wide-page works-video-landing">${subnav("works", "video")}${workVideoGrid}</div>`, firstImage(workVideos[0]), false));
+publish("/works/videos", page("works / video", worksDescription, "/works/videos", "works", `<div class="wide-page works-section-page">${worksTop("video")}${workVideoGrid}</div>`, firstImage(workVideos[0]), false));
 for (const item of workVideos) {
   const videoIndex = `<div class="video-index">${workVideos.map((listed) => `<a href="/works/videos/${esc(listed.slug)}"${listed.slug === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${firstImage(listed) ? `<img src="${esc(firstImage(listed))}" alt="" loading="lazy" decoding="async">` : ""}<span><strong>${esc(listed.title)}</strong>${videoMeta(listed).map((value) => `<small>${esc(value)}</small>`).join("")}</span></a>`).join("")}</div>`;
   const credit = item.credit || item.credits || "";
   const detail = `<article class="video-detail works-video-detail">${closeLink("/works/videos", "video")}${videoEmbed(item)}<h1>${esc(item.title)}</h1>${videoMeta(item).length ? `<p class="media-meta">${videoMeta(item).map(esc).join(" · ")}</p>` : ""}${credit ? `<p class="media-credit">${esc(credit)}</p>` : ""}${item.note ? `<div class="prose">${esc(item.note)}</div>` : ""}${bodyHtml(item)}</article>`;
-  publish(`/works/videos/${item.slug}`, page(item.title, item.description || item.title, `/works/videos/${item.slug}`, "works", split(`<div class="panel-headline">${subnav("works", "video")}</div>${videoIndex}`, detail, "video-split"), firstImage(item), true));
+  publish(`/works/videos/${item.slug}`, page(item.title, item.description || item.title, `/works/videos/${item.slug}`, "works", split(`<div class="panel-headline">${worksTop("video")}</div>${videoIndex}`, detail, "video-split"), firstImage(item), true));
 }
 
 function liveRows(item) {
@@ -195,18 +191,18 @@ function liveRows(item) {
     return `${heading}<div class="live-row"><time>${date}</time><span>${event}</span><small>${venue}</small></div>`;
   }).join("");
 }
-publish("/works/live", page("works / live", worksDescription, "/works/live", "works", split(`<div class="panel-headline">${subnav("works", "live")}</div><div class="live-log">${live.map(liveRows).join("")}</div>`, "", "live-split"), "", true));
+publish("/works/live", page("works / live", worksDescription, "/works/live", "works", split(`<div class="panel-headline">${worksTop("live")}</div><div class="live-log">${live.map(liveRows).join("")}</div>`, "", "live-split"), "", true));
 const othersHasDetail = (item) => Boolean(firstImage(item) || item.video || item.body || item.credit || item.credits);
 const othersIndex = (selected = "") => others.length ? `<div class="text-index others-index">${others.map((item) => {
   const inside = `<span>${esc(displayDate(item.date))}</span><strong>${esc(item.title)}</strong><small>${esc(item.type_label || item.meta || "")}</small>${sampleMark(item)}${item.note ? `<em>${esc(item.note)}</em>` : ""}`;
   return othersHasDetail(item) ? `<a href="/works/others/${esc(item.slug)}"${selected === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${inside}</a>` : `<div class="index-static">${inside}</div>`;
 }).join("")}</div>` : '<p class="empty-note">more soon.</p>';
-publish("/works/others", page("works / others", worksDescription, "/works/others", "works", split(`<div class="panel-headline">${subnav("works", "others")}</div>${othersIndex()}`, ""), "", true));
+publish("/works/others", page("works / others", worksDescription, "/works/others", "works", split(`<div class="panel-headline">${worksTop("others")}</div>${othersIndex()}`, ""), "", true));
 for (const item of others) {
   if (!othersHasDetail(item)) continue;
   const credit = item.credit || item.credits || "";
   const detail = `<article class="text-detail">${closeLink("/works/others", "others")}<p>${esc(displayDate(item.date))}</p><h1>${esc(item.title)}</h1>${imageGallery(item)}${videoEmbed(item)}${credit ? `<p class="media-credit">${esc(credit)}</p>` : ""}${item.note ? `<div class="prose">${esc(item.note)}</div>` : ""}${bodyHtml(item)}${externalLinks(item)}</article>`;
-  publish(`/works/others/${item.slug}`, page(item.title, item.description || item.title, `/works/others/${item.slug}`, "works", split(`<div class="panel-headline">${subnav("works", "others")}</div>${othersIndex(item.slug)}`, detail), firstImage(item), true));
+  publish(`/works/others/${item.slug}`, page(item.title, item.description || item.title, `/works/others/${item.slug}`, "works", split(`<div class="panel-headline">${worksTop("others")}</div>${othersIndex(item.slug)}`, detail), firstImage(item), true));
 }
 
 clearDetails("/news");
