@@ -44,7 +44,8 @@ if (!sitemap.includes("https://sosilofficial.github.io/notes/") || sitemap.inclu
 const home = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 if (home.includes("sosil-archive.rezigitar.chatgpt.site/admin") || />edit<\/a>/.test(home)) failures.push("index.html: 이전 edit 링크가 남아 있습니다");
 if (!home.includes('href="/notes"')) failures.push("index.html: Notes navigation 경로 오류");
-if (!home.includes('href="/works"') || !sitemap.includes("https://sosilofficial.github.io/works/")) failures.push("Works landing 경로 오류");
+const hasWorksNav = home.includes('href="/works"') || home.includes('href="/works/discography"');
+if (!hasWorksNav || !sitemap.includes("https://sosilofficial.github.io/works/")) failures.push("Works landing 경로 오류");
 if (!home.includes('/assets/site-redesign.css') || !home.includes('/assets/site-redesign.js')) failures.push("index.html: 리디자인 자산 연결 오류");
 if (!home.includes('https://www.youtube.com/watch?v=zZtQdgaWjBI')) failures.push("index.html: 홈 앨범 YouTube 링크 오류");
 if (/[←→↗]/.test(home)) failures.push("index.html: 금지된 방향 화살표 UI가 남아 있습니다");
