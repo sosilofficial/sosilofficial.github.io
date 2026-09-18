@@ -146,6 +146,25 @@ h1, h2, strong { font-weight: 400; }
 .external-links a { text-transform: lowercase; }
 .liner-notes { max-width: 52ch; }
 
+.work-video-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(130px, 220px));
+  justify-content: space-between;
+  align-items: start;
+  gap: var(--space-xl) var(--space-lg);
+  max-width: 1060px;
+}
+.work-video-grid a { display: block; }
+.work-video-grid img {
+  width: 82%;
+  max-width: 220px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  filter: saturate(.82) contrast(.94);
+}
+.work-video-grid span { display: flex; flex-direction: column; gap: 2px; margin-top: 9px; }
+.work-video-grid small { color: var(--muted); }
+
 .video-index { display: grid; gap: var(--space-lg); }
 .video-index a { padding: 8px; }
 .video-index a.is-selected { background: var(--selected); }
@@ -287,7 +306,7 @@ h1, h2, strong { font-weight: 400; }
 .home-mailing button { position: absolute; width: 1px; height: 1px; overflow: hidden; padding: 0; border: 0; clip-path: inset(50%); }
 
 @media (max-width: 1100px) {
-  .release-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .release-grid, .work-video-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .archive-video-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
@@ -319,8 +338,8 @@ h1, h2, strong { font-weight: 400; }
   .panel-title, .panel-headline { margin-bottom: 38px; }
   .subnav { margin-bottom: 56px; }
   .wide-page { min-height: auto; padding: 24px 18px 80px; }
-  .release-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 42px 16px; }
-  .release-grid img, .release-index img, .video-index img, .merch-index img, .archive-video-grid img, .media-placeholder { width: 100%; }
+  .release-grid, .work-video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 42px 16px; }
+  .release-grid img, .work-video-grid img, .release-index img, .video-index img, .merch-index img, .archive-video-grid img, .media-placeholder { width: 100%; }
   .release-grid article:nth-child(even) { margin-top: 56px; }
   .release-index { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .release-detail, .text-detail, .photo-detail, .video-detail, .merch-detail { margin-top: 20px; }
