@@ -75,15 +75,11 @@
   }
   .release-split .release-detail {
     position: relative;
-    display: grid !important;
-    grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
-    column-gap: clamp(28px, 3.2vw, 52px);
-    row-gap: clamp(28px, 4vh, 46px);
+    display: flow-root !important;
     width: min(100%, 760px) !important;
     max-width: 760px !important;
     margin: 0 auto !important;
     padding: clamp(28px, 4vh, 42px) clamp(4px, .5vw, 10px) 72px !important;
-    align-items: start;
   }
   .release-split .release-detail .close-detail {
     position: absolute !important;
@@ -102,8 +98,7 @@
   }
   .release-split .release-detail .close-detail::after { content: none !important; }
   .release-split .release-detail header {
-    grid-column: 1 / -1;
-    margin: 0 !important;
+    margin: 0 0 clamp(24px, 3.4vh, 36px) !important;
     padding-right: 40px !important;
   }
   .release-split .release-detail header p {
@@ -121,75 +116,87 @@
     line-height: 1.42;
     letter-spacing: .008em;
   }
+
+  /* Small artwork floats at left. Text first occupies its right side, then naturally uses the full panel width below it. */
   .release-split .release-hero {
-    grid-column: 1;
-    grid-row: 2 / span 5;
+    float: left !important;
     display: block;
-    width: 100% !important;
-    max-width: 180px !important;
+    width: clamp(108px, 11.5vw, 142px) !important;
+    max-width: 142px !important;
+    margin: 0 clamp(24px, 2.6vw, 38px) 18px 0 !important;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     filter: saturate(.84) contrast(.95);
   }
   .release-split .detail-section {
-    width: 100%;
+    width: auto !important;
     margin: 0 !important;
   }
-  .release-split .release-tracklist-section { grid-column: 2; }
-  .release-split .release-credits-section { grid-column: 2; }
+  .release-split .release-tracklist-section,
+  .release-split .release-credits-section {
+    margin-left: clamp(138px, 14.1vw, 180px) !important;
+  }
+  .release-split .release-credits-section {
+    margin-top: clamp(28px, 3.8vh, 42px) !important;
+  }
   .release-split .detail-section h2 {
-    margin: 0 0 15px;
+    margin: 0 0 13px;
     color: var(--muted);
-    opacity: .68;
-    font-size: .56rem;
+    opacity: .66;
+    font-size: .55rem;
     font-weight: 400;
     letter-spacing: .08em;
     text-transform: lowercase;
   }
   .release-split .track-list {
     display: grid;
-    gap: 6px;
+    gap: 5px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
   .release-split .track-list li {
     display: grid;
-    grid-template-columns: 1.7rem minmax(0, 1fr);
-    gap: 0 10px;
+    grid-template-columns: 1.65rem minmax(0, 1fr);
+    gap: 0 9px;
     padding: 0;
-    font-size: .63rem;
-    line-height: 1.48;
+    font-size: .62rem;
+    line-height: 1.46;
     letter-spacing: 0;
   }
   .release-split .track-list li span:first-child {
     color: var(--muted);
-    opacity: .5;
-    font-size: .55rem;
+    opacity: .48;
+    font-size: .54rem;
   }
   .release-split .release-credits-section p {
     margin: 0;
     color: var(--muted);
-    font-size: .62rem;
+    font-size: .61rem;
     line-height: 1.7;
     white-space: pre-line;
   }
+
+  /* Liner notes are intentionally allowed to wrap beside the cover first, then expand to the whole third column below it. */
   .release-split .liner-notes {
-    grid-column: 2;
-    max-width: 54ch;
-    margin: 0 !important;
-    font-size: .65rem;
-    line-height: 1.82;
-    letter-spacing: .004em;
+    width: auto !important;
+    max-width: none !important;
+    margin: clamp(38px, 5.2vh, 58px) 0 0 !important;
+    font-size: .64rem;
+    line-height: 1.86;
+    letter-spacing: .003em;
   }
-  .release-split .liner-notes p { margin: 0 0 1.85em; }
+  .release-split .liner-notes p {
+    max-width: none !important;
+    margin: 0 0 1.9em;
+  }
   .release-split .external-links {
-    grid-column: 2;
+    clear: both;
     display: flex !important;
-    margin: 0 !important;
+    margin: clamp(42px, 5.8vh, 64px) 0 0 !important;
     padding-bottom: 18px;
     gap: 12px 24px;
-    font-size: .62rem;
+    font-size: .61rem;
   }
   .release-split .external-links a { border-bottom-color: rgba(17, 21, 27, .5); }
 }
