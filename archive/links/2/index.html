@@ -13,9 +13,7 @@
     align-items: start;
     justify-items: start;
   }
-  .archive-text-landing .archive-text-index span:empty {
-    display: none;
-  }
+  .archive-text-landing .archive-text-index span:empty { display: none; }
   .archive-text-landing .archive-text-index strong {
     max-width: 42rem;
     font-size: .84rem;
@@ -30,32 +28,74 @@
     font-size: .62rem;
     letter-spacing: .03em;
   }
-  .archive-text-landing .archive-text-index a.is-selected {
-    background: transparent;
-  }
+  .archive-text-landing .archive-text-index a.is-selected { background: transparent; }
 
-  .archive-text-page .detail-panel {
-    padding-left: clamp(30px, 4vw, 68px);
-    padding-right: clamp(30px, 5vw, 86px);
+  .archive-text-detail-page {
+    position: relative;
   }
-  .archive-text-page .text-detail {
-    max-width: 42rem;
-    margin-top: clamp(62px, 9vh, 110px);
+  .archive-text-detail-page > .subnav {
+    margin-bottom: clamp(52px, 7vh, 86px);
   }
-  .archive-text-page .text-detail h1 {
-    max-width: 28ch;
-    margin-bottom: clamp(34px, 5vh, 58px);
-    font-size: clamp(1.05rem, 1.7vw, 1.5rem);
-    line-height: 1.42;
+  .archive-text-detail-page .archive-text-detail {
+    position: relative;
+    width: min(100%, 980px);
+    max-width: 980px;
+    margin: 0;
+    padding-right: 150px;
   }
-  .archive-text-page .text-detail .prose,
-  .archive-text-page .text-detail > p {
-    max-width: 50ch;
+  .archive-text-detail-page .archive-text-detail .close-detail {
+    position: absolute;
+    top: 0;
+    right: 0;
+    float: none;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    color: transparent;
+    font-size: 0;
+  }
+  .archive-text-detail-page .archive-text-detail .close-detail::after {
+    content: "back to text";
+    color: var(--muted);
+    font-size: .76rem;
+  }
+  .archive-text-detail-page .archive-text-detail > p:first-of-type:empty { display: none; }
+  .archive-text-detail-page .archive-text-detail h1 {
+    max-width: 34ch;
+    margin: 0 0 8px;
+    font-size: clamp(1.02rem, 1.35vw, 1.28rem);
+    line-height: 1.35;
+  }
+  .archive-text-detail-page .archive-text-detail .publisher {
+    margin: 0 0 clamp(34px, 5vh, 58px);
+    color: var(--muted);
+  }
+  .archive-text-detail-page .source-link {
+    width: min(100%, 680px);
+    margin-top: clamp(34px, 5vh, 58px);
+  }
+  .archive-text-detail-page .prose {
+    width: min(100%, 680px);
+    max-width: 680px;
     line-height: 1.82;
   }
-  .archive-text-page .original-link {
-    margin-top: clamp(52px, 8vh, 92px);
-    font-size: .68rem;
+}
+@media (max-width: 820px) {
+  .archive-text-detail-page .archive-text-detail { position: relative; }
+  .archive-text-detail-page .archive-text-detail .close-detail {
+    position: static;
+    float: none;
+    display: inline-block;
+    width: auto;
+    height: auto;
+    margin: 0 0 28px;
+    color: var(--muted);
+    font-size: 0;
+  }
+  .archive-text-detail-page .archive-text-detail .close-detail::after {
+    content: "back to text";
+    font-size: .73rem;
   }
 }
-</style></head><body class="archive-text-page"><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive" class="is-active" aria-current="page">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout "><section class="index-panel"><div class="panel-headline"><nav class="subnav" aria-label="archive 하위 메뉴"><a href="/archive/photo-video">photo</a><a href="/archive/videos">video</a><a href="/archive/links" class="is-active" aria-current="page">text</a></nav></div><div class="text-index archive-text-index"><a href="/archive/links/1"><span></span><strong>Pick! New Indie Musician – 113. 소실</strong><small>street-h.com</small></a><a href="/archive/links/2" class="is-selected" aria-current="page"><span></span><strong>&lt;몽상은나의조랑말&gt;: 흐린 현실을 외면하기</strong><small>overtone.kr</small></a><a href="/archive/links/3"><span></span><strong>싱그러운 사실의 힘 ‘몽상은나의조랑말’ [단편선과 플리들]</strong><small>sisain.co.kr</small></a><a href="/archive/links/4"><span></span><strong>[서정민갑의 수요뮤직] 3월의 좋은 음악, 소실 [몽상은나의조랑말]</strong><small>vop.co.kr</small></a></div></section><section class="detail-panel"><article class="text-detail archive-text-detail"><button type="button" class="close-detail" data-close-url="/archive/links" aria-label="text 닫기">×</button><p></p><h1>&lt;몽상은나의조랑말&gt;: 흐린 현실을 외면하기</h1><p class="publisher">overtone.kr</p><dl class="source-link"><dt>original</dt><dd><a href="https://overtone.kr/full-review/%EB%AA%BD%EC%83%81%EC%9D%80%EB%82%98%EC%9D%98%EC%A1%B0%EB%9E%91%EB%A7%90-%ED%9D%90%EB%A6%B0-%ED%98%84%EC%8B%A4%EC%9D%84-%EC%99%B8%EB%A9%B4%ED%95%98%EA%B8%B0" target="_blank" rel="noreferrer">overtone.kr</a></dd><dt>url</dt><dd><a href="https://overtone.kr/full-review/%EB%AA%BD%EC%83%81%EC%9D%80%EB%82%98%EC%9D%98%EC%A1%B0%EB%9E%91%EB%A7%90-%ED%9D%90%EB%A6%B0-%ED%98%84%EC%8B%A4%EC%9D%84-%EC%99%B8%EB%A9%B4%ED%95%98%EA%B8%B0" target="_blank" rel="noreferrer">https://overtone.kr/full-review/%EB%AA%BD%EC%83%81%EC%9D%80%EB%82%98%EC%9D%98%EC%A1%B0%EB%9E%91%EB%A7%90-%ED%9D%90%EB%A6%B0-%ED%98%84%EC%8B%A4%EC%9D%84-%EC%99%B8%EB%A9%B4%ED%95%98%EA%B8%B0</a></dd></dl></article></section></div></main></div></body></html>
+</style></head><body class="archive-text-page"><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive" class="is-active" aria-current="page">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="wide-page archive-text-detail-page"><nav class="subnav" aria-label="archive 하위 메뉴"><a href="/archive/photo-video">photo</a><a href="/archive/videos">video</a><a href="/archive/links" class="is-active" aria-current="page">text</a></nav><article class="text-detail archive-text-detail"><button type="button" class="close-detail" data-close-url="/archive/links" aria-label="text 닫기">×</button><p></p><h1>&lt;몽상은나의조랑말&gt;: 흐린 현실을 외면하기</h1><p class="publisher">overtone.kr</p><dl class="source-link"><dt>original</dt><dd><a href="https://overtone.kr/full-review/%EB%AA%BD%EC%83%81%EC%9D%80%EB%82%98%EC%9D%98%EC%A1%B0%EB%9E%91%EB%A7%90-%ED%9D%90%EB%A6%B0-%ED%98%84%EC%8B%A4%EC%9D%84-%EC%99%B8%EB%A9%B4%ED%95%98%EA%B8%B0" target="_blank" rel="noreferrer">overtone.kr</a></dd><dt>url</dt><dd><a href="https://overtone.kr/full-review/%EB%AA%BD%EC%83%81%EC%9D%80%EB%82%98%EC%9D%98%EC%A1%B0%EB%9E%91%EB%A7%90-%ED%9D%90%EB%A6%B0-%ED%98%84%EC%8B%A4%EC%9D%84-%EC%99%B8%EB%A9%B4%ED%95%98%EA%B8%B0" target="_blank" rel="noreferrer">https://overtone.kr/full-review/%EB%AA%BD%EC%83%81%EC%9D%80%EB%82%98%EC%9D%98%EC%A1%B0%EB%9E%91%EB%A7%90-%ED%9D%90%EB%A6%B0-%ED%98%84%EC%8B%A4%EC%9D%84-%EC%99%B8%EB%A9%B4%ED%95%98%EA%B8%B0</a></dd></dl></article></div></main></div></body></html>
