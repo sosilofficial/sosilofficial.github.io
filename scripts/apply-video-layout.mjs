@@ -6,14 +6,37 @@ const VIDEO_DIR = path.join(ROOT, "works", "videos");
 const LANDING = path.join(VIDEO_DIR, "index.html");
 const STYLE = `<style id="stable-video-index-style">
 @media (min-width: 821px) {
-  .video-split .video-index { display: grid; gap: 34px; }
-  .video-split .video-index a { width: min(100%, 320px); padding: 8px; }
-  .video-split .video-index img { width: 100%; max-width: 300px; }
+  .video-split .index-panel {
+    padding-left: var(--pad);
+    padding-right: var(--pad);
+  }
+  .video-split .video-index {
+    display: grid;
+    gap: clamp(34px, 4.2vh, 48px);
+    width: 100%;
+  }
+  .video-split .video-index a {
+    display: block;
+    width: 100%;
+    padding: 0;
+  }
+  .video-split .video-index img {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .video-split .video-index span {
+    width: 100%;
+    margin-top: 9px;
+  }
 }
 </style>`;
 
 function ensureStyle(html) {
-  if (html.includes('id="stable-video-index-style"')) return html;
+  if (html.includes('id="stable-video-index-style"')) {
+    return html.replace(/<style id="stable-video-index-style">[\s\S]*?<\/style>/, STYLE);
+  }
   return html.replace("</head>", `${STYLE}</head>`);
 }
 
@@ -57,4 +80,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied stable Works video index layout and larger thumbnail scale.");
+console.log("Applied stable Works video index layout with full-width wide thumbnails.");
