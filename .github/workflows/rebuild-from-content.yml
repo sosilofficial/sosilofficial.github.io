@@ -8,6 +8,8 @@ on:
       - "scripts/build-content.mjs"
       - "scripts/validate-site.mjs"
       - "scripts/apply-home-layout.mjs"
+      - "assets/site-redesign.css"
+      - "assets/site-redesign.js"
 
 concurrency:
   group: sosil-content-publish
