@@ -29,9 +29,7 @@ const STYLE = `<style id="archive-text-layout-style">
     align-items: start;
     justify-items: start;
   }
-  .archive-text-landing .archive-text-index span:empty {
-    display: none;
-  }
+  .archive-text-landing .archive-text-index span:empty { display: none; }
   .archive-text-landing .archive-text-index strong {
     max-width: 42rem;
     font-size: .84rem;
@@ -46,32 +44,74 @@ const STYLE = `<style id="archive-text-layout-style">
     font-size: .62rem;
     letter-spacing: .03em;
   }
-  .archive-text-landing .archive-text-index a.is-selected {
-    background: transparent;
-  }
+  .archive-text-landing .archive-text-index a.is-selected { background: transparent; }
 
-  .archive-text-page .detail-panel {
-    padding-left: clamp(30px, 4vw, 68px);
-    padding-right: clamp(30px, 5vw, 86px);
+  .archive-text-detail-page {
+    position: relative;
   }
-  .archive-text-page .text-detail {
-    max-width: 42rem;
-    margin-top: clamp(62px, 9vh, 110px);
+  .archive-text-detail-page > .subnav {
+    margin-bottom: clamp(52px, 7vh, 86px);
   }
-  .archive-text-page .text-detail h1 {
-    max-width: 28ch;
-    margin-bottom: clamp(34px, 5vh, 58px);
-    font-size: clamp(1.05rem, 1.7vw, 1.5rem);
-    line-height: 1.42;
+  .archive-text-detail-page .archive-text-detail {
+    position: relative;
+    width: min(100%, 980px);
+    max-width: 980px;
+    margin: 0;
+    padding-right: 150px;
   }
-  .archive-text-page .text-detail .prose,
-  .archive-text-page .text-detail > p {
-    max-width: 50ch;
+  .archive-text-detail-page .archive-text-detail .close-detail {
+    position: absolute;
+    top: 0;
+    right: 0;
+    float: none;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    color: transparent;
+    font-size: 0;
+  }
+  .archive-text-detail-page .archive-text-detail .close-detail::after {
+    content: "back to text";
+    color: var(--muted);
+    font-size: .76rem;
+  }
+  .archive-text-detail-page .archive-text-detail > p:first-of-type:empty { display: none; }
+  .archive-text-detail-page .archive-text-detail h1 {
+    max-width: 34ch;
+    margin: 0 0 8px;
+    font-size: clamp(1.02rem, 1.35vw, 1.28rem);
+    line-height: 1.35;
+  }
+  .archive-text-detail-page .archive-text-detail .publisher {
+    margin: 0 0 clamp(34px, 5vh, 58px);
+    color: var(--muted);
+  }
+  .archive-text-detail-page .source-link {
+    width: min(100%, 680px);
+    margin-top: clamp(34px, 5vh, 58px);
+  }
+  .archive-text-detail-page .prose {
+    width: min(100%, 680px);
+    max-width: 680px;
     line-height: 1.82;
   }
-  .archive-text-page .original-link {
-    margin-top: clamp(52px, 8vh, 92px);
-    font-size: .68rem;
+}
+@media (max-width: 820px) {
+  .archive-text-detail-page .archive-text-detail { position: relative; }
+  .archive-text-detail-page .archive-text-detail .close-detail {
+    position: static;
+    float: none;
+    display: inline-block;
+    width: auto;
+    height: auto;
+    margin: 0 0 28px;
+    color: var(--muted);
+    font-size: 0;
+  }
+  .archive-text-detail-page .archive-text-detail .close-detail::after {
+    content: "back to text";
+    font-size: .73rem;
   }
 }
 </style>`;
@@ -87,8 +127,15 @@ function convertLanding(html) {
   const subnav = html.match(/<nav class="subnav" aria-label="archive 하위 메뉴">[\s\S]*?<\/nav>/)?.[0] || "";
   const index = html.match(/<div class="text-index archive-text-index">[\s\S]*?<\/div>/)?.[0] || "";
   if (!subnav || !index) return html;
-
   const main = `<main class="site-main"><div class="wide-page archive-text-landing">${subnav}${index}</div></main>`;
+  return html.replace(/<main class="site-main">[\s\S]*?<\/main>/, main);
+}
+
+function convertDetail(html) {
+  const subnav = html.match(/<nav class="subnav" aria-label="archive 하위 메뉴">[\s\S]*?<\/nav>/)?.[0] || "";
+  const article = html.match(/<article class="text-detail archive-text-detail">[\s\S]*?<\/article>/)?.[0] || "";
+  if (!subnav || !article) return html;
+  const main = `<main class="site-main"><div class="wide-page archive-text-detail-page">${subnav}${article}</div></main>`;
   return html.replace(/<main class="site-main">[\s\S]*?<\/main>/, main);
 }
 
@@ -99,9 +146,9 @@ for (const file of files) {
     const next = [cls, isLanding ? "archive-text-landing-page" : "archive-text-page"].filter(Boolean).join(" ");
     return `<body class="${next}">`;
   });
-  if (isLanding) html = convertLanding(html);
+  html = isLanding ? convertLanding(html) : convertDetail(html);
   html = ensureStyle(html);
   fs.writeFileSync(file, html);
 }
 
-console.log("Aligned Archive/Text landing with Archive/Photo grid and removed empty date gutter.");
+console.log("Aligned Archive/Text landing and detail pages with the Archive/Photo grid.");
