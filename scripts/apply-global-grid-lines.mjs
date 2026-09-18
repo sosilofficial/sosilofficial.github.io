@@ -4,28 +4,40 @@ import path from "node:path";
 const ROOT = process.cwd();
 const STYLE = `<style id="global-grid-lines-style">
 @media (min-width: 821px) {
+  /* Discography is the master desktop split: 35 / 55 = 38.8889% / 61.1111%. */
   .split-layout,
   .info-split {
+    display: grid !important;
     position: relative !important;
-    grid-template-columns: minmax(0, 35fr) minmax(0, 55fr) !important;
+    width: 100% !important;
+    max-width: none !important;
+    grid-template-columns: 38.8888889% 61.1111111% !important;
+  }
+
+  .split-layout > .index-panel,
+  .info-split > .index-panel {
+    grid-column: 1 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
   }
 
   .split-layout > .detail-panel,
   .info-split > .detail-panel {
-    border-left: 0 !important;
+    grid-column: 2 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+    border-left: 1px solid var(--line) !important;
   }
 
+  /* Remove the old overlay divider: the real panel edge is now the Discography edge. */
   .split-layout::after,
   .info-split::after {
-    content: "";
-    position: absolute;
-    z-index: 10;
-    top: 0;
-    bottom: 0;
-    left: 38.8888889%;
-    width: 1px;
-    background: var(--line);
-    pointer-events: none;
+    content: none !important;
   }
 }
 </style>`;
@@ -49,4 +61,4 @@ for (const file of walk(ROOT)) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Locked every desktop content divider to the exact Discography 35:55 boundary.");
+console.log("Matched every desktop split panel width and divider to the exact Discography 35:55 grid.");
