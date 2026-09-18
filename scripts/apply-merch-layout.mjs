@@ -45,11 +45,11 @@ const STYLE = `<style id="stable-merch-layout-style">
   .merch-split .merch-detail {
     width: min(100%, 620px);
     max-width: 620px;
-    margin: clamp(24px, 4vh, 42px) auto 0;
+    margin: calc(1.55em + clamp(44px, 8vh, 100px)) auto 0;
   }
   .merch-split .merch-detail h1 {
     max-width: 34ch;
-    margin: 8px 0 clamp(22px, 3vh, 32px);
+    margin: 0 0 clamp(22px, 3vh, 32px);
     font-size: clamp(.92rem, 1.35vw, 1.2rem);
     line-height: 1.42;
   }
@@ -106,4 +106,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, detailHtml);
 }
 
-console.log("Applied large Merch index images and compact desktop detail gallery with visible purchase links.");
+console.log("Applied large Merch index images, aligned detail heading grid, and compact desktop detail gallery.");
