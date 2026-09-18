@@ -28,5 +28,39 @@
     width: 100%;
     margin-top: 9px;
   }
+  .merch-split .detail-panel {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .merch-split .merch-detail {
+    width: min(100%, 620px);
+    max-width: 620px;
+    margin: clamp(24px, 4vh, 42px) auto 0;
+  }
+  .merch-split .merch-detail h1 {
+    max-width: 34ch;
+    margin: 8px 0 clamp(22px, 3vh, 32px);
+    font-size: clamp(.92rem, 1.35vw, 1.2rem);
+    line-height: 1.42;
+  }
+  .merch-split .merch-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(10px, 1.4vw, 18px);
+    margin: 0 0 clamp(24px, 3.5vh, 36px);
+  }
+  .merch-split .merch-gallery img {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+  .merch-split .purchase-links {
+    margin-top: 0;
+    padding-bottom: 24px;
+  }
 }
 </style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive">archive</a><a href="/merch" class="is-active" aria-current="page">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout merch-split"><section class="index-panel"><div class="panel-title">merch</div><div class="merch-index"><a href="/merch/3"><img src="/media/catalog/2026-09-05/e2bf2b31-7651-4fcd-8893-8762a7df7c6e.jpg" alt="" loading="lazy"><span><strong>[CD Album] 소실 Sosil - 몽상은나의조랑말 Reverie is My Pony</strong><small>CD album</small></span></a></div></section><section class="detail-panel"></section></div></main></div></body></html>
