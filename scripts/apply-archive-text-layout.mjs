@@ -3,9 +3,10 @@ import path from "node:path";
 
 const ROOT = process.cwd();
 const TEXT_DIR = path.join(ROOT, "archive", "links");
+const LANDING = path.join(TEXT_DIR, "index.html");
 const files = [];
 
-if (fs.existsSync(path.join(TEXT_DIR, "index.html"))) files.push(path.join(TEXT_DIR, "index.html"));
+if (fs.existsSync(LANDING)) files.push(LANDING);
 if (fs.existsSync(TEXT_DIR)) {
   for (const entry of fs.readdirSync(TEXT_DIR, { withFileTypes: true })) {
     const file = path.join(TEXT_DIR, entry.name, "index.html");
@@ -15,45 +16,40 @@ if (fs.existsSync(TEXT_DIR)) {
 
 const STYLE = `<style id="archive-text-layout-style">
 @media (min-width: 821px) {
-  .archive-text-index {
+  .archive-text-landing .archive-text-index {
     display: grid;
     gap: clamp(36px, 5vh, 58px);
-    width: min(100%, 39rem);
+    width: min(100%, 980px);
   }
-  .archive-text-index a {
+  .archive-text-landing .archive-text-index a {
     display: grid;
-    grid-template-columns: 5.1rem minmax(0, 1fr);
-    gap: 2px 14px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
     padding: 0;
     align-items: start;
+    justify-items: start;
   }
-  .archive-text-index a.is-selected {
-    background: transparent;
+  .archive-text-landing .archive-text-index span:empty {
+    display: none;
   }
-  .archive-text-index span {
-    grid-row: 1 / span 2;
-    color: var(--muted);
-    opacity: .55;
-    font-size: .62rem;
-    letter-spacing: .025em;
-    line-height: 1.5;
-  }
-  .archive-text-index strong {
+  .archive-text-landing .archive-text-index strong {
+    max-width: 42rem;
     font-size: .84rem;
     line-height: 1.42;
     letter-spacing: .006em;
   }
-  .archive-text-index small {
-    grid-column: 2;
+  .archive-text-landing .archive-text-index small {
+    grid-column: 1;
     margin-top: 5px;
     color: var(--muted);
     opacity: .72;
     font-size: .62rem;
     letter-spacing: .03em;
   }
-  .archive-text-index a.is-selected strong {
-    opacity: .62;
+  .archive-text-landing .archive-text-index a.is-selected {
+    background: transparent;
   }
+
   .archive-text-page .detail-panel {
     padding-left: clamp(30px, 4vw, 68px);
     padding-right: clamp(30px, 5vw, 86px);
@@ -80,15 +76,32 @@ const STYLE = `<style id="archive-text-layout-style">
 }
 </style>`;
 
+function ensureStyle(html) {
+  if (html.includes('id="archive-text-layout-style"')) {
+    return html.replace(/<style id="archive-text-layout-style">[\s\S]*?<\/style>/, STYLE);
+  }
+  return html.replace("</head>", `${STYLE}</head>`);
+}
+
+function convertLanding(html) {
+  const subnav = html.match(/<nav class="subnav" aria-label="archive 하위 메뉴">[\s\S]*?<\/nav>/)?.[0] || "";
+  const index = html.match(/<div class="text-index archive-text-index">[\s\S]*?<\/div>/)?.[0] || "";
+  if (!subnav || !index) return html;
+
+  const main = `<main class="site-main"><div class="wide-page archive-text-landing">${subnav}${index}</div></main>`;
+  return html.replace(/<main class="site-main">[\s\S]*?<\/main>/, main);
+}
+
 for (const file of files) {
   let html = fs.readFileSync(file, "utf8");
-  html = html.replace(/<body class="([^"]*)">/, (_m, cls) => `<body class="${[cls, "archive-text-page"].filter(Boolean).join(" ")}">`);
-  if (html.includes('id="archive-text-layout-style"')) {
-    html = html.replace(/<style id="archive-text-layout-style">[\s\S]*?<\/style>/, STYLE);
-  } else {
-    html = html.replace("</head>", `${STYLE}</head>`);
-  }
+  const isLanding = file === LANDING;
+  html = html.replace(/<body class="([^"]*)">/, (_m, cls) => {
+    const next = [cls, isLanding ? "archive-text-landing-page" : "archive-text-page"].filter(Boolean).join(" ");
+    return `<body class="${next}">`;
+  });
+  if (isLanding) html = convertLanding(html);
+  html = ensureStyle(html);
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied quieter editorial Archive/Text typography and spacing.");
+console.log("Aligned Archive/Text landing with Archive/Photo grid and removed empty date gutter.");
