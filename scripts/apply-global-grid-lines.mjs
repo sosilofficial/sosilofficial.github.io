@@ -4,14 +4,31 @@ import path from "node:path";
 const ROOT = process.cwd();
 const STYLE = `<style id="global-grid-lines-style">
 @media (min-width: 821px) {
-  /* Discography is the master desktop split: 35 / 55 = 38.8889% / 61.1111%. */
+  /*
+   * One shared coordinate system for every desktop split page.
+   * The sidebar itself is unchanged; only the content canvas is normalized.
+   * Keeping a stable scrollbar gutter prevents long/short pages from shifting
+   * the content width by a few pixels relative to Discography.
+   */
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  .site-main {
+    margin-left: max(var(--sidebar), 118px) !important;
+    width: calc(100% - max(var(--sidebar), 118px)) !important;
+    max-width: none !important;
+  }
+
+  /* Discography is the master split: 35 / 55 = 38.8889% / 61.1111%. */
   .split-layout,
   .info-split {
     display: grid !important;
     position: relative !important;
     width: 100% !important;
+    min-width: 0 !important;
     max-width: none !important;
-    grid-template-columns: 38.8888889% 61.1111111% !important;
+    grid-template-columns: minmax(0, 38.8888889%) minmax(0, 61.1111111%) !important;
   }
 
   .split-layout > .index-panel,
@@ -31,13 +48,25 @@ const STYLE = `<style id="global-grid-lines-style">
     left: auto !important;
     right: auto !important;
     box-sizing: border-box !important;
-    border-left: 1px solid var(--line) !important;
+    border-left: 0 !important;
   }
 
-  /* Remove the old overlay divider: the real panel edge is now the Discography edge. */
+  /*
+   * Draw the divider from the shared grid itself rather than from each
+   * page's detail panel. This avoids page-specific sticky/fixed/overflow
+   * rules moving or covering the visible line.
+   */
   .split-layout::after,
   .info-split::after {
-    content: none !important;
+    content: "" !important;
+    position: absolute !important;
+    z-index: 40 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 38.8888889% !important;
+    width: 1px !important;
+    background: var(--line) !important;
+    pointer-events: none !important;
   }
 }
 </style>`;
@@ -61,4 +90,4 @@ for (const file of walk(ROOT)) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Matched every desktop split panel width and divider to the exact Discography 35:55 grid.");
+console.log("Locked every desktop split width and divider to one Discography-based coordinate system.");
