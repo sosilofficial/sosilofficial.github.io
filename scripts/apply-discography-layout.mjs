@@ -23,7 +23,7 @@ const STYLE = `<style id="stable-discography-layout-style">
     padding: 0;
   }
   .release-split .release-index > a.is-selected {
-    background: rgba(72, 80, 91, .025);
+    background: transparent;
   }
   .release-split .release-index img {
     width: 100%;
@@ -35,38 +35,51 @@ const STYLE = `<style id="stable-discography-layout-style">
     width: 100%;
     margin-top: 9px;
   }
+  .release-split .release-index strong {
+    font-size: .83rem;
+    line-height: 1.42;
+  }
+  .release-split .release-index small {
+    margin-top: 3px;
+    color: var(--muted);
+    opacity: .72;
+    font-size: .62rem;
+    letter-spacing: .02em;
+  }
   .release-split .release-tracklist-left {
-    margin: -20px 0 4px;
+    margin: -18px 0 8px;
     padding: 0 2px;
     max-width: 34rem;
   }
   .release-split .release-tracklist-left h2 {
-    margin: 0 0 13px;
+    margin: 0 0 15px;
     color: var(--muted);
-    font-size: .64rem;
+    opacity: .72;
+    font-size: .61rem;
     font-weight: 400;
-    letter-spacing: .045em;
+    letter-spacing: .06em;
     text-transform: lowercase;
   }
   .release-split .release-tracklist-left .track-list {
     display: grid;
-    gap: 7px;
+    gap: 8px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
   .release-split .release-tracklist-left .track-list li {
     display: grid;
-    grid-template-columns: 2.2rem minmax(0, 1fr);
-    gap: 0 8px;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0 10px;
     padding: 0;
-    font-size: .68rem;
-    line-height: 1.45;
-    letter-spacing: .008em;
+    font-size: .69rem;
+    line-height: 1.48;
+    letter-spacing: .004em;
   }
   .release-split .release-tracklist-left .track-list li span:first-child {
     color: var(--muted);
-    opacity: .7;
+    opacity: .58;
+    font-size: .61rem;
   }
   .release-split .detail-panel {
     position: sticky;
@@ -78,9 +91,33 @@ const STYLE = `<style id="stable-discography-layout-style">
   .release-split .release-detail {
     margin: 0 auto;
     padding-top: clamp(28px, 4vh, 44px);
+    max-width: 560px;
   }
   .release-split .release-detail header {
-    margin-top: 0;
+    margin: 0 0 clamp(34px, 5vh, 56px);
+  }
+  .release-split .release-detail header h1 {
+    margin-bottom: 7px;
+    font-size: clamp(1.16rem, 1.8vw, 1.68rem);
+    line-height: 1.3;
+  }
+  .release-split .release-detail header p {
+    margin-bottom: 5px;
+    font-size: .66rem;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .release-split .release-hero {
+    width: min(82%, 470px);
+  }
+  .release-split .liner-notes {
+    max-width: 50ch;
+    margin-top: clamp(64px, 9vh, 110px);
+    line-height: 1.78;
+  }
+  .release-split .external-links {
+    margin-top: clamp(54px, 8vh, 96px);
+    padding-bottom: 44px;
   }
 }
 </style>`;
@@ -132,4 +169,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied video-like Discography index spacing, fixed detail column, and minimal left tracklists.");
+console.log("Applied video-matched Discography spacing, sticky detail, and minimal left tracklists.");
