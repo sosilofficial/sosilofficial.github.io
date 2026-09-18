@@ -35,6 +35,40 @@ const STYLE = `<style id="stable-merch-layout-style">
     width: 100%;
     margin-top: 9px;
   }
+  .merch-split .detail-panel {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .merch-split .merch-detail {
+    width: min(100%, 620px);
+    max-width: 620px;
+    margin: clamp(24px, 4vh, 42px) auto 0;
+  }
+  .merch-split .merch-detail h1 {
+    max-width: 34ch;
+    margin: 8px 0 clamp(22px, 3vh, 32px);
+    font-size: clamp(.92rem, 1.35vw, 1.2rem);
+    line-height: 1.42;
+  }
+  .merch-split .merch-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(10px, 1.4vw, 18px);
+    margin: 0 0 clamp(24px, 3.5vh, 36px);
+  }
+  .merch-split .merch-gallery img {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+  .merch-split .purchase-links {
+    margin-top: 0;
+    padding-bottom: 24px;
+  }
 }
 </style>`;
 
@@ -72,4 +106,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, detailHtml);
 }
 
-console.log("Applied Discography-like Merch image scale and equal side spacing.");
+console.log("Applied large Merch index images and compact desktop detail gallery with visible purchase links.");
