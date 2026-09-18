@@ -97,14 +97,31 @@
 }
 </style><style id="global-grid-lines-style">
 @media (min-width: 821px) {
-  /* Discography is the master desktop split: 35 / 55 = 38.8889% / 61.1111%. */
+  /*
+   * One shared coordinate system for every desktop split page.
+   * The sidebar itself is unchanged; only the content canvas is normalized.
+   * Keeping a stable scrollbar gutter prevents long/short pages from shifting
+   * the content width by a few pixels relative to Discography.
+   */
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  .site-main {
+    margin-left: max(var(--sidebar), 118px) !important;
+    width: calc(100% - max(var(--sidebar), 118px)) !important;
+    max-width: none !important;
+  }
+
+  /* Discography is the master split: 35 / 55 = 38.8889% / 61.1111%. */
   .split-layout,
   .info-split {
     display: grid !important;
     position: relative !important;
     width: 100% !important;
+    min-width: 0 !important;
     max-width: none !important;
-    grid-template-columns: 38.8888889% 61.1111111% !important;
+    grid-template-columns: minmax(0, 38.8888889%) minmax(0, 61.1111111%) !important;
   }
 
   .split-layout > .index-panel,
@@ -124,13 +141,25 @@
     left: auto !important;
     right: auto !important;
     box-sizing: border-box !important;
-    border-left: 1px solid var(--line) !important;
+    border-left: 0 !important;
   }
 
-  /* Remove the old overlay divider: the real panel edge is now the Discography edge. */
+  /*
+   * Draw the divider from the shared grid itself rather than from each
+   * page's detail panel. This avoids page-specific sticky/fixed/overflow
+   * rules moving or covering the visible line.
+   */
   .split-layout::after,
   .info-split::after {
-    content: none !important;
+    content: "" !important;
+    position: absolute !important;
+    z-index: 40 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 38.8888889% !important;
+    width: 1px !important;
+    background: var(--line) !important;
+    pointer-events: none !important;
   }
 }
 </style></head><body class="archive-text-page"><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive" class="is-active" aria-current="page">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout "><section class="index-panel"><div class="panel-headline"><nav class="subnav" aria-label="archive 하위 메뉴"><a href="/archive/photo-video">photo</a><a href="/archive/videos">video</a><a href="/archive/links" class="is-active" aria-current="page">text</a></nav></div><div class="text-index archive-text-index"><a href="/archive/links/1"><span></span><strong>Pick! New Indie Musician – 113. 소실</strong><small>street-h.com</small></a><a href="/archive/links/2" class="is-selected" aria-current="page"><span></span><strong>&lt;몽상은나의조랑말&gt;: 흐린 현실을 외면하기</strong><small>overtone.kr</small></a><a href="/archive/links/3"><span></span><strong>싱그러운 사실의 힘 ‘몽상은나의조랑말’ [단편선과 플리들]</strong><small>sisain.co.kr</small></a><a href="/archive/links/4"><span></span><strong>[서정민갑의 수요뮤직] 3월의 좋은 음악, 소실 [몽상은나의조랑말]</strong><small>vop.co.kr</small></a></div></section><section class="detail-panel"><article class="text-detail archive-text-detail"><button type="button" class="close-detail" data-close-url="/archive/links" aria-label="text 닫기">×</button><p></p><h1>&lt;몽상은나의조랑말&gt;: 흐린 현실을 외면하기</h1><p class="publisher">overtone.kr</p><dl class="source-link"><dt>original</dt><dd><a href="https://overtone.kr/full-review/%EB%AA%BD%EC%83%81%EC%9D%80%EB%82%98%EC%9D%98%EC%A1%B0%EB%9E%91%EB%A7%90-%ED%9D%90%EB%A6%B0-%ED%98%84%EC%8B%A4%EC%9D%84-%EC%99%B8%EB%A9%B4%ED%95%98%EA%B8%B0" target="_blank" rel="noreferrer">overtone.kr</a></dd><dt>url</dt><dd><a href="https://overtone.kr/full-review/%EB%AA%BD%EC%83%81%EC%9D%80%EB%82%98%EC%9D%98%EC%A1%B0%EB%9E%91%EB%A7%90-%ED%9D%90%EB%A6%B0-%ED%98%84%EC%8B%A4%EC%9D%84-%EC%99%B8%EB%A9%B4%ED%95%98%EA%B8%B0" target="_blank" rel="noreferrer">https://overtone.kr/full-review/%EB%AA%BD%EC%83%81%EC%9D%80%EB%82%98%EC%9D%98%EC%A1%B0%EB%9E%91%EB%A7%90-%ED%9D%90%EB%A6%B0-%ED%98%84%EC%8B%A4%EC%9D%84-%EC%99%B8%EB%A9%B4%ED%95%98%EA%B8%B0</a></dd></dl></article></section></div></main></div></body></html>

@@ -65,14 +65,31 @@
 }
 </style><style id="global-grid-lines-style">
 @media (min-width: 821px) {
-  /* Discography is the master desktop split: 35 / 55 = 38.8889% / 61.1111%. */
+  /*
+   * One shared coordinate system for every desktop split page.
+   * The sidebar itself is unchanged; only the content canvas is normalized.
+   * Keeping a stable scrollbar gutter prevents long/short pages from shifting
+   * the content width by a few pixels relative to Discography.
+   */
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  .site-main {
+    margin-left: max(var(--sidebar), 118px) !important;
+    width: calc(100% - max(var(--sidebar), 118px)) !important;
+    max-width: none !important;
+  }
+
+  /* Discography is the master split: 35 / 55 = 38.8889% / 61.1111%. */
   .split-layout,
   .info-split {
     display: grid !important;
     position: relative !important;
     width: 100% !important;
+    min-width: 0 !important;
     max-width: none !important;
-    grid-template-columns: 38.8888889% 61.1111111% !important;
+    grid-template-columns: minmax(0, 38.8888889%) minmax(0, 61.1111111%) !important;
   }
 
   .split-layout > .index-panel,
@@ -92,13 +109,25 @@
     left: auto !important;
     right: auto !important;
     box-sizing: border-box !important;
-    border-left: 1px solid var(--line) !important;
+    border-left: 0 !important;
   }
 
-  /* Remove the old overlay divider: the real panel edge is now the Discography edge. */
+  /*
+   * Draw the divider from the shared grid itself rather than from each
+   * page's detail panel. This avoids page-specific sticky/fixed/overflow
+   * rules moving or covering the visible line.
+   */
   .split-layout::after,
   .info-split::after {
-    content: none !important;
+    content: "" !important;
+    position: absolute !important;
+    z-index: 40 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 38.8888889% !important;
+    width: 1px !important;
+    background: var(--line) !important;
+    pointer-events: none !important;
   }
 }
 </style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive">archive</a><a href="/merch" class="is-active" aria-current="page">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout merch-split"><section class="index-panel"><div class="panel-title">merch</div><div class="merch-index"><a href="/merch/3"><img src="/media/catalog/2026-09-05/e2bf2b31-7651-4fcd-8893-8762a7df7c6e.jpg" alt="" loading="lazy"><span><strong>[CD Album] 소실 Sosil - 몽상은나의조랑말 Reverie is My Pony</strong><small>CD album</small></span></a></div></section><section class="detail-panel"></section></div></main></div></body></html>

@@ -1,13 +1,30 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nebraska | 소실 SOSIL</title><link rel="icon" href="/favicon-sosil.svg"><link rel="stylesheet" href="/assets/site-redesign.css?v=20260919-5"><script src="/assets/site-redesign.js?v=20260919-5" defer></script><meta name="description" content="이번 달에 본 영화"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://sosilofficial.github.io/notes/1/"><meta property="og:locale" content="ko_KR"><meta property="og:type" content="article"><meta property="og:site_name" content="소실 SOSIL"><meta property="og:title" content="Nebraska | 소실 SOSIL"><meta property="og:description" content="이번 달에 본 영화"><meta property="og:url" content="https://sosilofficial.github.io/notes/1/"><meta property="og:image" content="https://i.ytimg.com/vi/ZuIBvmxIN4w/mqdefault.jpg"><meta name="twitter:card" content="summary_large_image"><style id="global-grid-lines-style">
 @media (min-width: 821px) {
-  /* Discography is the master desktop split: 35 / 55 = 38.8889% / 61.1111%. */
+  /*
+   * One shared coordinate system for every desktop split page.
+   * The sidebar itself is unchanged; only the content canvas is normalized.
+   * Keeping a stable scrollbar gutter prevents long/short pages from shifting
+   * the content width by a few pixels relative to Discography.
+   */
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  .site-main {
+    margin-left: max(var(--sidebar), 118px) !important;
+    width: calc(100% - max(var(--sidebar), 118px)) !important;
+    max-width: none !important;
+  }
+
+  /* Discography is the master split: 35 / 55 = 38.8889% / 61.1111%. */
   .split-layout,
   .info-split {
     display: grid !important;
     position: relative !important;
     width: 100% !important;
+    min-width: 0 !important;
     max-width: none !important;
-    grid-template-columns: 38.8888889% 61.1111111% !important;
+    grid-template-columns: minmax(0, 38.8888889%) minmax(0, 61.1111111%) !important;
   }
 
   .split-layout > .index-panel,
@@ -27,13 +44,25 @@
     left: auto !important;
     right: auto !important;
     box-sizing: border-box !important;
-    border-left: 1px solid var(--line) !important;
+    border-left: 0 !important;
   }
 
-  /* Remove the old overlay divider: the real panel edge is now the Discography edge. */
+  /*
+   * Draw the divider from the shared grid itself rather than from each
+   * page's detail panel. This avoids page-specific sticky/fixed/overflow
+   * rules moving or covering the visible line.
+   */
   .split-layout::after,
   .info-split::after {
-    content: none !important;
+    content: "" !important;
+    position: absolute !important;
+    z-index: 40 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 38.8888889% !important;
+    width: 1px !important;
+    background: var(--line) !important;
+    pointer-events: none !important;
   }
 }
 </style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography">works</a><a href="/news">news</a><a href="/notes" class="is-active" aria-current="page">notes</a><a href="/archive">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout "><section class="index-panel"><div class="panel-title">notes</div><div class="note-index"><a href="/notes/3"><span>2026.09.04</span><strong>Joseph Cornell</strong></a><a href="/notes/1" class="is-selected" aria-current="page"><span>2026.09.03</span><strong>Nebraska</strong></a></div></section><section class="detail-panel"><article class="text-detail note-detail"><button type="button" class="close-detail" data-close-url="/notes" aria-label="notes 닫기">×</button><p>2026.09.03</p><h1>Nebraska</h1><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/ZuIBvmxIN4w" title="Nebraska" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><div class="prose">영화를 재밌게 보았다. 알렉산더 페인 감독은 디졸브를 정말 잘 쓰는 것 같다. 좋은 시나리오와 좋은 연기.</div></article></section></div></main></div></body></html>
