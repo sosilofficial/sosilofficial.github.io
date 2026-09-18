@@ -7,32 +7,59 @@ const LANDING = path.join(DISCO_DIR, "index.html");
 
 const STYLE = `<style id="stable-discography-layout-style">
 @media (min-width: 821px) {
-  .release-split .index-panel {
-    padding-left: var(--pad);
-    padding-right: var(--pad);
+  .release-split {
+    display: grid !important;
+    grid-template-columns: var(--index) var(--detail) !important;
+    min-height: 100vh !important;
   }
+  .release-split > .index-panel {
+    display: block !important;
+    min-width: 0;
+    padding: var(--pad) !important;
+  }
+  .release-split .panel-headline { margin-bottom: clamp(36px, 6vh, 76px) !important; }
+  .release-split .works-top {
+    display: block !important;
+  }
+  .release-split .works-top h1 {
+    margin: 0 0 var(--space-md) !important;
+    font-size: 1.08rem !important;
+  }
+  .release-split .works-top .subnav {
+    display: flex !important;
+    gap: clamp(16px, 2vw, 32px) !important;
+    margin: 0 !important;
+  }
+  .release-split .works-top .subnav::before { content: none !important; }
+  .release-split .works-top .subnav a { display: inline !important; }
+  .release-split .works-top .subnav a.is-active {
+    color: var(--ink) !important;
+    text-decoration: underline !important;
+    text-underline-offset: 4px;
+  }
+
   .release-split .release-index {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(34px, 4.2vh, 48px);
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: clamp(34px, 4.2vh, 48px) !important;
     width: 100%;
   }
   .release-split .release-index > a {
     display: block;
     width: 100%;
-    padding: 0;
+    padding: 0 !important;
   }
   .release-split .release-index > a.is-selected {
     background: rgba(72, 80, 91, .018);
   }
   .release-split .release-index img {
-    width: 100%;
-    max-width: none;
+    width: 100% !important;
+    max-width: none !important;
     aspect-ratio: 1 / 1;
     object-fit: cover;
   }
   .release-split .release-index span {
-    width: 100%;
+    width: 100% !important;
     margin-top: 9px;
   }
   .release-split .release-index strong {
@@ -47,21 +74,45 @@ const STYLE = `<style id="stable-discography-layout-style">
     letter-spacing: .02em;
   }
 
-  .release-split .detail-panel {
-    position: sticky;
+  .release-split > .detail-panel {
+    position: sticky !important;
     top: 0;
     align-self: start;
+    min-width: 0;
     height: 100vh;
     overflow-y: auto;
+    border-left: 1px solid var(--line) !important;
+    padding: var(--pad) !important;
   }
   .release-split .release-detail {
-    width: min(100%, 660px);
-    max-width: 660px;
-    margin: 0 auto;
-    padding: clamp(30px, 4.5vh, 48px) clamp(8px, 1vw, 16px) 72px;
+    position: relative;
+    display: block !important;
+    width: min(100%, 660px) !important;
+    max-width: 660px !important;
+    margin: 0 auto !important;
+    padding: clamp(30px, 4.5vh, 48px) clamp(8px, 1vw, 16px) 72px !important;
   }
+  .release-split .release-detail .close-detail {
+    position: sticky !important;
+    top: 0;
+    right: auto;
+    float: right !important;
+    display: grid;
+    place-items: center;
+    width: 28px !important;
+    height: 28px !important;
+    margin: -6px -6px 14px 20px !important;
+    padding: 0 !important;
+    color: var(--ink) !important;
+    font-size: 1.15rem !important;
+    opacity: .62;
+  }
+  .release-split .release-detail .close-detail::after { content: none !important; }
   .release-split .release-detail header {
-    margin: 0 0 clamp(28px, 4vh, 44px);
+    display: block;
+    max-width: none !important;
+    margin: 0 0 clamp(28px, 4vh, 44px) !important;
+    padding-right: 0 !important;
   }
   .release-split .release-detail header p {
     margin: 0 0 4px;
@@ -72,22 +123,23 @@ const STYLE = `<style id="stable-discography-layout-style">
     letter-spacing: .035em;
   }
   .release-split .release-detail header h1 {
-    max-width: 28ch;
+    max-width: 28ch !important;
     margin: 0 0 5px;
-    font-size: clamp(.86rem, 1.15vw, 1.05rem);
+    font-size: clamp(.86rem, 1.15vw, 1.05rem) !important;
     line-height: 1.42;
     letter-spacing: .008em;
   }
   .release-split .release-hero {
-    width: min(42%, 250px);
-    max-width: 250px;
+    display: block;
+    width: min(42%, 250px) !important;
+    max-width: 250px !important;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     filter: saturate(.84) contrast(.95);
   }
   .release-split .detail-section {
     width: min(100%, 430px);
-    margin-top: clamp(42px, 6vh, 70px);
+    margin-top: clamp(42px, 6vh, 70px) !important;
   }
   .release-split .detail-section h2 {
     margin: 0 0 17px;
@@ -121,25 +173,21 @@ const STYLE = `<style id="stable-discography-layout-style">
   }
   .release-split .liner-notes {
     max-width: 48ch;
-    margin-top: clamp(76px, 11vh, 132px);
+    margin-top: clamp(76px, 11vh, 132px) !important;
     font-size: .65rem;
     line-height: 1.82;
     letter-spacing: .004em;
   }
-  .release-split .liner-notes p {
-    margin-bottom: 1.85em;
-  }
+  .release-split .liner-notes p { margin-bottom: 1.85em; }
   .release-split .external-links {
-    margin-top: clamp(66px, 9vh, 110px);
+    display: flex !important;
+    margin-top: clamp(66px, 9vh, 110px) !important;
     padding-bottom: 18px;
     gap: 12px 24px;
     font-size: .62rem;
   }
   .release-split .external-links a {
     border-bottom-color: rgba(17, 21, 27, .5);
-  }
-  .release-split .close-detail {
-    opacity: .62;
   }
 }
 </style>`;
@@ -189,4 +237,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied sparse slowcore-style Discography detail layout with small typography and compact artwork.");
+console.log("Restored three-column Discography layout and right-side sticky detail panel.");
