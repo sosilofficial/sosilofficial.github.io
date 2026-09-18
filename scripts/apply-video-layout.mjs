@@ -30,6 +30,14 @@ const STYLE = `<style id="stable-video-index-style">
     width: 100%;
     margin-top: 9px;
   }
+  .video-split .detail-panel {
+    position: relative;
+  }
+  .video-split .works-video-detail {
+    position: sticky;
+    top: var(--pad);
+    margin: 0 auto;
+  }
 }
 </style>`;
 
@@ -80,4 +88,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied stable Works video index layout with full-width wide thumbnails.");
+console.log("Applied stable Works video index layout with full-width thumbnails and sticky detail playback.");
