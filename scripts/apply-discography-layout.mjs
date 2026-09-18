@@ -23,7 +23,7 @@ const STYLE = `<style id="stable-discography-layout-style">
     padding: 0;
   }
   .release-split .release-index > a.is-selected {
-    background: rgba(72, 80, 91, .025);
+    background: rgba(72, 80, 91, .018);
   }
   .release-split .release-index img {
     width: 100%;
@@ -36,16 +36,17 @@ const STYLE = `<style id="stable-discography-layout-style">
     margin-top: 9px;
   }
   .release-split .release-index strong {
-    font-size: .83rem;
-    line-height: 1.42;
+    font-size: .8rem;
+    line-height: 1.4;
   }
   .release-split .release-index small {
     margin-top: 3px;
     color: var(--muted);
-    opacity: .72;
-    font-size: .62rem;
+    opacity: .66;
+    font-size: .6rem;
     letter-spacing: .02em;
   }
+
   .release-split .detail-panel {
     position: sticky;
     top: 0;
@@ -54,67 +55,91 @@ const STYLE = `<style id="stable-discography-layout-style">
     overflow-y: auto;
   }
   .release-split .release-detail {
+    width: min(100%, 660px);
+    max-width: 660px;
     margin: 0 auto;
-    padding-top: clamp(28px, 4vh, 44px);
-    max-width: 560px;
+    padding: clamp(30px, 4.5vh, 48px) clamp(8px, 1vw, 16px) 72px;
   }
   .release-split .release-detail header {
-    margin: 0 0 clamp(34px, 5vh, 56px);
-  }
-  .release-split .release-detail header h1 {
-    margin-bottom: 7px;
-    font-size: clamp(1.16rem, 1.8vw, 1.68rem);
-    line-height: 1.3;
+    margin: 0 0 clamp(28px, 4vh, 44px);
   }
   .release-split .release-detail header p {
-    margin-bottom: 5px;
-    font-size: .66rem;
-    line-height: 1.5;
-    color: var(--muted);
-  }
-  .release-split .release-hero {
-    width: min(82%, 470px);
-  }
-  .release-split .detail-section {
-    margin-top: clamp(50px, 7vh, 84px);
-  }
-  .release-split .detail-section h2 {
-    margin-bottom: 16px;
+    margin: 0 0 4px;
     color: var(--muted);
     opacity: .72;
-    font-size: .61rem;
-    letter-spacing: .06em;
+    font-size: .59rem;
+    line-height: 1.45;
+    letter-spacing: .035em;
+  }
+  .release-split .release-detail header h1 {
+    max-width: 28ch;
+    margin: 0 0 5px;
+    font-size: clamp(.86rem, 1.15vw, 1.05rem);
+    line-height: 1.42;
+    letter-spacing: .008em;
+  }
+  .release-split .release-hero {
+    width: min(42%, 250px);
+    max-width: 250px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    filter: saturate(.84) contrast(.95);
+  }
+  .release-split .detail-section {
+    width: min(100%, 430px);
+    margin-top: clamp(42px, 6vh, 70px);
+  }
+  .release-split .detail-section h2 {
+    margin: 0 0 17px;
+    color: var(--muted);
+    opacity: .68;
+    font-size: .56rem;
+    font-weight: 400;
+    letter-spacing: .08em;
     text-transform: lowercase;
   }
   .release-split .track-list {
     display: grid;
-    gap: 8px;
+    gap: 7px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
   .release-split .track-list li {
     display: grid;
-    grid-template-columns: 2rem minmax(0, 1fr);
-    gap: 0 10px;
+    grid-template-columns: 1.8rem minmax(0, 1fr);
+    gap: 0 11px;
     padding: 0;
-    font-size: .69rem;
-    line-height: 1.48;
-    letter-spacing: .004em;
+    font-size: .64rem;
+    line-height: 1.5;
+    letter-spacing: 0;
   }
   .release-split .track-list li span:first-child {
     color: var(--muted);
-    opacity: .58;
-    font-size: .61rem;
+    opacity: .5;
+    font-size: .56rem;
   }
   .release-split .liner-notes {
-    max-width: 50ch;
-    margin-top: clamp(64px, 9vh, 110px);
-    line-height: 1.78;
+    max-width: 48ch;
+    margin-top: clamp(76px, 11vh, 132px);
+    font-size: .65rem;
+    line-height: 1.82;
+    letter-spacing: .004em;
+  }
+  .release-split .liner-notes p {
+    margin-bottom: 1.85em;
   }
   .release-split .external-links {
-    margin-top: clamp(54px, 8vh, 96px);
-    padding-bottom: 44px;
+    margin-top: clamp(66px, 9vh, 110px);
+    padding-bottom: 18px;
+    gap: 12px 24px;
+    font-size: .62rem;
+  }
+  .release-split .external-links a {
+    border-bottom-color: rgba(17, 21, 27, .5);
+  }
+  .release-split .close-detail {
+    opacity: .62;
   }
 }
 </style>`;
@@ -164,4 +189,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied Merch-like Discography split layout with a stable left index and right-side detail panel.");
+console.log("Applied sparse slowcore-style Discography detail layout with small typography and compact artwork.");
