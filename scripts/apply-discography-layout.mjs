@@ -18,9 +18,7 @@ const STYLE = `<style id="stable-discography-layout-style">
     padding: var(--pad) !important;
   }
   .release-split .panel-headline { margin-bottom: clamp(36px, 6vh, 76px) !important; }
-  .release-split .works-top {
-    display: block !important;
-  }
+  .release-split .works-top { display: block !important; }
   .release-split .works-top h1 {
     margin: 0 0 var(--space-md) !important;
     font-size: 1.08rem !important;
@@ -49,9 +47,7 @@ const STYLE = `<style id="stable-discography-layout-style">
     width: 100%;
     padding: 0 !important;
   }
-  .release-split .release-index > a.is-selected {
-    background: rgba(72, 80, 91, .018);
-  }
+  .release-split .release-index > a.is-selected { background: rgba(72, 80, 91, .018); }
   .release-split .release-index img {
     width: 100% !important;
     max-width: none !important;
@@ -86,22 +82,26 @@ const STYLE = `<style id="stable-discography-layout-style">
   }
   .release-split .release-detail {
     position: relative;
-    display: block !important;
-    width: min(100%, 660px) !important;
-    max-width: 660px !important;
+    display: grid !important;
+    grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
+    column-gap: clamp(28px, 3.2vw, 52px);
+    row-gap: clamp(28px, 4vh, 46px);
+    width: min(100%, 760px) !important;
+    max-width: 760px !important;
     margin: 0 auto !important;
-    padding: clamp(30px, 4.5vh, 48px) clamp(8px, 1vw, 16px) 72px !important;
+    padding: clamp(28px, 4vh, 42px) clamp(4px, .5vw, 10px) 72px !important;
+    align-items: start;
   }
   .release-split .release-detail .close-detail {
-    position: sticky !important;
+    position: absolute !important;
     top: 0;
-    right: auto;
-    float: right !important;
+    right: 0;
+    float: none !important;
     display: grid;
     place-items: center;
     width: 28px !important;
     height: 28px !important;
-    margin: -6px -6px 14px 20px !important;
+    margin: 0 !important;
     padding: 0 !important;
     color: var(--ink) !important;
     font-size: 1.15rem !important;
@@ -109,10 +109,9 @@ const STYLE = `<style id="stable-discography-layout-style">
   }
   .release-split .release-detail .close-detail::after { content: none !important; }
   .release-split .release-detail header {
-    display: block;
-    max-width: none !important;
-    margin: 0 0 clamp(28px, 4vh, 44px) !important;
-    padding-right: 0 !important;
+    grid-column: 1 / -1;
+    margin: 0 !important;
+    padding-right: 40px !important;
   }
   .release-split .release-detail header p {
     margin: 0 0 4px;
@@ -123,26 +122,30 @@ const STYLE = `<style id="stable-discography-layout-style">
     letter-spacing: .035em;
   }
   .release-split .release-detail header h1 {
-    max-width: 28ch !important;
+    max-width: 30ch !important;
     margin: 0 0 5px;
-    font-size: clamp(.86rem, 1.15vw, 1.05rem) !important;
+    font-size: clamp(.84rem, 1.05vw, 1rem) !important;
     line-height: 1.42;
     letter-spacing: .008em;
   }
   .release-split .release-hero {
+    grid-column: 1;
+    grid-row: 2 / span 5;
     display: block;
-    width: min(42%, 250px) !important;
-    max-width: 250px !important;
+    width: 100% !important;
+    max-width: 180px !important;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     filter: saturate(.84) contrast(.95);
   }
   .release-split .detail-section {
-    width: min(100%, 430px);
-    margin-top: clamp(42px, 6vh, 70px) !important;
+    width: 100%;
+    margin: 0 !important;
   }
+  .release-split .release-tracklist-section { grid-column: 2; }
+  .release-split .release-credits-section { grid-column: 2; }
   .release-split .detail-section h2 {
-    margin: 0 0 17px;
+    margin: 0 0 15px;
     color: var(--muted);
     opacity: .68;
     font-size: .56rem;
@@ -152,43 +155,50 @@ const STYLE = `<style id="stable-discography-layout-style">
   }
   .release-split .track-list {
     display: grid;
-    gap: 7px;
+    gap: 6px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
   .release-split .track-list li {
     display: grid;
-    grid-template-columns: 1.8rem minmax(0, 1fr);
-    gap: 0 11px;
+    grid-template-columns: 1.7rem minmax(0, 1fr);
+    gap: 0 10px;
     padding: 0;
-    font-size: .64rem;
-    line-height: 1.5;
+    font-size: .63rem;
+    line-height: 1.48;
     letter-spacing: 0;
   }
   .release-split .track-list li span:first-child {
     color: var(--muted);
     opacity: .5;
-    font-size: .56rem;
+    font-size: .55rem;
+  }
+  .release-split .release-credits-section p {
+    margin: 0;
+    color: var(--muted);
+    font-size: .62rem;
+    line-height: 1.7;
+    white-space: pre-line;
   }
   .release-split .liner-notes {
-    max-width: 48ch;
-    margin-top: clamp(76px, 11vh, 132px) !important;
+    grid-column: 2;
+    max-width: 54ch;
+    margin: 0 !important;
     font-size: .65rem;
     line-height: 1.82;
     letter-spacing: .004em;
   }
-  .release-split .liner-notes p { margin-bottom: 1.85em; }
+  .release-split .liner-notes p { margin: 0 0 1.85em; }
   .release-split .external-links {
+    grid-column: 2;
     display: flex !important;
-    margin-top: clamp(66px, 9vh, 110px) !important;
+    margin: 0 !important;
     padding-bottom: 18px;
     gap: 12px 24px;
     font-size: .62rem;
   }
-  .release-split .external-links a {
-    border-bottom-color: rgba(17, 21, 27, .5);
-  }
+  .release-split .external-links a { border-bottom-color: rgba(17, 21, 27, .5); }
 }
 </style>`;
 
@@ -233,8 +243,10 @@ fs.writeFileSync(LANDING, landing);
 for (const file of detailFiles) {
   let html = fs.readFileSync(file, "utf8");
   html = html.replace(/<div class="release-tracklist-left">[\s\S]*?<\/div>/g, "");
+  html = html.replace(/<section class="detail-section"><h2>tracklist<\/h2>/gi, '<section class="detail-section release-tracklist-section"><h2>tracklist</h2>');
+  html = html.replace(/<section class="detail-section"><h2>credits<\/h2>/gi, '<section class="detail-section release-credits-section"><h2>credits</h2>');
   html = ensureStyle(html);
   fs.writeFileSync(file, html);
 }
 
-console.log("Restored three-column Discography layout and right-side sticky detail panel.");
+console.log("Reworked Discography detail into compact cover + full-height right content column.");
