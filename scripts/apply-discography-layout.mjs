@@ -118,14 +118,14 @@ const STYLE = `<style id="stable-discography-layout-style">
     margin: 0 0 4px;
     color: var(--muted);
     opacity: .72;
-    font-size: .59rem;
+    font-size: .72rem;
     line-height: 1.45;
     letter-spacing: .035em;
   }
   .release-split .release-detail header h1 {
     max-width: 30ch !important;
     margin: 0 0 5px;
-    font-size: clamp(.84rem, 1.05vw, 1rem) !important;
+    font-size: clamp(.97rem, 1.05vw, 1.13rem) !important;
     line-height: 1.42;
     letter-spacing: .008em;
   }
@@ -158,7 +158,7 @@ const STYLE = `<style id="stable-discography-layout-style">
     margin: 0 0 13px;
     color: var(--muted);
     opacity: .66;
-    font-size: .55rem;
+    font-size: .68rem;
     font-weight: 400;
     letter-spacing: .08em;
     text-transform: lowercase;
@@ -168,8 +168,8 @@ const STYLE = `<style id="stable-discography-layout-style">
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: repeat(5, auto);
     grid-auto-flow: column;
-    column-gap: clamp(20px, 2.2vw, 34px);
-    row-gap: 6px;
+    column-gap: clamp(16px, 1.8vw, 26px);
+    row-gap: 7px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -180,14 +180,14 @@ const STYLE = `<style id="stable-discography-layout-style">
     grid-template-columns: 1.65rem max-content;
     gap: 0 9px;
     padding: 0;
-    font-size: .60rem;
+    font-size: .73rem;
     line-height: 1.46;
     letter-spacing: 0;
   }
   .release-split .track-list li span:first-child {
     color: var(--muted);
     opacity: .48;
-    font-size: .54rem;
+    font-size: .67rem;
   }
   .release-split .track-list li span:last-child {
     white-space: nowrap;
@@ -195,7 +195,7 @@ const STYLE = `<style id="stable-discography-layout-style">
   .release-split .release-credits-section p {
     margin: 0;
     color: var(--muted);
-    font-size: .61rem;
+    font-size: .74rem;
     line-height: 1.7;
     white-space: pre-line;
   }
@@ -204,7 +204,7 @@ const STYLE = `<style id="stable-discography-layout-style">
     width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
-    font-size: .64rem;
+    font-size: .77rem;
     line-height: 1.86;
     letter-spacing: .003em;
   }
@@ -218,7 +218,7 @@ const STYLE = `<style id="stable-discography-layout-style">
     margin: 0 !important;
     padding-bottom: 18px;
     gap: 12px 24px;
-    font-size: .61rem;
+    font-size: .74rem;
   }
   .release-split .external-links a { border-bottom-color: rgba(17, 21, 27, .5); }
 }
@@ -271,4 +271,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Kept Discography track titles on one line and tightened the two-column tracklist rhythm.");
+console.log("Increased Discography detail typography by roughly 2px while keeping the compact grid.");
