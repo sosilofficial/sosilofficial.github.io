@@ -20,9 +20,8 @@ const STYLE = `<style id="global-grid-lines-style">
     max-width: none !important;
   }
 
-  /* Discography is the master split: 35 / 55 = 38.8889% / 61.1111%. */
-  .split-layout,
-  .info-split {
+  /* Discography remains the master split for all regular list/detail pages. */
+  .split-layout:not(.info-split) {
     display: grid !important;
     position: relative !important;
     width: 100% !important;
@@ -31,7 +30,46 @@ const STYLE = `<style id="global-grid-lines-style">
     grid-template-columns: minmax(0, 38.8888889%) minmax(0, 61.1111111%) !important;
   }
 
-  .split-layout > .index-panel,
+  .split-layout:not(.info-split) > .index-panel {
+    grid-column: 1 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+  }
+
+  .split-layout:not(.info-split) > .detail-panel {
+    grid-column: 2 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+    border-left: 0 !important;
+  }
+
+  .split-layout:not(.info-split)::after {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 40 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    left: 38.8888889% !important;
+    width: 1px !important;
+    background: var(--line) !important;
+    pointer-events: none !important;
+  }
+
+  /* Info is intentionally weighted toward the biography column. */
+  .info-split {
+    display: grid !important;
+    position: relative !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    grid-template-columns: minmax(0, 57.3%) minmax(0, 42.7%) !important;
+  }
+
   .info-split > .index-panel {
     grid-column: 1 !important;
     width: auto !important;
@@ -39,7 +77,6 @@ const STYLE = `<style id="global-grid-lines-style">
     max-width: none !important;
   }
 
-  .split-layout > .detail-panel,
   .info-split > .detail-panel {
     grid-column: 2 !important;
     width: auto !important;
@@ -51,19 +88,13 @@ const STYLE = `<style id="global-grid-lines-style">
     border-left: 0 !important;
   }
 
-  /*
-   * Draw the divider from the shared grid itself rather than from each
-   * page's detail panel. This avoids page-specific sticky/fixed/overflow
-   * rules moving or covering the visible line.
-   */
-  .split-layout::after,
   .info-split::after {
     content: "" !important;
     position: absolute !important;
     z-index: 40 !important;
     top: 0 !important;
     bottom: 0 !important;
-    left: 38.8888889% !important;
+    left: 57.3% !important;
     width: 1px !important;
     background: var(--line) !important;
     pointer-events: none !important;
@@ -90,4 +121,4 @@ for (const file of walk(ROOT)) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Locked every desktop split width and divider to one Discography-based coordinate system.");
+console.log("Kept Discography-based split lines globally while giving Info a wider biography column.");
