@@ -157,12 +157,17 @@ const STYLE = `<style id="stable-discography-layout-style">
   }
   .release-split .track-list {
     display: grid;
-    gap: 5px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(5, auto);
+    grid-auto-flow: column;
+    column-gap: clamp(28px, 3vw, 48px);
+    row-gap: 5px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
   .release-split .track-list li {
+    min-width: 0;
     display: grid;
     grid-template-columns: 1.65rem minmax(0, 1fr);
     gap: 0 9px;
@@ -256,4 +261,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Fixed Discography overlap and reflowed detail content around compact artwork across the full right panel.");
+console.log("Split Discography tracklists into two aligned columns after track five.");
