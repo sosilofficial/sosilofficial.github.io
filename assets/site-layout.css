@@ -1,3 +1,5 @@
+:root { --paper: #86BF84; }
+
 /* Shared left edge for every public page, including detail pages. */
 .site-main > .page-wrap,
 .site-main > .home-swiss {
