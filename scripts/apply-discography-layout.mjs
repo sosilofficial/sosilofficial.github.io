@@ -23,7 +23,7 @@ const STYLE = `<style id="stable-discography-layout-style">
     padding: 0;
   }
   .release-split .release-index > a.is-selected {
-    background: transparent;
+    background: rgba(72, 80, 91, .025);
   }
   .release-split .release-index img {
     width: 100%;
@@ -45,41 +45,6 @@ const STYLE = `<style id="stable-discography-layout-style">
     opacity: .72;
     font-size: .62rem;
     letter-spacing: .02em;
-  }
-  .release-split .release-tracklist-left {
-    margin: -18px 0 8px;
-    padding: 0 2px;
-    max-width: 34rem;
-  }
-  .release-split .release-tracklist-left h2 {
-    margin: 0 0 15px;
-    color: var(--muted);
-    opacity: .72;
-    font-size: .61rem;
-    font-weight: 400;
-    letter-spacing: .06em;
-    text-transform: lowercase;
-  }
-  .release-split .release-tracklist-left .track-list {
-    display: grid;
-    gap: 8px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .release-split .release-tracklist-left .track-list li {
-    display: grid;
-    grid-template-columns: 2rem minmax(0, 1fr);
-    gap: 0 10px;
-    padding: 0;
-    font-size: .69rem;
-    line-height: 1.48;
-    letter-spacing: .004em;
-  }
-  .release-split .release-tracklist-left .track-list li span:first-child {
-    color: var(--muted);
-    opacity: .58;
-    font-size: .61rem;
   }
   .release-split .detail-panel {
     position: sticky;
@@ -109,6 +74,38 @@ const STYLE = `<style id="stable-discography-layout-style">
   }
   .release-split .release-hero {
     width: min(82%, 470px);
+  }
+  .release-split .detail-section {
+    margin-top: clamp(50px, 7vh, 84px);
+  }
+  .release-split .detail-section h2 {
+    margin-bottom: 16px;
+    color: var(--muted);
+    opacity: .72;
+    font-size: .61rem;
+    letter-spacing: .06em;
+    text-transform: lowercase;
+  }
+  .release-split .track-list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .release-split .track-list li {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0 10px;
+    padding: 0;
+    font-size: .69rem;
+    line-height: 1.48;
+    letter-spacing: .004em;
+  }
+  .release-split .track-list li span:first-child {
+    color: var(--muted);
+    opacity: .58;
+    font-size: .61rem;
   }
   .release-split .liner-notes {
     max-width: 50ch;
@@ -148,7 +145,10 @@ const template = fs.readFileSync(detailFiles[0], "utf8");
 const indexPanel = template.match(/<section class="index-panel">([\s\S]*?)<\/section><section class="detail-panel">/)?.[1];
 if (!indexPanel) throw new Error("DISCOGRAPHY LAYOUT ERROR: index panel could not be extracted.");
 
-const cleanIndexPanel = indexPanel.replace(/ class="is-selected" aria-current="page"/g, "");
+const cleanIndexPanel = indexPanel
+  .replace(/ class="is-selected" aria-current="page"/g, "")
+  .replace(/<div class="release-tracklist-left">[\s\S]*?<\/div>/g, "");
+
 let landing = fs.readFileSync(LANDING, "utf8");
 const landingReplacement = `<main class="site-main"><div class="split-layout release-split"><section class="index-panel">${cleanIndexPanel}</section><section class="detail-panel"></section></div></main>`;
 if (!/<main class="site-main">[\s\S]*?<\/main>/.test(landing)) {
@@ -159,14 +159,9 @@ fs.writeFileSync(LANDING, landing);
 
 for (const file of detailFiles) {
   let html = fs.readFileSync(file, "utf8");
-  const trackSection = html.match(/<section class="detail-section"><h2>tracklist<\/h2>([\s\S]*?)<\/section>/i);
-  if (trackSection) {
-    const leftTracklist = `<div class="release-tracklist-left"><h2>tracklist</h2>${trackSection[1]}</div>`;
-    html = html.replace(trackSection[0], "");
-    html = html.replace(/(<a href="[^"]+" class="is-selected" aria-current="page">[\s\S]*?<\/a>)/, `$1${leftTracklist}`);
-  }
+  html = html.replace(/<div class="release-tracklist-left">[\s\S]*?<\/div>/g, "");
   html = ensureStyle(html);
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied video-matched Discography spacing, sticky detail, and minimal left tracklists.");
+console.log("Applied Merch-like Discography split layout with a stable left index and right-side detail panel.");
