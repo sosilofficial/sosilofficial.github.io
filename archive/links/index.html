@@ -97,28 +97,40 @@
 }
 </style><style id="global-grid-lines-style">
 @media (min-width: 821px) {
+  /* Discography is the master desktop split: 35 / 55 = 38.8889% / 61.1111%. */
   .split-layout,
   .info-split {
+    display: grid !important;
     position: relative !important;
-    grid-template-columns: minmax(0, 35fr) minmax(0, 55fr) !important;
+    width: 100% !important;
+    max-width: none !important;
+    grid-template-columns: 38.8888889% 61.1111111% !important;
+  }
+
+  .split-layout > .index-panel,
+  .info-split > .index-panel {
+    grid-column: 1 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
   }
 
   .split-layout > .detail-panel,
   .info-split > .detail-panel {
-    border-left: 0 !important;
+    grid-column: 2 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+    border-left: 1px solid var(--line) !important;
   }
 
+  /* Remove the old overlay divider: the real panel edge is now the Discography edge. */
   .split-layout::after,
   .info-split::after {
-    content: "";
-    position: absolute;
-    z-index: 10;
-    top: 0;
-    bottom: 0;
-    left: 38.8888889%;
-    width: 1px;
-    background: var(--line);
-    pointer-events: none;
+    content: none !important;
   }
 }
 </style></head><body class="archive-text-page"><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive" class="is-active" aria-current="page">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout "><section class="index-panel"><div class="panel-headline"><nav class="subnav" aria-label="archive 하위 메뉴"><a href="/archive/photo-video">photo</a><a href="/archive/videos">video</a><a href="/archive/links" class="is-active" aria-current="page">text</a></nav></div><div class="text-index archive-text-index"><a href="/archive/links/1"><span></span><strong>Pick! New Indie Musician – 113. 소실</strong><small>street-h.com</small></a><a href="/archive/links/2"><span></span><strong>&lt;몽상은나의조랑말&gt;: 흐린 현실을 외면하기</strong><small>overtone.kr</small></a><a href="/archive/links/3"><span></span><strong>싱그러운 사실의 힘 ‘몽상은나의조랑말’ [단편선과 플리들]</strong><small>sisain.co.kr</small></a><a href="/archive/links/4"><span></span><strong>[서정민갑의 수요뮤직] 3월의 좋은 음악, 소실 [몽상은나의조랑말]</strong><small>vop.co.kr</small></a></div></section><section class="detail-panel"></section></div></main></div></body></html>

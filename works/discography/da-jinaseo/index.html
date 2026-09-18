@@ -217,28 +217,40 @@
 }
 </style><style id="global-grid-lines-style">
 @media (min-width: 821px) {
+  /* Discography is the master desktop split: 35 / 55 = 38.8889% / 61.1111%. */
   .split-layout,
   .info-split {
+    display: grid !important;
     position: relative !important;
-    grid-template-columns: minmax(0, 35fr) minmax(0, 55fr) !important;
+    width: 100% !important;
+    max-width: none !important;
+    grid-template-columns: 38.8888889% 61.1111111% !important;
+  }
+
+  .split-layout > .index-panel,
+  .info-split > .index-panel {
+    grid-column: 1 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
   }
 
   .split-layout > .detail-panel,
   .info-split > .detail-panel {
-    border-left: 0 !important;
+    grid-column: 2 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+    border-left: 1px solid var(--line) !important;
   }
 
+  /* Remove the old overlay divider: the real panel edge is now the Discography edge. */
   .split-layout::after,
   .info-split::after {
-    content: "";
-    position: absolute;
-    z-index: 10;
-    top: 0;
-    bottom: 0;
-    left: 38.8888889%;
-    width: 1px;
-    background: var(--line);
-    pointer-events: none;
+    content: none !important;
   }
 }
 </style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography" class="is-active" aria-current="page">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout release-split"><section class="index-panel"><div class="panel-headline"><header class="works-top"><h1>works</h1><nav class="subnav" aria-label="works 하위 메뉴"><a href="/works/discography" class="is-active" aria-current="page">discography</a><a href="/works/videos">video</a><a href="/works/live">live</a><a href="/works/others">others</a></nav></header></div><div class="release-index"><a href="/works/discography/8"><img src="/media/catalog/2026-09-04/a78bfa4e-a48f-4757-9783-26024fff6536.webp" alt="" loading="lazy" decoding="async"><span><strong>몽상은나의조랑말</strong><small>2025.03.17</small></span></a><a href="/works/discography/da-jinaseo" class="is-selected" aria-current="page"><img src="/media/catalog/da-jinaseo.jpg" alt="" loading="lazy" decoding="async"><span><strong>다 지나서</strong><small>2021.11.24</small></span></a></div></section><section class="detail-panel"><article class="release-detail"><button type="button" class="close-detail" data-close-url="/works/discography" aria-label="discography 닫기">×</button><header><p>2021.11.24</p><h1>다 지나서</h1><p>Da Jinaseo</p></header><img class="release-hero" src="/media/catalog/da-jinaseo.jpg" alt="다 지나서 앨범 커버" decoding="async"><section class="detail-section release-tracklist-section"><h2>tracklist</h2><ol class="track-list"><li><span>01</span><span>파도는 결국 Eventually Wave is</span></li><li><span>02</span><span>잠기운 Jamkioon</span></li><li><span>03</span><span>다 지나서 Da Jinaseo</span></li><li><span>04</span><span>Drake</span></li><li><span>05</span><span>Ma</span></li></ol></section><div class="prose liner-notes">Credits

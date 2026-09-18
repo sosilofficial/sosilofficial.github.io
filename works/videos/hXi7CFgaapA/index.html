@@ -44,28 +44,40 @@
 }
 </style><style id="global-grid-lines-style">
 @media (min-width: 821px) {
+  /* Discography is the master desktop split: 35 / 55 = 38.8889% / 61.1111%. */
   .split-layout,
   .info-split {
+    display: grid !important;
     position: relative !important;
-    grid-template-columns: minmax(0, 35fr) minmax(0, 55fr) !important;
+    width: 100% !important;
+    max-width: none !important;
+    grid-template-columns: 38.8888889% 61.1111111% !important;
+  }
+
+  .split-layout > .index-panel,
+  .info-split > .index-panel {
+    grid-column: 1 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
   }
 
   .split-layout > .detail-panel,
   .info-split > .detail-panel {
-    border-left: 0 !important;
+    grid-column: 2 !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    left: auto !important;
+    right: auto !important;
+    box-sizing: border-box !important;
+    border-left: 1px solid var(--line) !important;
   }
 
+  /* Remove the old overlay divider: the real panel edge is now the Discography edge. */
   .split-layout::after,
   .info-split::after {
-    content: "";
-    position: absolute;
-    z-index: 10;
-    top: 0;
-    bottom: 0;
-    left: 38.8888889%;
-    width: 1px;
-    background: var(--line);
-    pointer-events: none;
+    content: none !important;
   }
 }
 </style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography" class="is-active" aria-current="page">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout video-split"><section class="index-panel"><div class="panel-headline"><header class="works-top"><h1>works</h1><nav class="subnav" aria-label="works 하위 메뉴"><a href="/works/discography">discography</a><a href="/works/videos" class="is-active" aria-current="page">video</a><a href="/works/live">live</a><a href="/works/others">others</a></nav></header></div><div class="video-index"><a href="/works/videos/KKTXayq4SeQ"><img src="https://i.ytimg.com/vi/KKTXayq4SeQ/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span><strong>sosil live at unknown place...</strong><small>video</small></span></a><a href="/works/videos/hXi7CFgaapA" class="is-selected" aria-current="page"><img src="https://i.ytimg.com/vi/hXi7CFgaapA/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span><strong>소실 Sosil - 44</strong><small>video</small></span></a><a href="/works/videos/Xk3s3WhN1xg"><img src="https://i.ytimg.com/vi/Xk3s3WhN1xg/mqdefault.jpg" alt="" loading="lazy" decoding="async"><span><strong>소실 Sosil - 눈과피 Snow and Blood</strong><small>video</small></span></a></div></section><section class="detail-panel"><article class="video-detail works-video-detail"><button type="button" class="close-detail" data-close-url="/works/videos" aria-label="video 닫기">×</button><div class="video-embed"><iframe src="https://www.youtube-nocookie.com/embed/hXi7CFgaapA" title="소실 Sosil - 44" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div><h1>소실 Sosil - 44</h1><p class="media-meta">video</p></article></section></div></main></div></body></html>
