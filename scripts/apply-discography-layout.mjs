@@ -168,8 +168,8 @@ const STYLE = `<style id="stable-discography-layout-style">
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: repeat(5, auto);
     grid-auto-flow: column;
-    column-gap: var(--detail-grid-gap);
-    row-gap: 5px;
+    column-gap: clamp(20px, 2.2vw, 34px);
+    row-gap: 6px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -177,10 +177,10 @@ const STYLE = `<style id="stable-discography-layout-style">
   .release-split .track-list li {
     min-width: 0;
     display: grid;
-    grid-template-columns: 1.65rem minmax(0, 1fr);
+    grid-template-columns: 1.65rem max-content;
     gap: 0 9px;
     padding: 0;
-    font-size: .62rem;
+    font-size: .60rem;
     line-height: 1.46;
     letter-spacing: 0;
   }
@@ -188,6 +188,9 @@ const STYLE = `<style id="stable-discography-layout-style">
     color: var(--muted);
     opacity: .48;
     font-size: .54rem;
+  }
+  .release-split .track-list li span:last-child {
+    white-space: nowrap;
   }
   .release-split .release-credits-section p {
     margin: 0;
@@ -268,4 +271,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Aligned Discography artwork, tracklist, credits and liner notes to one exact internal grid.");
+console.log("Kept Discography track titles on one line and tightened the two-column tracklist rhythm.");
