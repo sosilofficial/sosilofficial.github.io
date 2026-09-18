@@ -7,6 +7,7 @@ on:
       - "content/**"
       - "scripts/build-content.mjs"
       - "scripts/validate-site.mjs"
+      - "scripts/apply-home-layout.mjs"
 
 concurrency:
   group: sosil-content-publish
@@ -29,6 +30,8 @@ jobs:
           node-version: 22
       - name: Build static pages
         run: node scripts/build-content.mjs
+      - name: Apply homepage layout
+        run: node scripts/apply-home-layout.mjs
       - name: Validate generated site
         run: node scripts/validate-site.mjs
       - name: Commit generated files
