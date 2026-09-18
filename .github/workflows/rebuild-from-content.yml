@@ -9,6 +9,7 @@ on:
       - "scripts/validate-site.mjs"
       - "scripts/apply-home-layout.mjs"
       - "scripts/apply-video-layout.mjs"
+      - "scripts/apply-discography-layout.mjs"
       - "scripts/apply-merch-layout.mjs"
       - "scripts/apply-archive-photo-layout.mjs"
       - "scripts/apply-notes-layout.mjs"
@@ -38,6 +39,8 @@ jobs:
         run: node scripts/build-content.mjs
       - name: Apply stable video layout
         run: node scripts/apply-video-layout.mjs
+      - name: Apply Discography layout
+        run: node scripts/apply-discography-layout.mjs
       - name: Apply stable merch layout
         run: node scripts/apply-merch-layout.mjs
       - name: Apply Archive Photo post layout
