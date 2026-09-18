@@ -87,7 +87,7 @@ function titleFor(name) { return name === "소실 SOSIL" ? "소실 SOSIL — 김
 function head(name, description, route, image = "", detail = false) {
   const title = titleFor(name);
   const canonical = `${ORIGIN}${route === "/" ? "/" : `${route.replace(/\/$/, "")}/`}`;
-  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><link rel="icon" href="/favicon-sosil.svg"><link rel="stylesheet" href="/assets/site-redesign.css?v=20260919-3"><script src="/assets/site-redesign.js?v=20260919-3" defer></script><meta name="description" content="${esc(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${canonical}"><meta property="og:locale" content="ko_KR"><meta property="og:type" content="${detail ? "article" : "website"}"><meta property="og:site_name" content="소실 SOSIL"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}">${image ? `<meta property="og:image" content="${esc(absolute(image))}">` : ""}<meta name="twitter:card" content="summary_large_image">${route === "/" ? '<script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicGroup","name":"소실","alternateName":"Sosil","member":{"@type":"Person","name":"김성빈"},"genre":["slowcore","folk"],"url":"https://sosilofficial.github.io/"}</script>' : ""}</head>`;
+  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><link rel="icon" href="/favicon-sosil.svg"><link rel="stylesheet" href="/assets/site-redesign.css?v=20260919-4"><script src="/assets/site-redesign.js?v=20260919-4" defer></script><meta name="description" content="${esc(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${canonical}"><meta property="og:locale" content="ko_KR"><meta property="og:type" content="${detail ? "article" : "website"}"><meta property="og:site_name" content="소실 SOSIL"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}">${image ? `<meta property="og:image" content="${esc(absolute(image))}">` : ""}<meta name="twitter:card" content="summary_large_image">${route === "/" ? '<script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicGroup","name":"소실","alternateName":"Sosil","member":{"@type":"Person","name":"김성빈"},"genre":["slowcore","folk"],"url":"https://sosilofficial.github.io/"}</script>' : ""}</head>`;
 }
 function shell(active, main, bodyClass = "") {
   const nav = [["works", "/works"], ["news", "/news"], ["notes", "/notes"], ["archive", "/archive"], ["merch", "/merch"], ["info", "/info"], ["contact", "/contact"]].map(([label, href]) => `<a href="${href}"${active === label ? ' class="is-active" aria-current="page"' : ""}>${label}</a>`).join("");
@@ -286,13 +286,19 @@ for (const item of merch) publish(`/merch/${item.slug}`, page(item.title, item.d
 const info = site("info");
 const infoLinks = info.links.map((link, i) => `<a href="${esc(link.url)}" target="_blank" rel="noreferrer"><span>${String(i + 1).padStart(2, "0")}</span>${esc(link.label)}</a>`).join("");
 const [infoKo = "", infoEn = ""] = info.subtitle.split(/\n\s*\n/, 2);
-const infoMain = split(`<article class="info-copy"><h1>info</h1><div>${esc(infoKo)}</div></article>`, `<aside class="info-aside"><figure><img src="${INFO_IMAGE}" alt="소실 공연 장면" loading="lazy" decoding="async"><figcaption>slowcore / alternative folk musician<br>based in seoul, south korea</figcaption></figure><div class="info-lower"><div class="info-english">${esc(infoEn)}</div><nav aria-label="소실 외부 링크">${infoLinks}</nav></div></aside>`, "info-split");
-publish("/info", page("info", info.description, "/info", "info", infoMain, INFO_IMAGE));
+const sentenceParts = (text) => text.replace(/\s+/g, " ").trim().match(/[^.!?]+[.!?]?/g)?.map((part) => part.trim()).filter(Boolean) || [];
+const koParts = sentenceParts(infoKo);
+const enParts = sentenceParts(infoEn);
+const paragraph = (parts) => parts.length ? `<p>${esc(parts.join(" "))}</p>` : "";
+const infoKorean = `${paragraph(koParts.slice(0, 1))}${paragraph(koParts.slice(1, 2))}${paragraph(koParts.slice(2))}`;
+const infoEnglish = `${paragraph(enParts.slice(0, 1))}${paragraph(enParts.slice(1, 3))}${paragraph(enParts.slice(3))}`;
+const infoMain = split(`<article class="info-copy"><h1>info</h1><div class="info-korean">${infoKorean}</div><span class="section-mark" aria-hidden="true">—</span><div class="info-english">${infoEnglish}</div></article>`, `<aside class="info-aside"><figure><img src="${INFO_IMAGE}" alt="소실 공연 장면" loading="lazy" decoding="async"><figcaption>slowcore / alternative folk musician<br>based in seoul, south korea</figcaption></figure><span class="section-mark" aria-hidden="true">—</span><nav aria-label="소실 외부 링크">${infoLinks}</nav></aside>`, "info-split");
+publish("/info", page("info", info.description, "/info", "info", infoMain, INFO_IMAGE, false, "info-body"));
 
 const contact = site("contact");
 const instagram = contact.links[0] || { label: "@headlesssosil", url: "https://www.instagram.com/headlesssosil/" };
 const contactMain = `<article class="contact-page"><h1>contact</h1><p>for booking, collaboration, video work, or other inquiries.</p><dl><dt>email</dt><dd><a href="mailto:${esc(contact.meta)}">${esc(contact.meta)}</a></dd><dt>instagram</dt><dd><a href="${esc(instagram.url)}" target="_blank" rel="noreferrer">${esc(instagram.label)}</a></dd></dl></article>`;
-publish("/contact", page("contact", contact.description, "/contact", "contact", contactMain));
+publish("/contact", page("contact", contact.description, "/contact", "contact", contactMain, "", false, "contact-body"));
 
 const home = site("home");
 const featured = discography.find((item) => firstImage(item)) || discography[0];
