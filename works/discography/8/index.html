@@ -16,7 +16,7 @@
     padding: 0;
   }
   .release-split .release-index > a.is-selected {
-    background: rgba(72, 80, 91, .025);
+    background: rgba(72, 80, 91, .018);
   }
   .release-split .release-index img {
     width: 100%;
@@ -29,16 +29,17 @@
     margin-top: 9px;
   }
   .release-split .release-index strong {
-    font-size: .83rem;
-    line-height: 1.42;
+    font-size: .8rem;
+    line-height: 1.4;
   }
   .release-split .release-index small {
     margin-top: 3px;
     color: var(--muted);
-    opacity: .72;
-    font-size: .62rem;
+    opacity: .66;
+    font-size: .6rem;
     letter-spacing: .02em;
   }
+
   .release-split .detail-panel {
     position: sticky;
     top: 0;
@@ -47,67 +48,91 @@
     overflow-y: auto;
   }
   .release-split .release-detail {
+    width: min(100%, 660px);
+    max-width: 660px;
     margin: 0 auto;
-    padding-top: clamp(28px, 4vh, 44px);
-    max-width: 560px;
+    padding: clamp(30px, 4.5vh, 48px) clamp(8px, 1vw, 16px) 72px;
   }
   .release-split .release-detail header {
-    margin: 0 0 clamp(34px, 5vh, 56px);
-  }
-  .release-split .release-detail header h1 {
-    margin-bottom: 7px;
-    font-size: clamp(1.16rem, 1.8vw, 1.68rem);
-    line-height: 1.3;
+    margin: 0 0 clamp(28px, 4vh, 44px);
   }
   .release-split .release-detail header p {
-    margin-bottom: 5px;
-    font-size: .66rem;
-    line-height: 1.5;
-    color: var(--muted);
-  }
-  .release-split .release-hero {
-    width: min(82%, 470px);
-  }
-  .release-split .detail-section {
-    margin-top: clamp(50px, 7vh, 84px);
-  }
-  .release-split .detail-section h2 {
-    margin-bottom: 16px;
+    margin: 0 0 4px;
     color: var(--muted);
     opacity: .72;
-    font-size: .61rem;
-    letter-spacing: .06em;
+    font-size: .59rem;
+    line-height: 1.45;
+    letter-spacing: .035em;
+  }
+  .release-split .release-detail header h1 {
+    max-width: 28ch;
+    margin: 0 0 5px;
+    font-size: clamp(.86rem, 1.15vw, 1.05rem);
+    line-height: 1.42;
+    letter-spacing: .008em;
+  }
+  .release-split .release-hero {
+    width: min(42%, 250px);
+    max-width: 250px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    filter: saturate(.84) contrast(.95);
+  }
+  .release-split .detail-section {
+    width: min(100%, 430px);
+    margin-top: clamp(42px, 6vh, 70px);
+  }
+  .release-split .detail-section h2 {
+    margin: 0 0 17px;
+    color: var(--muted);
+    opacity: .68;
+    font-size: .56rem;
+    font-weight: 400;
+    letter-spacing: .08em;
     text-transform: lowercase;
   }
   .release-split .track-list {
     display: grid;
-    gap: 8px;
+    gap: 7px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
   .release-split .track-list li {
     display: grid;
-    grid-template-columns: 2rem minmax(0, 1fr);
-    gap: 0 10px;
+    grid-template-columns: 1.8rem minmax(0, 1fr);
+    gap: 0 11px;
     padding: 0;
-    font-size: .69rem;
-    line-height: 1.48;
-    letter-spacing: .004em;
+    font-size: .64rem;
+    line-height: 1.5;
+    letter-spacing: 0;
   }
   .release-split .track-list li span:first-child {
     color: var(--muted);
-    opacity: .58;
-    font-size: .61rem;
+    opacity: .5;
+    font-size: .56rem;
   }
   .release-split .liner-notes {
-    max-width: 50ch;
-    margin-top: clamp(64px, 9vh, 110px);
-    line-height: 1.78;
+    max-width: 48ch;
+    margin-top: clamp(76px, 11vh, 132px);
+    font-size: .65rem;
+    line-height: 1.82;
+    letter-spacing: .004em;
+  }
+  .release-split .liner-notes p {
+    margin-bottom: 1.85em;
   }
   .release-split .external-links {
-    margin-top: clamp(54px, 8vh, 96px);
-    padding-bottom: 44px;
+    margin-top: clamp(66px, 9vh, 110px);
+    padding-bottom: 18px;
+    gap: 12px 24px;
+    font-size: .62rem;
+  }
+  .release-split .external-links a {
+    border-bottom-color: rgba(17, 21, 27, .5);
+  }
+  .release-split .close-detail {
+    opacity: .62;
   }
 }
 </style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography" class="is-active" aria-current="page">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout release-split"><section class="index-panel"><div class="panel-headline"><header class="works-top"><h1>works</h1><nav class="subnav" aria-label="works 하위 메뉴"><a href="/works/discography" class="is-active" aria-current="page">discography</a><a href="/works/videos">video</a><a href="/works/live">live</a><a href="/works/others">others</a></nav></header></div><div class="release-index"><a href="/works/discography/8" class="is-selected" aria-current="page"><img src="/media/catalog/2026-09-04/a78bfa4e-a48f-4757-9783-26024fff6536.webp" alt="" loading="lazy" decoding="async"><span><strong>몽상은나의조랑말</strong><small>2025.03.17</small></span></a><a href="/works/discography/da-jinaseo"><img src="/media/catalog/da-jinaseo.jpg" alt="" loading="lazy" decoding="async"><span><strong>다 지나서</strong><small>2021.11.24</small></span></a></div></section><section class="detail-panel"><article class="release-detail"><button type="button" class="close-detail" data-close-url="/works/discography" aria-label="discography 닫기">×</button><header><p>2025.03.17</p><h1>몽상은나의조랑말</h1><p>Reverie is My Pony</p></header><img class="release-hero" src="/media/catalog/2026-09-04/a78bfa4e-a48f-4757-9783-26024fff6536.webp" alt="몽상은나의조랑말 앨범 커버" decoding="async"><section class="detail-section"><h2>tracklist</h2><ol class="track-list"><li><span>01</span><span>멀어 Too Far</span></li><li><span>02</span><span>창밖에 Out of the Window</span></li><li><span>03</span><span>미끄럼틀 Slide</span></li><li><span>04</span><span>슬픔과어둠 Sorrow and Darkness</span></li><li><span>05</span><span>44</span></li><li><span>06</span><span>몽상은나의조랑말 Reverie is My Pony</span></li><li><span>07</span><span>이젠 나아지기를 Hope Getting Better</span></li><li><span>08</span><span>눈과피 Snow and Blood</span></li><li><span>09</span><span>노르웨이 Norway</span></li><li><span>10</span><span>숨고싶은날 Hiding Today</span></li></ol></section><div class="prose liner-notes">여전히 ‘얼터너티브’를 이야기하는 젊은 음악인 ‘소실’이 있다. 물론 지금도 ‘얼터너티브’란 용어는 힙합이나 R&amp;B 등의 장르 앞에서 계속해서 쓰이고 있다. ‘대안’이라는 의미를 넘어 ‘새로운’이라는 뜻까지를 내포하고 있는 듯하다. 소실은 첫 앨범 [몽상은나의조랑말]을 만들며 ‘대안’에 더 방점을 두고 ‘얼터너티브 포크’라 이름 붙였다. 그가 처음 음악에 빠져들 무렵 들었던, 너바나(Nirvana)를 위시한 얼터너티브 록은 많은 영향을 끼쳤다. 그 음악이 가진 ‘태도’ 또한 빼놓을 수 없었다. 소실의 음악을 포크라 규정지을 수 있다면 기존과는 또 다른 정서와 태도를 가진 포크 음악을 하고 싶었다. 그래서 자신의 음악을 얼터너티브 포크라 정의했다.
