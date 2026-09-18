@@ -1,9 +1,9 @@
 :root {
-  --paper: #DADFE5;
-  --ink: #86BF84;
-  --soft-ink: #86BF84;
-  --faint: #86BF84;
-  --signal: #86BF84;
+  --paper: #8CADA5;
+  --ink: #000000;
+  --soft-ink: #000000;
+  --faint: #000000;
+  --signal: #000000;
 }
 
 /* Shared left edge for every public page, including detail pages. */
