@@ -54,8 +54,8 @@ const STYLE = `<style id="works-live-layout-style">
   }
   .live-row .live-artists {
     margin-top: 4px;
-    color: var(--muted);
-    opacity: .82;
+    color: var(--ink);
+    opacity: 1;
     font-size: .64rem;
     line-height: 1.5;
     letter-spacing: .015em;
@@ -103,4 +103,4 @@ if (html.includes('id="works-live-layout-style"')) {
   html = html.replace("</head>", `${STYLE}</head>`);
 }
 fs.writeFileSync(FILE, html);
-console.log("Split Works/Live entries into title, artists and venue lines.");
+console.log("Split Works/Live entries into title, artists and venue lines with black artist text.");
