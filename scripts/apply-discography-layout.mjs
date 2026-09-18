@@ -81,8 +81,13 @@ const STYLE = `<style id="stable-discography-layout-style">
     padding: var(--pad) !important;
   }
   .release-split .release-detail {
+    --detail-grid-gap: clamp(28px, 3vw, 44px);
     position: relative;
-    display: flow-root !important;
+    display: grid !important;
+    grid-template-columns: clamp(112px, 12vw, 150px) minmax(0, 1fr);
+    column-gap: var(--detail-grid-gap);
+    row-gap: var(--detail-grid-gap);
+    align-items: start;
     width: min(100%, 760px) !important;
     max-width: 760px !important;
     margin: 0 auto !important;
@@ -105,7 +110,8 @@ const STYLE = `<style id="stable-discography-layout-style">
   }
   .release-split .release-detail .close-detail::after { content: none !important; }
   .release-split .release-detail header {
-    margin: 0 0 clamp(24px, 3.4vh, 36px) !important;
+    grid-column: 1 / -1;
+    margin: 0 !important;
     padding-right: 40px !important;
   }
   .release-split .release-detail header p {
@@ -124,13 +130,13 @@ const STYLE = `<style id="stable-discography-layout-style">
     letter-spacing: .008em;
   }
 
-  /* Small artwork floats at left. Text first occupies its right side, then naturally uses the full panel width below it. */
   .release-split .release-hero {
-    float: left !important;
+    grid-column: 1;
+    grid-row: 2;
     display: block;
-    width: clamp(108px, 11.5vw, 142px) !important;
-    max-width: 142px !important;
-    margin: 0 clamp(24px, 2.6vw, 38px) 18px 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     filter: saturate(.84) contrast(.95);
@@ -139,12 +145,14 @@ const STYLE = `<style id="stable-discography-layout-style">
     width: auto !important;
     margin: 0 !important;
   }
-  .release-split .release-tracklist-section,
-  .release-split .release-credits-section {
-    margin-left: clamp(138px, 14.1vw, 180px) !important;
+  .release-split .release-tracklist-section {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
   }
   .release-split .release-credits-section {
-    margin-top: clamp(28px, 3.8vh, 42px) !important;
+    grid-column: 1 / -1;
+    margin: 0 !important;
   }
   .release-split .detail-section h2 {
     margin: 0 0 13px;
@@ -160,7 +168,7 @@ const STYLE = `<style id="stable-discography-layout-style">
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: repeat(5, auto);
     grid-auto-flow: column;
-    column-gap: clamp(28px, 3vw, 48px);
+    column-gap: var(--detail-grid-gap);
     row-gap: 5px;
     margin: 0;
     padding: 0;
@@ -188,12 +196,11 @@ const STYLE = `<style id="stable-discography-layout-style">
     line-height: 1.7;
     white-space: pre-line;
   }
-
-  /* Liner notes are intentionally allowed to wrap beside the cover first, then expand to the whole third column below it. */
   .release-split .liner-notes {
-    width: auto !important;
+    grid-column: 1 / -1;
+    width: 100% !important;
     max-width: none !important;
-    margin: clamp(38px, 5.2vh, 58px) 0 0 !important;
+    margin: 0 !important;
     font-size: .64rem;
     line-height: 1.86;
     letter-spacing: .003em;
@@ -203,9 +210,9 @@ const STYLE = `<style id="stable-discography-layout-style">
     margin: 0 0 1.9em;
   }
   .release-split .external-links {
-    clear: both;
+    grid-column: 1 / -1;
     display: flex !important;
-    margin: clamp(42px, 5.8vh, 64px) 0 0 !important;
+    margin: 0 !important;
     padding-bottom: 18px;
     gap: 12px 24px;
     font-size: .61rem;
@@ -261,4 +268,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Split Discography tracklists into two aligned columns after track five.");
+console.log("Aligned Discography artwork, tracklist, credits and liner notes to one exact internal grid.");
