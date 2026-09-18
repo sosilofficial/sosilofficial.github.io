@@ -147,6 +147,7 @@ const routes = [];
 function publish(route, html) { writeRoute(route, html); if (!route.startsWith("/gibberish")) routes.push(route); }
 
 clearDetails("/works/discography");
+clearDetails("/works/videos");
 clearDetails("/works/others");
 const discography = by("works", "discography");
 const workVideos = by("works", "video");
@@ -167,9 +168,14 @@ for (const item of discography) {
 }
 
 const videoMeta = (item) => [displayDate(item.date), item.runtime, item.type_label || item.media_type || item.meta].filter(Boolean);
-const videoIndex = workVideos.length ? `<div class="video-index">${workVideos.map((item, i) => `<a href="#video-${esc(item.slug)}" data-panel-target="video-${esc(item.slug)}"${i === 0 ? ' class="is-selected"' : ""}>${firstImage(item) ? `<img src="${esc(firstImage(item))}" alt="" loading="lazy" decoding="async">` : ""}<span><strong>${esc(item.title)}</strong>${videoMeta(item).map((value) => `<small>${esc(value)}</small>`).join("")}</span></a>`).join("")}</div>` : '<p class="empty-note">more soon.</p>';
-const videoPanels = workVideos.map((item, i) => `<article id="video-${esc(item.slug)}" class="switch-panel"${i ? " hidden" : ""} data-panel="video-${esc(item.slug)}">${videoEmbed(item)}<h1>${esc(item.title)}</h1>${videoMeta(item).length ? `<p class="media-meta">${videoMeta(item).map(esc).join(" · ")}</p>` : ""}${item.credit ? `<p class="media-credit">${esc(item.credit)}</p>` : ""}${item.note ? `<div class="prose">${esc(item.note)}</div>` : ""}${bodyHtml(item)}</article>`).join("");
-publish("/works/videos", page("works / video", worksDescription, "/works/videos", "works", split(`<div class="panel-headline">${subnav("works", "video")}</div>${videoIndex}`, videoPanels, "video-split"), firstImage(workVideos[0]), true));
+const workVideoGrid = workVideos.length ? `<div class="work-video-grid">${workVideos.map((item) => `<a href="/works/videos/${esc(item.slug)}">${firstImage(item) ? `<img src="${esc(firstImage(item))}" alt="${esc(item.title)} thumbnail" loading="lazy" decoding="async">` : '<span class="media-placeholder">video</span>'}<span><strong>${esc(item.title)}</strong>${videoMeta(item).map((value) => `<small>${esc(value)}</small>`).join("")}</span></a>`).join("")}</div>` : '<p class="empty-note wide-empty">more soon.</p>';
+publish("/works/videos", page("works / video", worksDescription, "/works/videos", "works", `<div class="wide-page works-video-landing">${subnav("works", "video")}${workVideoGrid}</div>`, firstImage(workVideos[0]), false));
+for (const item of workVideos) {
+  const videoIndex = `<div class="video-index">${workVideos.map((listed) => `<a href="/works/videos/${esc(listed.slug)}"${listed.slug === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${firstImage(listed) ? `<img src="${esc(firstImage(listed))}" alt="" loading="lazy" decoding="async">` : ""}<span><strong>${esc(listed.title)}</strong>${videoMeta(listed).map((value) => `<small>${esc(value)}</small>`).join("")}</span></a>`).join("")}</div>`;
+  const credit = item.credit || item.credits || "";
+  const detail = `<article class="video-detail works-video-detail">${closeLink("/works/videos", "video")}${videoEmbed(item)}<h1>${esc(item.title)}</h1>${videoMeta(item).length ? `<p class="media-meta">${videoMeta(item).map(esc).join(" · ")}</p>` : ""}${credit ? `<p class="media-credit">${esc(credit)}</p>` : ""}${item.note ? `<div class="prose">${esc(item.note)}</div>` : ""}${bodyHtml(item)}</article>`;
+  publish(`/works/videos/${item.slug}`, page(item.title, item.description || item.title, `/works/videos/${item.slug}`, "works", split(`<div class="panel-headline">${subnav("works", "video")}</div>${videoIndex}`, detail, "video-split"), firstImage(item), true));
+}
 
 function liveRows(item) {
   let currentYear = "";
@@ -190,7 +196,7 @@ function liveRows(item) {
   }).join("");
 }
 publish("/works/live", page("works / live", worksDescription, "/works/live", "works", split(`<div class="panel-headline">${subnav("works", "live")}</div><div class="live-log">${live.map(liveRows).join("")}</div>`, "", "live-split"), "", true));
-const othersHasDetail = (item) => Boolean(firstImage(item) || item.video || item.body || item.credit);
+const othersHasDetail = (item) => Boolean(firstImage(item) || item.video || item.body || item.credit || item.credits);
 const othersIndex = (selected = "") => others.length ? `<div class="text-index others-index">${others.map((item) => {
   const inside = `<span>${esc(displayDate(item.date))}</span><strong>${esc(item.title)}</strong><small>${esc(item.type_label || item.meta || "")}</small>${sampleMark(item)}${item.note ? `<em>${esc(item.note)}</em>` : ""}`;
   return othersHasDetail(item) ? `<a href="/works/others/${esc(item.slug)}"${selected === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${inside}</a>` : `<div class="index-static">${inside}</div>`;
@@ -198,7 +204,8 @@ const othersIndex = (selected = "") => others.length ? `<div class="text-index o
 publish("/works/others", page("works / others", worksDescription, "/works/others", "works", split(`<div class="panel-headline">${subnav("works", "others")}</div>${othersIndex()}`, ""), "", true));
 for (const item of others) {
   if (!othersHasDetail(item)) continue;
-  const detail = `<article class="text-detail">${closeLink("/works/others", "others")}<p>${esc(displayDate(item.date))}</p><h1>${esc(item.title)}</h1>${imageGallery(item)}${videoEmbed(item)}${item.credit ? `<p class="media-credit">${esc(item.credit)}</p>` : ""}${item.note ? `<div class="prose">${esc(item.note)}</div>` : ""}${bodyHtml(item)}${externalLinks(item)}</article>`;
+  const credit = item.credit || item.credits || "";
+  const detail = `<article class="text-detail">${closeLink("/works/others", "others")}<p>${esc(displayDate(item.date))}</p><h1>${esc(item.title)}</h1>${imageGallery(item)}${videoEmbed(item)}${credit ? `<p class="media-credit">${esc(credit)}</p>` : ""}${item.note ? `<div class="prose">${esc(item.note)}</div>` : ""}${bodyHtml(item)}${externalLinks(item)}</article>`;
   publish(`/works/others/${item.slug}`, page(item.title, item.description || item.title, `/works/others/${item.slug}`, "works", split(`<div class="panel-headline">${subnav("works", "others")}</div>${othersIndex(item.slug)}`, detail), firstImage(item), true));
 }
 
