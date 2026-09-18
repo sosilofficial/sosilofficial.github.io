@@ -11,6 +11,7 @@ on:
       - "scripts/apply-video-layout.mjs"
       - "scripts/apply-merch-layout.mjs"
       - "scripts/apply-archive-photo-layout.mjs"
+      - "scripts/apply-notes-layout.mjs"
       - "assets/site-redesign.css"
       - "assets/site-redesign.js"
 
@@ -41,6 +42,8 @@ jobs:
         run: node scripts/apply-merch-layout.mjs
       - name: Apply Archive Photo post layout
         run: node scripts/apply-archive-photo-layout.mjs
+      - name: Apply slower Notes layout
+        run: node scripts/apply-notes-layout.mjs
       - name: Apply homepage layout
         run: node scripts/apply-home-layout.mjs
       - name: Validate generated site
