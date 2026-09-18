@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+// Keep Archive Photo as post-based landing + independent gallery detail pages.
 const ROOT = process.cwd();
 const PHOTO_DIR = path.join(ROOT, "archive", "photo-video");
 const LANDINGS = [path.join(ROOT, "archive", "index.html"), path.join(PHOTO_DIR, "index.html")];
