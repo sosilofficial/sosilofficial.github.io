@@ -66,6 +66,36 @@ body:
     attributes:
       label: 새 영상 링크
       description: 비워두면 기존 영상 링크를 유지합니다.
+  - type: input
+    id: runtime
+    attributes:
+      label: 새 재생 시간
+      description: 비워두면 기존 값을 유지합니다.
+  - type: input
+    id: media_type
+    attributes:
+      label: 새 종류
+      description: 비워두면 기존 값을 유지합니다.
+  - type: textarea
+    id: credit
+    attributes:
+      label: 새 크레딧
+      description: 비워두면 기존 값을 유지합니다.
+  - type: textarea
+    id: note
+    attributes:
+      label: 새 노트
+      description: 비워두면 기존 값을 유지합니다.
+  - type: input
+    id: price_krw
+    attributes:
+      label: 새 가격(KRW)
+      description: 숫자만 입력하세요. 비워두면 기존 값을 유지합니다.
+  - type: input
+    id: status
+    attributes:
+      label: 새 판매 상태
+      description: available, sold out, preorder 중 하나. 비워두면 기존 값을 유지합니다.
   - type: textarea
     id: extra
     attributes:

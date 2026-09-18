@@ -7,7 +7,7 @@ if (!issue || !issue.title.startsWith("[Edit]")) throw new Error("CONTENT ERROR:
 
 function fields(body) {
   const result = {};
-  const labels = ["카테고리", "기존 콘텐츠 slug 또는 현재 URL", "새 제목", "새 날짜", "새 본문", "새 설명", "새 썸네일 이미지", "새 본문 이미지", "새 외부 링크", "새 영상 링크", "추가 설명"];
+  const labels = ["카테고리", "기존 콘텐츠 slug 또는 현재 URL", "새 제목", "새 날짜", "새 본문", "새 설명", "새 썸네일 이미지", "새 본문 이미지", "새 외부 링크", "새 영상 링크", "새 재생 시간", "새 종류", "새 크레딧", "새 노트", "새 가격(KRW)", "새 판매 상태", "추가 설명"];
   const pattern = new RegExp(`^### (${labels.join("|")})\\n\\n`, "gm");
   const headings = [...body.matchAll(pattern)];
   headings.forEach((match, index) => {
@@ -108,6 +108,19 @@ if (value("새 영상 링크")) {
   if (next.category === "works" && next.subcategory === "video") next.url = video;
 }
 if (value("추가 설명")) next.meta = value("추가 설명");
+if (value("새 재생 시간")) next.runtime = value("새 재생 시간");
+if (value("새 종류")) next.media_type = value("새 종류");
+if (value("새 크레딧")) next.credit = value("새 크레딧");
+if (value("새 노트")) next.note = value("새 노트");
+if (value("새 가격(KRW)")) {
+  if (!/^\d+$/.test(value("새 가격(KRW)"))) throw new Error("CONTENT ERROR: 새 가격(KRW)은 숫자만 입력해 주세요.");
+  next.price_krw = Number(value("새 가격(KRW)"));
+}
+if (value("새 판매 상태")) {
+  const status = value("새 판매 상태").toLowerCase();
+  if (!["available", "sold out", "preorder"].includes(status)) throw new Error("CONTENT ERROR: 새 판매 상태는 available, sold out, preorder 중 하나여야 합니다.");
+  next.status = status;
+}
 if (next.category === "archive" && next.subcategory === "links" && value("새 외부 링크")) next.url = next.links[0]?.url || next.url;
 
 const frontmatter = Object.entries(next).map(([key, entry]) => `${key}: ${JSON.stringify(entry)}`).join("\n");

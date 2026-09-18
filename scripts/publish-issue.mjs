@@ -7,7 +7,7 @@ if (!issue || !issue.title.startsWith("[Content]")) throw new Error("CONTENT ERR
 
 function fields(body) {
   const result = {};
-  const labels = ["카테고리", "제목", "날짜", "본문", "설명", "썸네일 이미지", "본문 이미지", "외부 링크", "영상 링크", "slug", "추가 설명"];
+  const labels = ["카테고리", "제목", "날짜", "본문", "설명", "썸네일 이미지", "본문 이미지", "외부 링크", "영상 링크", "재생 시간", "종류", "크레딧", "노트", "가격(KRW)", "판매 상태", "slug", "추가 설명"];
   const alternatives = labels.join("|");
   const pattern = new RegExp(`^### (${alternatives})\\n\\n`, "gm");
   const headings = [...body.matchAll(pattern)];
@@ -73,12 +73,18 @@ const video = urls(form["영상 링크"] || "")[0] || "";
 const thumbnail = urls(form["썸네일 이미지"] || "")[0] || youtubeThumbnail(video);
 const extra = form["추가 설명"]?.trim() || "";
 const meta = category === "news" ? "NOTICE" : subcategory === "video" ? "video" : subcategory === "photo" ? "image" : extra;
+const price = form["가격(KRW)"]?.trim() || "";
+if (price && !/^\d+$/.test(price)) throw new Error("CONTENT ERROR: 가격(KRW)은 숫자만 입력해 주세요.");
+const status = form["판매 상태"]?.trim().toLowerCase() || "";
+if (status && !["available", "sold out", "preorder"].includes(status)) throw new Error("CONTENT ERROR: 판매 상태는 available, sold out, preorder 중 하나여야 합니다.");
 
 const data = {
   type: "content", category, subcategory, title, date, slug,
-  url: category === "notes" ? `/notes/${slug}` : category === "archive" && ["photo", "video"].includes(subcategory) ? `/archive/photo-video/${slug}` : category === "works" && subcategory === "video" ? video : category === "archive" && subcategory === "links" ? links[0]?.url || "" : category === "merch" ? `/merch/${slug}` : `/${category}${subcategory ? `/${subcategory}` : ""}/${slug}`,
+  url: category === "notes" ? `/notes/${slug}` : category === "archive" && subcategory === "photo" ? `/archive/photo-video/${slug}` : category === "archive" && subcategory === "video" ? `/archive/videos/${slug}` : category === "works" && subcategory === "video" ? video : category === "archive" && subcategory === "links" ? links[0]?.url || "" : category === "merch" ? `/merch/${slug}` : `/${category}${subcategory ? `/${subcategory}` : ""}/${slug}`,
   description: form["설명"]?.trim() || "", thumbnail, images, video, links, meta,
-  media_type: subcategory === "video" ? "video" : subcategory === "photo" ? "image" : "",
+  media_type: form["종류"]?.trim() || (subcategory === "video" ? "video" : subcategory === "photo" ? "image" : ""),
+  runtime: form["재생 시간"]?.trim() || "", credit: form["크레딧"]?.trim() || "", note: form["노트"]?.trim() || "",
+  price_krw: price ? Number(price) : "", status,
   subtitle: "", creator: "", tracklist: [], credits: "", published: true, body_format: "markdown",
 };
 const frontmatter = Object.entries(data).map(([key, value]) => `${key}: ${JSON.stringify(value)}`).join("\n");
