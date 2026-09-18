@@ -56,9 +56,9 @@ const STYLE = `<style id="works-live-layout-style">
     margin-top: 4px;
     color: var(--ink);
     opacity: 1;
-    font-size: .64rem;
-    line-height: 1.5;
-    letter-spacing: .015em;
+    font-size: .83rem;
+    line-height: 1.46;
+    letter-spacing: .004em;
   }
   .live-row .live-venue {
     margin-top: 3px;
@@ -103,4 +103,4 @@ if (html.includes('id="works-live-layout-style"')) {
   html = html.replace("</head>", `${STYLE}</head>`);
 }
 fs.writeFileSync(FILE, html);
-console.log("Split Works/Live entries into title, artists and venue lines with black artist text.");
+console.log("Matched Works/Live artist names to the performance title type size.");
