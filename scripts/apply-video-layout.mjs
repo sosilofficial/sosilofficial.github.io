@@ -4,6 +4,18 @@ import path from "node:path";
 const ROOT = process.cwd();
 const VIDEO_DIR = path.join(ROOT, "works", "videos");
 const LANDING = path.join(VIDEO_DIR, "index.html");
+const STYLE = `<style id="stable-video-index-style">
+@media (min-width: 821px) {
+  .video-split .video-index { display: grid; gap: 34px; }
+  .video-split .video-index a { width: min(100%, 320px); padding: 8px; }
+  .video-split .video-index img { width: 100%; max-width: 300px; }
+}
+</style>`;
+
+function ensureStyle(html) {
+  if (html.includes('id="stable-video-index-style"')) return html;
+  return html.replace("</head>", `${STYLE}</head>`);
+}
 
 if (!fs.existsSync(LANDING)) {
   console.log("Works video landing not found; skipping stable video layout.");
@@ -37,6 +49,12 @@ if (!/<main class="site-main">[\s\S]*?<\/main>/.test(landing)) {
   throw new Error("VIDEO LAYOUT ERROR: landing main region not found.");
 }
 
-landing = landing.replace(/<main class="site-main">[\s\S]*?<\/main>/, replacement);
+landing = ensureStyle(landing.replace(/<main class="site-main">[\s\S]*?<\/main>/, replacement));
 fs.writeFileSync(LANDING, landing);
-console.log("Applied stable Works video index layout to landing page.");
+
+for (const file of detailFiles) {
+  const html = ensureStyle(fs.readFileSync(file, "utf8"));
+  fs.writeFileSync(file, html);
+}
+
+console.log("Applied stable Works video index layout and larger thumbnail scale.");
