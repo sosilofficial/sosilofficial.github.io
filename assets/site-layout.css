@@ -1,0 +1,22 @@
+/* Shared left edge for every public page, including detail pages. */
+.site-main > .page-wrap,
+.site-main > .home-swiss {
+  width: min(100%, 980px);
+  margin: 0;
+  padding: 104px 48px 80px;
+  transform: none;
+  text-align: left;
+}
+.site-main > .info-page,
+.site-main > .contact-page {
+  min-height: 0;
+  justify-content: flex-start;
+}
+.contact-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+.page-wrap .page-intro { margin-left: 0; margin-right: 0; }
+@media (max-width: 760px) {
+  /* Absolute positioning scrolls with the document instead of the viewport. */
+  .site-brand { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); }
+  .site-main > .page-wrap,
+  .site-main > .home-swiss { padding: 34px 20px 80px; }
+}
