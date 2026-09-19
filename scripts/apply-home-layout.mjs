@@ -112,6 +112,20 @@ html = html.replace(
   '<p><span class="home-grid-anchor">slowcore / alternative folk musician</span><br>based in seoul, south korea</p>'
 );
 
+/* Keep the intro to one quiet block. */
+html = html.replace(/<p>i make music,<br>and moving images\.<\/p>/, "");
+
+/* Keep the News slot visible even before the first authored News post exists. */
+if (!html.includes('class="home-news"')) {
+  html = html.replace(
+    '<section class="home-mailing">',
+    '<section class="home-news"><h2>latest news</h2><p class="empty-note">no news yet.</p></section><section class="home-mailing">'
+  );
+} else {
+  html = html.replace(/(<section class="home-news"><h2>)[^<]*(<\/h2>)/, "$1latest news$2");
+}
+html = html.replace(/ home-no-news/g, "");
+
 /* Keep the signup intentionally bare: heading, email line, join. */
 html = html.replace(/<p class="mailing-copy">[\s\S]*?<\/p>/, "");
 
@@ -130,4 +144,4 @@ html = html.replace(/<p class="mailing-status"[\s\S]*?<\/p>/, "");
 html = html.replace(/<script id="home-mobile-motion-script">[\s\S]*?<\/script>/, "");
 
 fs.writeFileSync(file, html);
-console.log("Applied the sparse homepage layout and preserved the Google Forms handoff.");
+console.log("Restored the homepage News slot, simplified the intro, and preserved the Google Forms handoff.");
