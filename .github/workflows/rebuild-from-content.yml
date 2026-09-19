@@ -16,6 +16,7 @@ on:
       - "scripts/apply-archive-text-layout.mjs"
       - "scripts/apply-notes-layout.mjs"
       - "scripts/apply-global-grid-lines.mjs"
+      - "scripts/apply-content-fonts.mjs"
       - "assets/site-redesign.css"
       - "assets/site-redesign.js"
 
@@ -58,6 +59,8 @@ jobs:
         run: node scripts/apply-home-layout.mjs
       - name: Apply unified vertical grid lines
         run: node scripts/apply-global-grid-lines.mjs
+      - name: Apply content font system
+        run: node scripts/apply-content-fonts.mjs
       - name: Validate generated site
         run: node scripts/validate-site.mjs
       - name: Commit generated files
