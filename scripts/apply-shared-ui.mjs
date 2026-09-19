@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+// Final frontend pass: one shared source of truth for typography, grids and dividers.
 const ROOT = process.cwd();
 
 const STYLE = `<style id="shared-ui-style">
