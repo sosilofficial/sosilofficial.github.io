@@ -65,6 +65,22 @@ function setupWorksScrollMemory() {
   });
 }
 
+function setupHomeGrid() {
+  const canvas = document.querySelector(".home-canvas");
+  const anchor = document.querySelector(".home-grid-anchor");
+  if (!canvas || !anchor || matchMedia("(max-width: 820px)").matches) return;
+
+  const sync = () => {
+    const width = Math.ceil(anchor.getBoundingClientRect().width);
+    if (width > 0) canvas.style.setProperty("--home-copy-width", `${width}px`);
+  };
+
+  sync();
+  if (document.fonts?.ready) document.fonts.ready.then(sync);
+  if ("ResizeObserver" in window) new ResizeObserver(sync).observe(anchor);
+  window.addEventListener("resize", sync, { passive: true });
+}
+
 function setupHomeMotion() {
   const field = document.querySelector("[data-home-motion]");
   const cover = field?.querySelector(".moving-cover");
@@ -129,5 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
   setupPanels();
   setupDetailClose();
   setupWorksScrollMemory();
+  setupHomeGrid();
   setupHomeMotion();
 });
