@@ -1,17 +1,28 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>archive / text | 소실 SOSIL</title><link rel="icon" href="/favicon-sosil.svg"><link rel="stylesheet" href="/assets/site-redesign.css?v=20260919-5"><script src="/assets/site-redesign.js?v=20260919-5" defer></script><meta name="description" content="소실(Sosil)의 사진, 영상, 인터뷰와 리뷰 아카이브."><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://sosilofficial.github.io/archive/links/"><meta property="og:locale" content="ko_KR"><meta property="og:type" content="article"><meta property="og:site_name" content="소실 SOSIL"><meta property="og:title" content="archive / text | 소실 SOSIL"><meta property="og:description" content="소실(Sosil)의 사진, 영상, 인터뷰와 리뷰 아카이브."><meta property="og:url" content="https://sosilofficial.github.io/archive/links/"><meta name="twitter:card" content="summary_large_image"><style id="archive-text-layout-style">
-.archive-text-page .archive-text-flat-page {
+/* Keep Photo, Video and Text on one shared Archive index coordinate. */
+.archive-index-page .wide-page {
   min-height: 100vh;
   max-width: none;
-  padding: clamp(42px, 5.5vh, 58px) clamp(38px, 5.5vw, 86px) 110px;
+  padding: clamp(42px, 5.5vh, 58px) clamp(38px, 5.5vw, 86px) 110px !important;
+}
+.archive-index-page .wide-page > .subnav {
+  margin-bottom: clamp(68px, 9vh, 110px) !important;
+}
+.archive-index-page .photo-post-grid,
+.archive-index-page .archive-video-grid,
+.archive-index-page .archive-text-groups {
+  width: min(100%, 1040px);
+}
+.archive-index-page .wide-empty {
+  width: min(100%, 1040px);
+  margin-top: 0;
+  text-align: left;
 }
 .archive-text-page .archive-text-top {
   margin-bottom: clamp(68px, 9vh, 110px);
 }
 .archive-text-page .archive-text-top .subnav {
   margin-bottom: 0;
-}
-.archive-text-page .archive-text-groups {
-  width: min(100%, 1040px);
 }
 .archive-text-page .archive-text-group {
   margin-bottom: clamp(54px, 7vh, 82px);
@@ -67,11 +78,12 @@
   font-family: var(--font-content, "Helvetica Neue", Helvetica, Arial, sans-serif);
 }
 @media (max-width: 820px) {
-  .archive-text-page .archive-text-flat-page {
-    padding: 24px 18px 80px;
+  .archive-index-page .wide-page {
+    padding: 24px 18px 80px !important;
   }
+  .archive-index-page .wide-page > .subnav,
   .archive-text-page .archive-text-top {
-    margin-bottom: 56px;
+    margin-bottom: 56px !important;
   }
   .archive-text-page .archive-text-group {
     margin-bottom: 52px;
@@ -283,4 +295,4 @@
 .home-news .small-link {
   font-family: var(--font-ui) !important;
 }
-</style></head><body class="archive-text-page"><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive" class="is-active" aria-current="page">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="wide-page archive-text-flat-page"><div class="archive-text-top"><nav class="subnav" aria-label="archive 하위 메뉴"><a href="/archive/photo-video">photo</a><a href="/archive/videos">video</a><a href="/archive/links" class="is-active" aria-current="page">text</a></nav></div><div class="archive-text-groups"><section class="archive-text-group"><h2>features</h2><div class="archive-text-flat-list"><article class="archive-text-entry"><p class="archive-text-entry-line"><a href="https://www.sisain.co.kr/news/articleView.html?idxno=55391" target="_blank" rel="noreferrer">싱그러운 사실의 힘 ‘몽상은나의조랑말’ [단편선과 플리들]</a><em>sisain.co.kr</em></p></article></div></section><section class="archive-text-group"><h2>interviews</h2><div class="archive-text-flat-list"><article class="archive-text-entry"><p class="archive-text-entry-line"><a href="https://street-h.com/magazine/112282/" target="_blank" rel="noreferrer">Pick! New Indie Musician – 113. 소실</a><em>street-h.com</em></p></article></div></section><section class="archive-text-group"><h2>reviews</h2><div class="archive-text-flat-list"><article class="archive-text-entry"><p class="archive-text-entry-line"><a href="https://overtone.kr/full-review/%EB%AA%BD%EC%83%81%EC%9D%80%EB%82%98%EC%9D%98%EC%A1%B0%EB%9E%91%EB%A7%90-%ED%9D%90%EB%A6%B0-%ED%98%84%EC%8B%A4%EC%9D%84-%EC%99%B8%EB%A9%B4%ED%95%98%EA%B8%B0" target="_blank" rel="noreferrer">&lt;몽상은나의조랑말&gt;: 흐린 현실을 외면하기</a><em>overtone.kr</em></p></article><article class="archive-text-entry"><p class="archive-text-entry-line"><a href="https://vop.co.kr/A00001669009.html" target="_blank" rel="noreferrer">[서정민갑의 수요뮤직] 3월의 좋은 음악, 소실 [몽상은나의조랑말]</a><em>vop.co.kr</em></p></article></div></section></div></div></main></div></body></html>
+</style></head><body class="archive-text-page archive-index-page"><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive" class="is-active" aria-current="page">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="wide-page archive-text-flat-page"><div class="archive-text-top"><nav class="subnav" aria-label="archive 하위 메뉴"><a href="/archive/photo-video">photo</a><a href="/archive/videos">video</a><a href="/archive/links" class="is-active" aria-current="page">text</a></nav></div><div class="archive-text-groups"><section class="archive-text-group"><h2>features</h2><div class="archive-text-flat-list"><article class="archive-text-entry"><p class="archive-text-entry-line"><a href="https://www.sisain.co.kr/news/articleView.html?idxno=55391" target="_blank" rel="noreferrer">싱그러운 사실의 힘 ‘몽상은나의조랑말’ [단편선과 플리들]</a><em>sisain.co.kr</em></p></article></div></section><section class="archive-text-group"><h2>interviews</h2><div class="archive-text-flat-list"><article class="archive-text-entry"><p class="archive-text-entry-line"><a href="https://street-h.com/magazine/112282/" target="_blank" rel="noreferrer">Pick! New Indie Musician – 113. 소실</a><em>street-h.com</em></p></article></div></section><section class="archive-text-group"><h2>reviews</h2><div class="archive-text-flat-list"><article class="archive-text-entry"><p class="archive-text-entry-line"><a href="https://overtone.kr/full-review/%EB%AA%BD%EC%83%81%EC%9D%80%EB%82%98%EC%9D%98%EC%A1%B0%EB%9E%91%EB%A7%90-%ED%9D%90%EB%A6%B0-%ED%98%84%EC%8B%A4%EC%9D%84-%EC%99%B8%EB%A9%B4%ED%95%98%EA%B8%B0" target="_blank" rel="noreferrer">&lt;몽상은나의조랑말&gt;: 흐린 현실을 외면하기</a><em>overtone.kr</em></p></article><article class="archive-text-entry"><p class="archive-text-entry-line"><a href="https://vop.co.kr/A00001669009.html" target="_blank" rel="noreferrer">[서정민갑의 수요뮤직] 3월의 좋은 음악, 소실 [몽상은나의조랑말]</a><em>vop.co.kr</em></p></article></div></section></div></div></main></div></body></html>
