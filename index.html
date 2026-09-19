@@ -15,6 +15,58 @@
     white-space: nowrap;
   }
 }
+
+/*
+ * On mobile, keep the whole first-page rhythm inside the initial viewport as
+ * often as possible. The cover remains present, but it no longer consumes
+ * almost half the screen before News and Mailing List appear.
+ */
+@media (max-width: 820px) {
+  .home-canvas {
+    min-height: calc(100dvh - 60px) !important;
+    padding: 18px 18px 32px !important;
+  }
+  .home-intro {
+    gap: 14px !important;
+  }
+  .home-motion-field {
+    height: clamp(150px, 26dvh, 220px) !important;
+    margin: 18px 0 20px !important;
+  }
+  .moving-cover {
+    width: min(36vw, 160px) !important;
+  }
+  .home-news {
+    margin: 0 0 22px !important;
+  }
+  .home-mailing {
+    margin-top: 0 !important;
+  }
+  .home-news h2,
+  .home-mailing h2 {
+    margin-bottom: 10px !important;
+  }
+  .mailing-copy {
+    margin-bottom: 12px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .home-intro {
+    gap: 12px !important;
+  }
+  .home-motion-field {
+    height: clamp(140px, 23dvh, 190px) !important;
+    margin: 16px 0 18px !important;
+  }
+  .moving-cover {
+    width: min(38vw, 150px) !important;
+  }
+  .home-news {
+    margin-bottom: 20px !important;
+  }
+}
+
 .home-mailing form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
