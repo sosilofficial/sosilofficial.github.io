@@ -110,4 +110,4 @@ for (const file of walk(ROOT)) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied the two-font system: typewriter for structure, Helvetica-style sans for readable content.");
+console.log("Applied the two-font system: typewriter for structure, Helvetica-style sans for readable content across the site.");
