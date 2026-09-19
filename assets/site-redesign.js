@@ -92,10 +92,18 @@ function setupHomeMotion() {
   const cover = field?.querySelector(".moving-cover");
   if (!field || !cover || matchMedia("(max-width: 820px)").matches) return;
 
-  // Keep a gentle drift visible with reduced motion, without jitter or afterimages.
+  // Preserve soft afterimages with reduced motion, without jitter or exposure shifts.
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const config = reducedMotion
-    ? { ...HOME_MOTION_CONFIG, jitterPx: 0, trailCount: 0, brightnessVariation: 0, colorDriftAmount: 0 }
+    ? {
+        ...HOME_MOTION_CONFIG,
+        jitterPx: 0,
+        trailCount: 4,
+        trailOpacity: 0.08,
+        trailScaleVariance: 0,
+        brightnessVariation: 0,
+        colorDriftAmount: 0
+      }
     : HOME_MOTION_CONFIG;
   document.documentElement.style.setProperty("--speed", `${config.speedSeconds}s`);
   document.documentElement.style.setProperty("--trail-count", config.trailCount);
@@ -134,6 +142,7 @@ function setupHomeMotion() {
     trail.style.opacity = opacity;
     trail.style.filter = `blur(${blur}px) saturate(${.61 + Math.random() * .1})`;
     trail.style.animationDuration = `${lifetime}ms`;
+    trail.style.setProperty("--trail-duration", `${lifetime}ms`);
     field.insertBefore(trail, cover);
     trails.push(trail);
     while (trails.length > config.trailCount) trails.shift()?.remove();

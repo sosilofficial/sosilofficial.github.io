@@ -565,5 +565,8 @@ h1, h2, strong { font-weight: 400; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-  .motion-trail { display: none; }
+  /* Keep the homepage's soft fade while reducing other animation. */
+  .motion-trail {
+    animation-duration: var(--trail-duration, var(--trail-lifetime)) !important;
+  }
 }
