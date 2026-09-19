@@ -69,6 +69,20 @@ async function closeDetail(page, landing, itemSelector, detailSelector, label) {
   ]);
 }
 
+async function assertHomeMotion(viewport, label) {
+  const context = await browser.newContext({ viewport, reducedMotion: "no-preference" });
+  const page = await context.newPage();
+  await open(page, "/");
+  const cover = page.locator(".moving-cover");
+  await cover.waitFor({ state: "visible" });
+  const before = await cover.evaluate((node) => getComputedStyle(node).transform);
+  await page.waitForTimeout(500);
+  const after = await cover.evaluate((node) => getComputedStyle(node).transform);
+  assert(before !== after, `${label}: 홈 앨범커버 transform이 움직이지 않습니다 (${before})`);
+  assert(await page.locator(".home-motion-field canvas.motion-history").count() === 1, `${label}: 홈 잔상 canvas가 생성되지 않았습니다`);
+  await context.close();
+}
+
 try {
   for (const viewport of viewports) {
     const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height }, reducedMotion: "reduce" });
@@ -112,6 +126,9 @@ try {
     await context.close();
   }
 
+  await assertHomeMotion({ width: 1440, height: 900 }, "desktop motion");
+  await assertHomeMotion({ width: 390, height: 844 }, "mobile motion");
+
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
   const routes = [...fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8").matchAll(/<loc>https:\/\/sosilofficial\.github\.io([^<]*)<\/loc>/g)].map((match) => match[1]);
@@ -127,7 +144,7 @@ try {
     }
   }
   await context.close();
-  console.log(`Browser QA passed at ${viewports.map((viewport) => `${viewport.width}x${viewport.height}`).join(", ")} and checked ${checked.size} local links.`);
+  console.log(`Browser QA passed at ${viewports.map((viewport) => `${viewport.width}x${viewport.height}`).join(", ")}, verified desktop/mobile home motion, and checked ${checked.size} local links.`);
 } finally {
   await browser.close();
   await new Promise((resolve) => server.close(resolve));
