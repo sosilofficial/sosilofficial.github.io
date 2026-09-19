@@ -42,7 +42,7 @@ const STYLE = `<style id="home-mailing-join-style">
     width: min(36vw, 160px) !important;
   }
   .home-news {
-    margin: 0 0 22px !important;
+    margin: 0 0 32px !important;
   }
   .home-mailing {
     margin-top: 0 !important;
@@ -68,7 +68,7 @@ const STYLE = `<style id="home-mailing-join-style">
     width: min(38vw, 150px) !important;
   }
   .home-news {
-    margin-bottom: 20px !important;
+    margin-bottom: 32px !important;
   }
 }
 
@@ -137,4 +137,4 @@ if (html.includes("data-mailing-form") && !html.includes("data-mailing-status"))
 }
 
 fs.writeFileSync(file, html);
-console.log("Aligned the homepage grid, kept Mailing List above the mobile fold, and preserved in-page signup.");
+console.log("Aligned the homepage grid, opened the mobile News/Mailing List rhythm, and preserved in-page signup.");
