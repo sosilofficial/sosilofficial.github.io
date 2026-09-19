@@ -38,6 +38,36 @@ function setupDetailClose() {
   });
 }
 
+function setupMailingList() {
+  const form = document.querySelector("[data-mailing-form]");
+  if (!form) return;
+  const status = document.querySelector("[data-mailing-status]");
+  const button = form.querySelector('button[type="submit"]');
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+
+    if (button) button.disabled = true;
+    if (status) status.textContent = "sending...";
+
+    try {
+      const body = new URLSearchParams(new FormData(form));
+      await fetch(form.action, {
+        method: "POST",
+        mode: "no-cors",
+        body
+      });
+      form.reset();
+      if (status) status.textContent = "thank you.";
+    } catch {
+      if (status) status.textContent = "couldn't send. please try again.";
+    } finally {
+      if (button) button.disabled = false;
+    }
+  });
+}
+
 function setupHomeGrid() {
   const canvas = document.querySelector(".home-canvas");
   const anchor = document.querySelector(".home-grid-anchor");
@@ -211,6 +241,7 @@ function setupHomeMotion() {
 document.addEventListener("DOMContentLoaded", () => {
   setupPanels();
   setupDetailClose();
+  setupMailingList();
   setupHomeGrid();
   setupHomeMotion();
 });
