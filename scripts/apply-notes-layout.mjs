@@ -28,9 +28,9 @@ const STYLE = `<style id="slow-notes-style">
 
   /*
    * Mirror the real Notes heading in the detail column instead of estimating
-   * its height with a calc(). The invisible heading occupies the exact same
-   * vertical space as the left heading, so the detail date and first index row
-   * share one horizontal baseline even if typography changes later.
+   * its height with a calc(). This spacer intentionally does not use the
+   * category-top class, so the later category-grid pass can still normalize
+   * the visible Notes heading on the left.
    */
   .split-layout > .detail-panel {
     padding-top: var(--category-top-y, clamp(48px, 6.8vh, 70px)) !important;
@@ -38,6 +38,14 @@ const STYLE = `<style id="slow-notes-style">
   .notes-top-spacer {
     visibility: hidden;
     pointer-events: none;
+    margin: 0 0 clamp(44px, 6vh, 72px);
+  }
+  .notes-top-spacer h1 {
+    margin: 0 0 24px !important;
+    font-size: 1.08rem !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+    letter-spacing: .02em !important;
   }
   .note-detail {
     max-width: 48rem;
@@ -84,7 +92,7 @@ function apply(file) {
   ) {
     html = html.replace(
       '<section class="detail-panel"><article class="text-detail note-detail">',
-      '<section class="detail-panel"><div class="category-top notes-top-spacer" aria-hidden="true"><h1>notes</h1></div><article class="text-detail note-detail">'
+      '<section class="detail-panel"><div class="notes-top-spacer" aria-hidden="true"><h1>notes</h1></div><article class="text-detail note-detail">'
     );
   }
 
