@@ -102,15 +102,6 @@ const STYLE = `<style id="home-mailing-join-style">
   text-transform: lowercase;
 }
 .home-mailing button:hover { opacity: .56; }
-.home-mailing button:disabled { cursor: default; opacity: .42; }
-.home-mailing .mailing-status {
-  min-height: 1.4em;
-  margin: 9px 0 0;
-  color: var(--muted);
-  font-size: .68rem;
-  line-height: 1.4;
-}
-.home-mailing .mailing-status:empty { min-height: 0; margin-top: 0; }
 </style>`;
 
 let html = fs.readFileSync(file, "utf8");
@@ -129,17 +120,16 @@ html = html.replace(
 /* Keep the signup intentionally bare: heading, email line, join. */
 html = html.replace(/<p class="mailing-copy">[\s\S]*?<\/p>/, "");
 
+/*
+ * Keep Google Forms as the final confirmation step. The email field is sent
+ * with the viewform GET request so Google opens with the address prefilled;
+ * the visitor only needs to press Google's submit button.
+ */
 html = html.replace(
-  /<form action="(https:\/\/docs\.google\.com\/forms\/d\/e\/[^\"]+)\/viewform" method="get" target="_blank">(?:<input type="hidden" name="usp" value="pp_url">)?/,
-  (_match, base) => `<form action="${base}/formResponse" method="post" data-mailing-form data-fallback-url="${base}/viewform">`
+  /<form action="(https:\/\/docs\.google\.com\/forms\/d\/e\/[^\"]+)\/formResponse" method="post" data-mailing-form(?: data-fallback-url="[^"]+")?>/,
+  (_match, base) => `<form action="${base}/viewform" method="get" target="_blank"><input type="hidden" name="usp" value="pp_url">`
 );
-
-if (html.includes("data-mailing-form") && !html.includes("data-mailing-status")) {
-  html = html.replace(
-    /(<section class="home-mailing">[\s\S]*?<\/form>)(<\/section>)/,
-    '$1<p class="mailing-status" data-mailing-status aria-live="polite"></p>$2'
-  );
-}
+html = html.replace(/<p class="mailing-status"[\s\S]*?<\/p>/, "");
 
 fs.writeFileSync(file, html);
-console.log("Simplified Mailing List copy, preserved the 32px mobile break after News, and kept a sparse signup rhythm.");
+console.log("Restored the Google Forms handoff with the homepage email prefilled and kept the sparse Mailing List layout.");
