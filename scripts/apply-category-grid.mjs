@@ -53,6 +53,11 @@ const STYLE = `<style id="category-grid-style">
   .archive-top.category-top h1 {
     font-size: 1.08rem !important;
   }
+
+  /* Works reads a touch high because of its existing header rules; optically align it. */
+  .works-top.category-top {
+    transform: translateY(3px);
+  }
 }
 
 @media (max-width: 820px) {
