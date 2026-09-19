@@ -7,6 +7,38 @@ const LANDING = path.join(DISCO_DIR, "index.html");
 
 const STYLE = `<style id="stable-discography-layout-style">
 @media (min-width: 821px) {
+  /* Keep the same complete Works navigation used by Video / Live / Others. */
+  .release-split .works-top {
+    display: block;
+  }
+  .release-split .works-top h1 {
+    margin: 0 0 var(--space-md);
+    font-size: 1.08rem;
+    letter-spacing: .02em;
+  }
+  .release-split .works-top .subnav {
+    display: flex;
+    gap: clamp(16px, 2vw, 32px);
+    margin: 0;
+  }
+  .release-split .works-top .subnav::before {
+    content: none;
+  }
+  .release-split .works-top .subnav a,
+  .release-split .works-top .subnav a:not(.is-active) {
+    display: inline-block !important;
+  }
+  .release-split .works-top .subnav a:not(.is-active) {
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .release-split .works-top .subnav a.is-active {
+    display: inline-block !important;
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
   /* Outer split coordinates now come from the shared UI pass. */
   .release-split > .detail-panel {
     position: sticky;
@@ -254,4 +286,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Kept Discography on the shared grid and hid the long index above mobile release details.");
+console.log("Restored the complete Works subnavigation and kept Discography on the shared grid.");
