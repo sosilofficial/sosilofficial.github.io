@@ -102,7 +102,10 @@ const STYLE = `<style id="shared-ui-style">
   letter-spacing: .02em;
   text-transform: lowercase;
 }
-.category-top .subnav { margin: 0; }
+.category-top .subnav {
+  margin: 0;
+  gap: clamp(16px, 2vw, 32px);
+}
 .panel-headline > .category-top { margin-bottom: 0; }
 .info-top-spacer {
   visibility: hidden;
@@ -193,11 +196,6 @@ const STYLE = `<style id="shared-ui-style">
   .contact-page {
     padding-top: var(--category-top-y);
     padding-left: var(--category-x);
-  }
-
-  .works-top.category-top,
-  .category-top.works-top {
-    transform: translateY(3px);
   }
 
   .info-split {
