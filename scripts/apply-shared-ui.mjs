@@ -256,6 +256,9 @@ const STYLE = `<style id="shared-ui-style">
     margin-bottom: 18px;
     font-size: .92rem;
   }
+  .contact-page {
+    padding: 24px 18px 80px;
+  }
   .info-top-spacer { display: none; }
   .info-split .info-korean p,
   .info-split .info-english p { margin-bottom: 16px; }
@@ -354,4 +357,4 @@ for (const file of walk(ROOT)) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied one shared UI system for typography, category coordinates, dividers, and Info rhythm.");
+console.log("Applied one shared UI system for typography, category coordinates, dividers, Info rhythm, and mobile Contact alignment.");
