@@ -7,55 +7,36 @@ const LANDING = path.join(DISCO_DIR, "index.html");
 
 const STYLE = `<style id="stable-discography-layout-style">
 @media (min-width: 821px) {
-  .release-split {
-    display: grid !important;
-    grid-template-columns: var(--index) var(--detail) !important;
-    min-height: 100vh !important;
-  }
-  .release-split > .index-panel {
-    display: block !important;
-    min-width: 0;
-    padding: var(--pad) !important;
-  }
-  .release-split .panel-headline { margin-bottom: clamp(36px, 6vh, 76px) !important; }
-  .release-split .works-top { display: block !important; }
-  .release-split .works-top h1 {
-    margin: 0 0 var(--space-md) !important;
-    font-size: 1.08rem !important;
-  }
-  .release-split .works-top .subnav {
-    display: flex !important;
-    gap: clamp(16px, 2vw, 32px) !important;
-    margin: 0 !important;
-  }
-  .release-split .works-top .subnav::before { content: none !important; }
-  .release-split .works-top .subnav a { display: inline !important; }
-  .release-split .works-top .subnav a.is-active {
-    color: var(--ink) !important;
-    text-decoration: underline !important;
-    text-underline-offset: 4px;
+  /* Outer split coordinates now come from the shared UI pass. */
+  .release-split > .detail-panel {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
   }
 
   .release-split .release-index {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: clamp(34px, 4.2vh, 48px) !important;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(34px, 4.2vh, 48px);
     width: 100%;
   }
   .release-split .release-index > a {
     display: block;
     width: 100%;
-    padding: 0 !important;
+    padding: 0;
   }
   .release-split .release-index > a.is-selected { background: rgba(72, 80, 91, .018); }
   .release-split .release-index img {
-    width: 100% !important;
-    max-width: none !important;
+    width: 100%;
+    max-width: none;
     aspect-ratio: 1 / 1;
     object-fit: cover;
   }
   .release-split .release-index span {
-    width: 100% !important;
+    width: 100%;
     margin-top: 9px;
   }
   .release-split .release-index strong {
@@ -70,49 +51,39 @@ const STYLE = `<style id="stable-discography-layout-style">
     letter-spacing: .02em;
   }
 
-  .release-split > .detail-panel {
-    position: sticky !important;
-    top: 0;
-    align-self: start;
-    min-width: 0;
-    height: 100vh;
-    overflow-y: auto;
-    border-left: 1px solid var(--line) !important;
-    padding: var(--pad) !important;
-  }
   .release-split .release-detail {
     --detail-grid-gap: clamp(28px, 3vw, 44px);
     position: relative;
-    display: grid !important;
+    display: grid;
     grid-template-columns: clamp(112px, 12vw, 150px) minmax(0, 1fr);
     column-gap: var(--detail-grid-gap);
     row-gap: var(--detail-grid-gap);
     align-items: start;
-    width: min(100%, 760px) !important;
-    max-width: 760px !important;
-    margin: 0 auto !important;
-    padding: clamp(28px, 4vh, 42px) clamp(4px, .5vw, 10px) 72px !important;
+    width: min(100%, 760px);
+    max-width: 760px;
+    margin: 0 auto;
+    padding: clamp(28px, 4vh, 42px) clamp(4px, .5vw, 10px) 72px;
   }
   .release-split .release-detail .close-detail {
-    position: absolute !important;
+    position: absolute;
     top: 0;
     right: 0;
-    float: none !important;
+    float: none;
     display: grid;
     place-items: center;
-    width: 28px !important;
-    height: 28px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    color: var(--ink) !important;
-    font-size: 1.15rem !important;
+    width: 28px;
+    height: 28px;
+    margin: 0;
+    padding: 0;
+    color: var(--ink);
+    font-size: 1.15rem;
     opacity: .62;
   }
-  .release-split .release-detail .close-detail::after { content: none !important; }
+  .release-split .release-detail .close-detail::after { content: none; }
   .release-split .release-detail header {
     grid-column: 1 / -1;
-    margin: 0 !important;
-    padding-right: 40px !important;
+    margin: 0;
+    padding-right: 40px;
   }
   .release-split .release-detail header p {
     margin: 0 0 4px;
@@ -123,9 +94,9 @@ const STYLE = `<style id="stable-discography-layout-style">
     letter-spacing: .035em;
   }
   .release-split .release-detail header h1 {
-    max-width: 30ch !important;
+    max-width: 30ch;
     margin: 0 0 5px;
-    font-size: clamp(.97rem, 1.05vw, 1.13rem) !important;
+    font-size: clamp(.97rem, 1.05vw, 1.13rem);
     line-height: 1.42;
     letter-spacing: .008em;
   }
@@ -134,16 +105,16 @@ const STYLE = `<style id="stable-discography-layout-style">
     grid-column: 1;
     grid-row: 2;
     display: block;
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
+    width: 100%;
+    max-width: none;
+    margin: 0;
     aspect-ratio: 1 / 1;
     object-fit: cover;
     filter: saturate(.84) contrast(.95);
   }
   .release-split .detail-section {
-    width: auto !important;
-    margin: 0 !important;
+    width: auto;
+    margin: 0;
   }
   .release-split .release-tracklist-section {
     grid-column: 2;
@@ -152,7 +123,7 @@ const STYLE = `<style id="stable-discography-layout-style">
   }
   .release-split .release-credits-section {
     grid-column: 1 / -1;
-    margin: 0 !important;
+    margin: 0;
   }
   .release-split .detail-section h2 {
     margin: 0 0 13px;
@@ -189,9 +160,7 @@ const STYLE = `<style id="stable-discography-layout-style">
     opacity: .48;
     font-size: .67rem;
   }
-  .release-split .track-list li span:last-child {
-    white-space: nowrap;
-  }
+  .release-split .track-list li span:last-child { white-space: nowrap; }
   .release-split .release-credits-section p {
     margin: 0;
     color: var(--muted);
@@ -201,26 +170,39 @@ const STYLE = `<style id="stable-discography-layout-style">
   }
   .release-split .liner-notes {
     grid-column: 1 / -1;
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
+    width: 100%;
+    max-width: none;
+    margin: 0;
     font-size: .77rem;
     line-height: 1.86;
     letter-spacing: .003em;
   }
   .release-split .liner-notes p {
-    max-width: none !important;
+    max-width: none;
     margin: 0 0 1.9em;
   }
   .release-split .external-links {
     grid-column: 1 / -1;
-    display: flex !important;
-    margin: 0 !important;
+    display: flex;
+    margin: 0;
     padding-bottom: 18px;
     gap: 12px 24px;
     font-size: .74rem;
   }
   .release-split .external-links a { border-bottom-color: rgba(17, 21, 27, .5); }
+}
+
+@media (max-width: 820px) {
+  /* On a selected release, keep Works context but remove the long list above the detail. */
+  .release-split.has-detail .release-index { display: none !important; }
+  .release-split.has-detail > .index-panel { padding-bottom: 0; }
+  .release-split.has-detail .panel-headline { margin-bottom: 18px; }
+  .release-split.has-detail > .detail-panel { padding-top: 0; }
+  .release-split.has-detail .release-detail {
+    max-width: none;
+    margin-top: 0;
+  }
+  .release-split.has-detail .release-detail header { margin-top: 0; }
 }
 </style>`;
 
@@ -267,8 +249,9 @@ for (const file of detailFiles) {
   html = html.replace(/<div class="release-tracklist-left">[\s\S]*?<\/div>/g, "");
   html = html.replace(/<section class="detail-section"><h2>tracklist<\/h2>/gi, '<section class="detail-section release-tracklist-section"><h2>tracklist</h2>');
   html = html.replace(/<section class="detail-section"><h2>credits<\/h2>/gi, '<section class="detail-section release-credits-section"><h2>credits</h2>');
+  html = html.replace('class="split-layout release-split"', 'class="split-layout release-split has-detail"');
   html = ensureStyle(html);
   fs.writeFileSync(file, html);
 }
 
-console.log("Tightened Discography track number spacing while keeping titles on one line.");
+console.log("Kept Discography on the shared grid and hid the long index above mobile release details.");
