@@ -7,12 +7,12 @@ const LANDING = path.join(DISCO_DIR, "index.html");
 
 const STYLE = `<style id="stable-discography-layout-style">
 @media (min-width: 821px) {
-  /* Keep the same complete Works navigation used by Video / Live / Others. */
+  /* Keep the same complete Works navigation and spacing used by Archive. */
   .release-split .works-top {
     display: block;
   }
   .release-split .works-top h1 {
-    margin: 0 0 var(--space-md);
+    margin: 0 0 24px;
     font-size: 1.08rem;
     letter-spacing: .02em;
   }
@@ -39,6 +39,14 @@ const STYLE = `<style id="stable-discography-layout-style">
     text-underline-offset: 4px;
   }
 
+  /* Match the first Discography cover to the first Video thumbnail coordinate. */
+  .release-split .panel-headline {
+    margin-bottom: clamp(36px, 6vh, 76px);
+  }
+  .release-split > .index-panel {
+    overflow: hidden;
+  }
+
   /* Outer split coordinates now come from the shared UI pass. */
   .release-split > .detail-panel {
     position: sticky;
@@ -46,6 +54,7 @@ const STYLE = `<style id="stable-discography-layout-style">
     align-self: start;
     height: 100vh;
     overflow-y: auto;
+    overflow-x: hidden;
     background: var(--bg);
   }
 
@@ -54,16 +63,20 @@ const STYLE = `<style id="stable-discography-layout-style">
     grid-template-columns: 1fr;
     gap: clamp(34px, 4.2vh, 48px);
     width: 100%;
+    max-width: 100%;
+    margin: 0;
   }
   .release-split .release-index > a {
     display: block;
     width: 100%;
+    max-width: 100%;
     padding: 0;
   }
   .release-split .release-index > a.is-selected { background: rgba(72, 80, 91, .018); }
   .release-split .release-index img {
+    display: block;
     width: 100%;
-    max-width: none;
+    max-width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
   }
@@ -286,4 +299,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Restored the complete Works subnavigation and kept Discography on the shared grid.");
+console.log("Aligned Discography navigation and cover start with Archive/Video while keeping covers inside the index panel.");
