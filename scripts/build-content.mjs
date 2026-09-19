@@ -169,7 +169,7 @@ publish("/works/videos", page("works / video", worksDescription, "/works/videos"
 for (const item of workVideos) {
   const videoIndex = `<div class="video-index">${workVideos.map((listed) => `<a href="/works/videos/${esc(listed.slug)}"${listed.slug === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${firstImage(listed) ? `<img src="${esc(firstImage(listed))}" alt="" loading="lazy" decoding="async">` : ""}<span><strong>${esc(listed.title)}</strong>${videoMeta(listed).map((value) => `<small>${esc(value)}</small>`).join("")}</span></a>`).join("")}</div>`;
   const credit = item.credit || item.credits || "";
-  const detail = `<article class="video-detail works-video-detail">${closeLink("/works/videos", "video")}${videoEmbed(item)}<h1>${esc(item.title)}</h1>${videoMeta(item).length ? `<p class="media-meta">${videoMeta(item).map(esc).join(" · ")}</p>` : ""}${credit ? `<p class="media-credit">${esc(credit)}</p>` : ""}${item.note ? `<div class="prose">${esc(item.note)}</div>` : ""}${bodyHtml(item)}</article>`;
+  const detail = `<article class="video-detail works-video-detail">${closeLink("/works/videos", "video")}<h1>${esc(item.title)}</h1>${videoMeta(item).length ? `<p class="media-meta">${videoMeta(item).map(esc).join(" · ")}</p>` : ""}${credit ? `<p class="media-credit">${esc(credit)}</p>` : ""}${videoEmbed(item)}${item.note ? `<div class="prose">${esc(item.note)}</div>` : ""}${bodyHtml(item)}</article>`;
   publish(`/works/videos/${item.slug}`, page(item.title, item.description || item.title, `/works/videos/${item.slug}`, "works", split(`<div class="panel-headline">${worksTop("video")}</div>${videoIndex}`, detail, "video-split"), firstImage(item), true));
 }
 
@@ -295,7 +295,9 @@ const enParts = sentenceParts(infoEn);
 const paragraph = (parts) => parts.length ? `<p>${esc(parts.join(" "))}</p>` : "";
 const infoKorean = `${paragraph(koParts.slice(0, 1))}${paragraph(koParts.slice(1, 2))}${paragraph(koParts.slice(2))}`;
 const infoEnglish = `${paragraph(enParts.slice(0, 1))}${paragraph(enParts.slice(1, 3))}${paragraph(enParts.slice(3))}`;
-const infoMain = split(`<article class="info-copy"><h1>info</h1><div class="info-korean">${infoKorean}</div><span class="section-mark" aria-hidden="true">—</span><div class="info-english">${infoEnglish}</div></article>`, `<aside class="info-aside"><figure><img src="${INFO_IMAGE}" alt="소실 공연 장면" loading="lazy" decoding="async"><figcaption>slowcore / alternative folk musician<br>based in seoul, south korea</figcaption></figure><span class="section-mark" aria-hidden="true">—</span><nav aria-label="소실 외부 링크">${infoLinks}</nav></aside>`, "info-split");
+const infoMedia = `<aside class="info-aside"><figure><img src="${INFO_IMAGE}" alt="소실 공연 장면" loading="lazy" decoding="async"><figcaption>slowcore / alternative folk musician<br>based in seoul, south korea</figcaption></figure><span class="section-mark" aria-hidden="true">—</span><nav aria-label="소실 외부 링크">${infoLinks}</nav></aside>`;
+const infoBio = `<article class="info-copy"><h1>info</h1><div class="info-korean">${infoKorean}</div><span class="section-mark" aria-hidden="true">—</span><div class="info-english">${infoEnglish}</div></article>`;
+const infoMain = split(infoMedia, infoBio, "info-split");
 publish("/info", page("info", info.description, "/info", "info", infoMain, INFO_IMAGE, false, "info-body"));
 
 const contact = site("contact");
@@ -312,6 +314,6 @@ const homeMain = `<div class="home-canvas"><section class="home-intro"><p>slowco
 publish("/", page("소실 SOSIL", home.description, "/", "", homeMain, firstImage(featured), false, "home-body"));
 
 routes.sort((a, b) => a.localeCompare(b));
-const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${uniq(routes).map((route) => `  <url><loc>${ORIGIN}${route === "/" ? "/" : `${route}/`}</loc></url>`).join("\n")}\n</urlset>\n`;
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/sitemap/0.9">\n${uniq(routes).map((route) => `  <url><loc>${ORIGIN}${route === "/" ? "/" : `${route}/`}</loc></url>`).join("\n")}\n</urlset>\n`;
 fs.writeFileSync(path.join(ROOT, "sitemap.xml"), sitemap);
 console.log(`Built ${uniq(routes).length} routes from ${all.length} content files.`);
