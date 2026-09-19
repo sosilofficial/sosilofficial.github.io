@@ -90,6 +90,10 @@ try {
 
     await open(page, "/");
     assert(await page.locator(".rail-nav a").count() === 7, `${viewport.name}: 주요 nav가 완전하지 않습니다`);
+    const homeNews = page.locator(".home-news");
+    await homeNews.waitFor({ state: "visible" });
+    assert((await homeNews.locator("h2").textContent())?.trim() === "latest news", `${viewport.name}: 홈 latest news 제목이 없습니다`);
+    assert(!(await page.locator(".home-intro").innerText()).includes("i make music"), `${viewport.name}: 삭제한 홈 소개 문구가 다시 나타났습니다`);
     const mailing = page.locator(".home-mailing form");
     await mailing.waitFor({ state: "visible" });
     const mailingBox = await mailing.boundingBox();
@@ -101,6 +105,13 @@ try {
     assert(coverTransformA === coverTransformB, `${viewport.name}: reduced motion에서 홈 커버가 움직입니다`);
 
     await open(page, "/works/discography");
+    const worksTabs = await page.locator(".release-split .subnav a").evaluateAll((links) => links.map((link) => ({
+      text: link.textContent?.trim(),
+      display: getComputedStyle(link).display,
+      visibility: getComputedStyle(link).visibility,
+    })));
+    assert(worksTabs.length === 4, `${viewport.name}: Works 하위 메뉴가 4개가 아닙니다`);
+    assert(worksTabs.every((tab) => tab.display !== "none" && tab.visibility !== "hidden"), `${viewport.name}: Works 하위 메뉴 중 숨겨진 항목이 있습니다`);
     await visibleImages(page, ".release-index img", `${viewport.name} discography`);
     if (viewport.width <= 430) {
       const columns = await page.locator(".release-index").evaluate((node) => getComputedStyle(node).gridTemplateColumns.split(" ").length);
@@ -144,7 +155,7 @@ try {
     }
   }
   await context.close();
-  console.log(`Browser QA passed at ${viewports.map((viewport) => `${viewport.width}x${viewport.height}`).join(", ")}, verified desktop/mobile home motion, and checked ${checked.size} local links.`);
+  console.log(`Browser QA passed at ${viewports.map((viewport) => `${viewport.width}x${viewport.height}`).join(", ")}, verified home News/Works tabs and desktop/mobile home motion, and checked ${checked.size} local links.`);
 } finally {
   await browser.close();
   await new Promise((resolve) => server.close(resolve));
