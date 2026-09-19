@@ -10,53 +10,120 @@ if (!fs.existsSync(FILE)) {
 
 const STYLE = `<style id="works-live-layout-style">
 @media (min-width: 821px) {
-  .live-split .index-panel {
+  /*
+   * Live is intentionally flatter than the other Works sections: one quiet,
+   * full-width performance table with lots of air around it and almost no UI chrome.
+   */
+  .live-split {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh;
+  }
+  .live-split > .index-panel {
+    width: 100% !important;
+    max-width: none !important;
     padding-right: var(--category-x, clamp(30px, 2.75vw, 44px)) !important;
   }
+  .live-split > .detail-panel {
+    display: none !important;
+  }
   .live-split .panel-headline {
-    margin-bottom: 48px !important;
+    margin-bottom: 44px !important;
   }
 
-  /*
-   * Live uses one strict two-column notebook grid: dates are a small annotation
-   * rail, while every piece of performance information shares one text axis.
-   */
   .live-log {
-    --live-date-col: 3.3rem;
-    --live-col-gap: 14px;
-    width: min(100%, 36rem);
+    width: 100%;
+    max-width: none;
+    border-top: 1px solid rgba(47, 55, 67, .075);
   }
   .live-log h2 {
-    margin: 48px 0 24px;
-    color: var(--ink);
-    opacity: .76;
-    font-size: .69rem;
-    font-weight: 400;
-    line-height: 1;
-    letter-spacing: .045em;
+    display: none;
   }
-  .live-log h2:first-child {
-    margin-top: 0;
-  }
-
   .live-row {
     display: grid;
-    grid-template-columns: var(--live-date-col) minmax(0, 1fr);
-    column-gap: var(--live-col-gap);
-    row-gap: 0;
-    margin-bottom: 24px;
+    grid-template-columns:
+      7.2rem
+      minmax(10rem, 1.15fr)
+      minmax(12rem, 1.55fr)
+      minmax(8rem, .9fr);
+    column-gap: clamp(14px, 1.6vw, 24px);
     align-items: baseline;
+    min-height: 38px;
+    margin: 0;
+    padding: 10px 0 11px;
+    border-bottom: 1px solid rgba(47, 55, 67, .06);
   }
-  .live-row:last-child {
-    margin-bottom: 0;
+  .live-row time,
+  .live-row .live-title,
+  .live-row .live-artists,
+  .live-row .live-venue {
+    display: block;
+    min-width: 0;
+    margin: 0;
   }
   .live-row time {
+    grid-column: 1;
+    color: var(--muted);
+    opacity: .66;
+    font-size: .61rem;
+    line-height: 1.45;
+    letter-spacing: .02em;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .live-row .live-title {
+    grid-column: 2;
+    color: var(--ink);
+    font-size: .78rem;
+    font-weight: 600 !important;
+    line-height: 1.42;
+  }
+  .live-row .live-artists {
+    grid-column: 3;
+    color: var(--ink);
+    opacity: .72;
+    font-size: .72rem;
+    line-height: 1.42;
+  }
+  .live-row .live-venue {
+    grid-column: 4;
+    color: var(--muted);
+    opacity: .52;
+    font-size: .60rem;
+    line-height: 1.42;
+    letter-spacing: .015em;
+  }
+  .live-row-artists-only .live-artists {
+    grid-column: 2 / 4;
+    opacity: .92;
+    font-size: .77rem;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 820px) {
+  .live-log {
+    border-top: 1px solid rgba(47, 55, 67, .075);
+  }
+  .live-log h2 {
+    display: none;
+  }
+  .live-row {
+    display: grid;
+    grid-template-columns: 6.4rem minmax(0, 1fr);
+    column-gap: 12px;
+    row-gap: 2px;
+    margin: 0;
+    padding: 11px 0 12px;
+    border-bottom: 1px solid rgba(47, 55, 67, .06);
+  }
+  .live-row time {
+    grid-column: 1;
     grid-row: 1 / span 3;
     color: var(--muted);
-    opacity: .64;
-    font-size: .62rem;
-    line-height: 1.5;
-    letter-spacing: .025em;
+    opacity: .66;
+    font-size: .60rem;
+    line-height: 1.45;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
@@ -66,79 +133,28 @@ const STYLE = `<style id="works-live-layout-style">
     grid-column: 2;
     display: block;
     min-width: 0;
+    margin: 0;
   }
   .live-row .live-title {
-    font-size: .80rem;
+    font-size: .78rem;
     font-weight: 600 !important;
-    line-height: 1.42;
+    line-height: 1.4;
   }
   .live-row .live-artists {
-    margin-top: 4px;
-    color: var(--ink);
-    opacity: .80;
-    font-size: .75rem;
-    line-height: 1.42;
+    opacity: .74;
+    font-size: .72rem;
+    line-height: 1.4;
   }
   .live-row .live-venue {
-    margin-top: 4px;
     color: var(--muted);
-    opacity: .50;
-    font-size: .59rem;
+    opacity: .52;
+    font-size: .60rem;
     line-height: 1.4;
-    letter-spacing: .02em;
   }
-}
-
-@media (max-width: 820px) {
-  .live-log {
-    --live-date-col: 3.2rem;
-    --live-col-gap: 12px;
-  }
-  .live-log h2 {
-    margin: 40px 0 24px;
-    font-size: .68rem;
-    font-weight: 400;
-    letter-spacing: .04em;
-  }
-  .live-log h2:first-child {
-    margin-top: 0;
-  }
-  .live-row {
-    display: grid;
-    grid-template-columns: var(--live-date-col) minmax(0, 1fr);
-    column-gap: var(--live-col-gap);
-    row-gap: 0;
-    margin-bottom: 24px;
-    align-items: baseline;
-  }
-  .live-row time {
-    grid-row: 1 / span 3;
-    font-size: .61rem;
-    line-height: 1.5;
-    font-variant-numeric: tabular-nums;
-  }
-  .live-row .live-title,
-  .live-row .live-artists,
-  .live-row .live-venue {
-    grid-column: 2;
-    display: block;
-  }
-  .live-row .live-title {
-    font-size: .79rem;
-    font-weight: 600 !important;
-    line-height: 1.42;
-  }
-  .live-row .live-artists {
-    margin-top: 4px;
-    font-size: .74rem;
-    line-height: 1.42;
-    opacity: .80;
-  }
-  .live-row .live-venue {
-    margin-top: 4px;
-    font-size: .59rem;
-    line-height: 1.4;
-    opacity: .50;
+  .live-row-artists-only .live-artists {
+    opacity: .92;
+    font-size: .77rem;
+    font-weight: 600;
   }
 }
 </style>`;
@@ -169,10 +185,15 @@ html = html.replace(
   }
 );
 
-/* Keep the full authored date in datetime, but let the year heading carry the year visually. */
+/* Flatten the year groups into one continuous table; the full date now carries the year. */
+html = html.replace(/<h2>\d{4}<\/h2>/g, "");
 html = html.replace(
-  /<time>(\d{4})\.(\d{2})\.(\d{2})<\/time>/g,
-  (_match, year, month, day) => `<time datetime="${year}-${month}-${day}">${month}.${day}</time>`
+  /<time datetime="(\d{4})-(\d{2})-(\d{2})">\d{2}\.\d{2}<\/time>/g,
+  (_match, year, month, day) => `<time datetime="${year}-${month}-${day}">${year}.${month}.${day}</time>`
+);
+html = html.replace(
+  /<div class="live-row">(<time[^>]*>[\s\S]*?<\/time>)(?=<span class="live-artists">)/g,
+  '<div class="live-row live-row-artists-only">$1'
 );
 
 if (html.includes('id="works-live-layout-style"')) {
@@ -181,4 +202,4 @@ if (html.includes('id="works-live-layout-style"')) {
   html = html.replace("</head>", `${STYLE}</head>`);
 }
 fs.writeFileSync(FILE, html);
-console.log("Bolded Live performance titles and tightened the page to one shared notebook grid.");
+console.log("Flattened Works/Live into a faint full-width performance table with aligned rows.");
