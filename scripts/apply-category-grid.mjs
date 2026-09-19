@@ -28,6 +28,10 @@ const STYLE = `<style id="category-grid-style">
 .panel-headline > .category-top {
   margin-bottom: 0 !important;
 }
+.info-top-spacer {
+  visibility: hidden;
+  pointer-events: none;
+}
 
 @media (min-width: 821px) {
   /* Category labels use the same top and inner-left coordinates as the sosil brand. */
@@ -43,6 +47,11 @@ const STYLE = `<style id="category-grid-style">
   .info-split > .index-panel {
     padding-top: var(--category-top-y) !important;
     padding-left: var(--category-x) !important;
+  }
+  .info-split > .detail-panel {
+    padding-top: var(--category-top-y) !important;
+    padding-left: var(--category-x) !important;
+    padding-right: var(--category-x) !important;
   }
   .contact-page {
     padding-top: var(--category-top-y) !important;
@@ -67,6 +76,9 @@ const STYLE = `<style id="category-grid-style">
   .category-top h1 {
     margin-bottom: 18px !important;
     font-size: .92rem !important;
+  }
+  .info-top-spacer {
+    display: none;
   }
 }
 </style>`;
@@ -114,11 +126,19 @@ function addSingleHeader(html, label) {
 
 function normalizeInfo(html) {
   html = html.replace('<article class="info-copy"><h1>info</h1>', '<article class="info-copy">');
-  if (html.includes('class="category-top info-top"')) return html;
-  return html.replace(
-    '<section class="index-panel"><aside class="info-aside">',
-    `<section class="index-panel"><header class="category-top info-top"><h1>info</h1></header><aside class="info-aside">`
-  );
+  if (!html.includes('class="category-top info-top"')) {
+    html = html.replace(
+      '<section class="index-panel"><aside class="info-aside">',
+      `<section class="index-panel"><header class="category-top info-top"><h1>info</h1></header><aside class="info-aside">`
+    );
+  }
+  if (!html.includes('class="category-top info-top info-top-spacer"')) {
+    html = html.replace(
+      '<section class="detail-panel"><article class="info-copy">',
+      '<section class="detail-panel"><div class="category-top info-top info-top-spacer" aria-hidden="true"><h1>info</h1></div><article class="info-copy">'
+    );
+  }
+  return html;
 }
 
 function normalizeContact(html) {
@@ -147,4 +167,4 @@ for (const file of walk(ROOT)) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Unified category headers, added Archive hierarchy, and aligned category coordinates with the sosil brand grid.");
+console.log("Unified category headers, added Archive hierarchy, aligned Info biography with its media grid, and kept category coordinates on the sosil brand grid.");
