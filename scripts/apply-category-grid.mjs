@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = process.cwd();
+// Final postprocessor: keep every section label on one shared page grid.
 
 const STYLE = `<style id="category-grid-style">
 :root {
