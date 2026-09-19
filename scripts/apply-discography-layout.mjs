@@ -177,8 +177,8 @@ const STYLE = `<style id="stable-discography-layout-style">
   .release-split .track-list li {
     min-width: 0;
     display: grid;
-    grid-template-columns: 1.65rem max-content;
-    gap: 0 9px;
+    grid-template-columns: 1.25rem max-content;
+    gap: 0 5px;
     padding: 0;
     font-size: .73rem;
     line-height: 1.46;
@@ -271,4 +271,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Increased Discography detail typography by roughly 2px while keeping the compact grid.");
+console.log("Tightened Discography track number spacing while keeping titles on one line.");
