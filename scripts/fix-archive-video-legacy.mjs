@@ -21,8 +21,10 @@ function contentSlugs(dir) {
 
 const videoSlugs = contentSlugs(path.join(ROOT, "content", "archive", "video"));
 const photoSlugs = contentSlugs(path.join(ROOT, "content", "archive", "photo"));
+let normalized = 0;
 
 for (const slug of videoSlugs) {
+  /* Never overwrite a real photo detail page when a photo and video share a slug. */
   if (photoSlugs.has(slug)) continue;
 
   const canonicalDir = path.join(ROOT, "archive", "videos", slug);
@@ -38,6 +40,7 @@ for (const slug of videoSlugs) {
 
   fs.mkdirSync(legacyDir, { recursive: true });
   fs.writeFileSync(path.join(legacyDir, "index.html"), `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><link rel="stylesheet" href="${cssHref}"><meta name="robots" content="noindex,follow"><link rel="canonical" href="${canonical}"><meta http-equiv="refresh" content="0; url=${target}"><script>location.replace(${JSON.stringify(target)});</script></head><body class="redirect-page"><main><a class="site-brand" href="/">sosil</a><p><a href="${target}">archive / video</a></p></main></body></html>`);
+  normalized += 1;
 }
 
-console.log(`Normalized ${[...videoSlugs].filter((slug) => !photoSlugs.has(slug)).length} Archive video legacy route(s).`);
+console.log(`Normalized ${normalized} Archive video legacy route(s).`);
