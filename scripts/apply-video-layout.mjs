@@ -6,10 +6,7 @@ const VIDEO_DIR = path.join(ROOT, "works", "videos");
 const LANDING = path.join(VIDEO_DIR, "index.html");
 const STYLE = `<style id="stable-video-index-style">
 @media (min-width: 821px) {
-  .video-split .index-panel {
-    padding-left: var(--pad);
-    padding-right: var(--pad);
-  }
+  /* Outer split coordinates now come from the shared UI pass. */
   .video-split .video-index {
     display: grid;
     gap: clamp(34px, 4.2vh, 48px);
@@ -34,7 +31,6 @@ const STYLE = `<style id="stable-video-index-style">
     position: sticky;
     top: 0;
     align-self: start;
-    width: auto;
     height: 100vh;
     overflow: hidden;
     background: var(--bg);
@@ -49,9 +45,16 @@ const STYLE = `<style id="stable-video-index-style">
     font-size: .9rem;
     line-height: 1.45;
   }
-  .video-split .detail-panel:empty {
-    pointer-events: none;
-  }
+  .video-split .detail-panel:empty { pointer-events: none; }
+}
+
+@media (max-width: 820px) {
+  /* On a selected video, keep Works context but remove the long thumbnail list above the player. */
+  .video-split.has-detail .video-index { display: none !important; }
+  .video-split.has-detail > .index-panel { padding-bottom: 0; }
+  .video-split.has-detail .panel-headline { margin-bottom: 18px; }
+  .video-split.has-detail > .detail-panel { padding-top: 0; }
+  .video-split.has-detail .works-video-detail { margin-top: 0; }
 }
 </style>`;
 
@@ -107,8 +110,9 @@ fs.writeFileSync(LANDING, landing);
 for (const file of detailFiles) {
   let html = fs.readFileSync(file, "utf8");
   html = moveTitleAboveVideo(html);
+  html = html.replace('class="split-layout video-split"', 'class="split-layout video-split has-detail"');
   html = ensureStyle(html);
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied stable Works video layout with the detail title above the player.");
+console.log("Kept Works Video on the shared grid and hid the long thumbnail index above mobile details.");
