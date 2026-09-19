@@ -38,6 +38,30 @@ function setupDetailClose() {
   });
 }
 
+function setupNoteNavigation() {
+  const links = [...document.querySelectorAll(".note-index a[href]")];
+  if (!links.length) return;
+
+  links.forEach((link) => link.addEventListener("click", (event) => {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) return;
+
+    const target = new URL(link.href, window.location.href);
+    const currentPath = window.location.pathname.replace(/\/+$/, "");
+    const targetPath = target.pathname.replace(/\/+$/, "");
+    if (targetPath === currentPath) return;
+
+    event.preventDefault();
+    window.location.assign(target.href);
+  }));
+}
+
 function setupMailingList() {
   const form = document.querySelector("[data-mailing-form]");
   if (!form) return;
@@ -241,6 +265,7 @@ function setupHomeMotion() {
 document.addEventListener("DOMContentLoaded", () => {
   setupPanels();
   setupDetailClose();
+  setupNoteNavigation();
   setupMailingList();
   setupHomeGrid();
   setupHomeMotion();
