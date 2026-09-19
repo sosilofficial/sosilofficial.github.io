@@ -132,7 +132,11 @@ try {
     const coverTransformA = await page.locator(".moving-cover").evaluate((node) => getComputedStyle(node).transform);
     await page.waitForTimeout(180);
     const coverTransformB = await page.locator(".moving-cover").evaluate((node) => getComputedStyle(node).transform);
-    assert(coverTransformA === coverTransformB, `${viewport.name}: reduced motion에서 홈 커버가 움직입니다`);
+    if (viewport.width > 820) {
+      assert(coverTransformA !== coverTransformB, `${viewport.name}: desktop reduced-motion에서도 기존의 느린 홈 커버 이동이 유지되지 않습니다`);
+    } else {
+      assert(coverTransformA === coverTransformB, `${viewport.name}: mobile reduced-motion에서 홈 커버가 움직입니다`);
+    }
 
     await open(page, "/works/discography");
     const worksTabs = await page.locator(".release-split .subnav a").evaluateAll((links) => links.map((link) => ({
