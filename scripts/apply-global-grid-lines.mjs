@@ -48,15 +48,26 @@ const STYLE = `<style id="global-grid-lines-style">
     border-left: 0 !important;
   }
 
+  /*
+   * Keep the structural divider, but let it read more like a faint trace than UI chrome:
+   * it stops short of the viewport edges and softly fades in/out.
+   */
   .split-layout:not(.info-split)::after {
     content: "" !important;
     position: absolute !important;
     z-index: 40 !important;
-    top: 0 !important;
-    bottom: 0 !important;
+    top: 9vh !important;
+    bottom: 9vh !important;
     left: 38.8888889% !important;
     width: 1px !important;
-    background: var(--line) !important;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--line) 12%,
+      var(--line) 88%,
+      transparent 100%
+    ) !important;
+    opacity: .42 !important;
     pointer-events: none !important;
   }
 
@@ -105,16 +116,10 @@ const STYLE = `<style id="global-grid-lines-style">
     max-width: 44ch !important;
   }
 
+  /* Info is read as one editorial spread, so whitespace does the separation here. */
   .info-split::after {
-    content: "" !important;
-    position: absolute !important;
-    z-index: 40 !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    left: 42.7% !important;
-    width: 1px !important;
-    background: var(--line) !important;
-    pointer-events: none !important;
+    content: none !important;
+    display: none !important;
   }
 }
 </style>`;
@@ -144,4 +149,4 @@ for (const file of walk(ROOT)) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Kept Discography-based split lines globally, swapped Info into a 42.7/57.3 media-to-bio grid, and preserved the Contact line break.");
+console.log("Softened regular split dividers into faint vertical traces, removed the Info divider, and preserved the shared grid.");
