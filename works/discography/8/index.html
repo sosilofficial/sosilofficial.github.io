@@ -454,7 +454,97 @@
   .info-split .info-english p { margin-bottom: 16px; }
   .info-split .info-copy .section-mark { margin: 16px 0; }
 }
-</style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography" class="is-active" aria-current="page">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout release-split has-detail"><section class="index-panel"><div class="panel-headline"><header class="category-top works-top"><h1>works</h1><nav class="subnav" aria-label="works 하위 메뉴"><a href="/works/discography" class="is-active" aria-current="page">discography</a><a href="/works/videos">video</a><a href="/works/live">live</a><a href="/works/others">others</a></nav></header></div><div class="release-index"><a href="/works/discography/8" class="is-selected" aria-current="page"><img src="/media/catalog/2026-09-04/a78bfa4e-a48f-4757-9783-26024fff6536.webp" alt="" loading="lazy" decoding="async"><span><strong>몽상은나의조랑말</strong><small>2025.03.17</small></span></a><a href="/works/discography/da-jinaseo"><img src="/media/catalog/da-jinaseo.jpg" alt="" loading="lazy" decoding="async"><span><strong>다 지나서</strong><small>2021.11.24</small></span></a></div></section><section class="detail-panel"><article class="release-detail"><button type="button" class="close-detail" data-close-url="/works/discography" aria-label="discography 닫기">×</button><header><p>2025.03.17</p><h1>몽상은나의조랑말</h1><p>Reverie is My Pony</p></header><img class="release-hero" src="/media/catalog/2026-09-04/a78bfa4e-a48f-4757-9783-26024fff6536.webp" alt="몽상은나의조랑말 앨범 커버" decoding="async"><section class="detail-section release-tracklist-section"><h2>tracklist</h2><ol class="track-list"><li><span>01</span><span>멀어 Too Far</span></li><li><span>02</span><span>창밖에 Out of the Window</span></li><li><span>03</span><span>미끄럼틀 Slide</span></li><li><span>04</span><span>슬픔과어둠 Sorrow and Darkness</span></li><li><span>05</span><span>44</span></li><li><span>06</span><span>몽상은나의조랑말 Reverie is My Pony</span></li><li><span>07</span><span>이젠 나아지기를 Hope Getting Better</span></li><li><span>08</span><span>눈과피 Snow and Blood</span></li><li><span>09</span><span>노르웨이 Norway</span></li><li><span>10</span><span>숨고싶은날 Hiding Today</span></li></ol></section><div class="prose liner-notes">여전히 ‘얼터너티브’를 이야기하는 젊은 음악인 ‘소실’이 있다. 물론 지금도 ‘얼터너티브’란 용어는 힙합이나 R&amp;B 등의 장르 앞에서 계속해서 쓰이고 있다. ‘대안’이라는 의미를 넘어 ‘새로운’이라는 뜻까지를 내포하고 있는 듯하다. 소실은 첫 앨범 [몽상은나의조랑말]을 만들며 ‘대안’에 더 방점을 두고 ‘얼터너티브 포크’라 이름 붙였다. 그가 처음 음악에 빠져들 무렵 들었던, 너바나(Nirvana)를 위시한 얼터너티브 록은 많은 영향을 끼쳤다. 그 음악이 가진 ‘태도’ 또한 빼놓을 수 없었다. 소실의 음악을 포크라 규정지을 수 있다면 기존과는 또 다른 정서와 태도를 가진 포크 음악을 하고 싶었다. 그래서 자신의 음악을 얼터너티브 포크라 정의했다.
+</style><style id="mobile-detail-screen-style">
+@media (max-width: 820px) {
+  /*
+   * Discography and Merch details should read as their own mobile screen,
+   * not as the second half of a stacked desktop split.
+   */
+  .mobile-detail-screen.has-detail {
+    display: block !important;
+    min-height: calc(100vh - 60px) !important;
+  }
+
+  .mobile-detail-screen.has-detail > .index-panel {
+    display: none !important;
+  }
+
+  .mobile-detail-screen.has-detail > .detail-panel {
+    display: block !important;
+    width: 100% !important;
+    min-height: calc(100vh - 60px) !important;
+    padding: 24px 18px 80px !important;
+    border-left: 0 !important;
+  }
+
+  .mobile-detail-screen.has-detail > .detail-panel > article {
+    position: relative !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .mobile-detail-screen.has-detail .close-detail {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    float: none !important;
+    margin: 0 !important;
+    width: 28px !important;
+    height: 28px !important;
+    z-index: 4 !important;
+  }
+
+  .mobile-detail-screen.has-detail .release-detail {
+    padding: 0 !important;
+  }
+
+  .mobile-detail-screen.has-detail .release-detail header {
+    margin: 0 0 32px !important;
+    padding-right: 42px !important;
+  }
+
+  .mobile-detail-screen.has-detail .release-detail header h1 {
+    margin-bottom: 5px !important;
+    font-size: 1rem !important;
+    line-height: 1.42 !important;
+  }
+
+  .mobile-detail-screen.has-detail .release-hero {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .mobile-detail-screen.has-detail .release-detail .detail-section,
+  .mobile-detail-screen.has-detail .release-detail .liner-notes,
+  .mobile-detail-screen.has-detail .release-detail .external-links {
+    margin-top: 44px !important;
+  }
+
+  .mobile-detail-screen.has-detail .merch-detail h1 {
+    max-width: none !important;
+    margin: 0 42px 28px 0 !important;
+    font-size: 1rem !important;
+    line-height: 1.42 !important;
+  }
+
+  .mobile-detail-screen.has-detail .merch-gallery {
+    gap: 18px !important;
+    margin: 0 0 32px !important;
+  }
+
+  .mobile-detail-screen.has-detail .merch-gallery img {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .mobile-detail-screen.has-detail .purchase-links {
+    margin-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+</style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography" class="is-active" aria-current="page">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout release-split has-detail mobile-detail-screen"><section class="index-panel"><div class="panel-headline"><header class="category-top works-top"><h1>works</h1><nav class="subnav" aria-label="works 하위 메뉴"><a href="/works/discography" class="is-active" aria-current="page">discography</a><a href="/works/videos">video</a><a href="/works/live">live</a><a href="/works/others">others</a></nav></header></div><div class="release-index"><a href="/works/discography/8" class="is-selected" aria-current="page"><img src="/media/catalog/2026-09-04/a78bfa4e-a48f-4757-9783-26024fff6536.webp" alt="" loading="lazy" decoding="async"><span><strong>몽상은나의조랑말</strong><small>2025.03.17</small></span></a><a href="/works/discography/da-jinaseo"><img src="/media/catalog/da-jinaseo.jpg" alt="" loading="lazy" decoding="async"><span><strong>다 지나서</strong><small>2021.11.24</small></span></a></div></section><section class="detail-panel"><article class="release-detail"><button type="button" class="close-detail" data-close-url="/works/discography" aria-label="discography 닫기">×</button><header><p>2025.03.17</p><h1>몽상은나의조랑말</h1><p>Reverie is My Pony</p></header><img class="release-hero" src="/media/catalog/2026-09-04/a78bfa4e-a48f-4757-9783-26024fff6536.webp" alt="몽상은나의조랑말 앨범 커버" decoding="async"><section class="detail-section release-tracklist-section"><h2>tracklist</h2><ol class="track-list"><li><span>01</span><span>멀어 Too Far</span></li><li><span>02</span><span>창밖에 Out of the Window</span></li><li><span>03</span><span>미끄럼틀 Slide</span></li><li><span>04</span><span>슬픔과어둠 Sorrow and Darkness</span></li><li><span>05</span><span>44</span></li><li><span>06</span><span>몽상은나의조랑말 Reverie is My Pony</span></li><li><span>07</span><span>이젠 나아지기를 Hope Getting Better</span></li><li><span>08</span><span>눈과피 Snow and Blood</span></li><li><span>09</span><span>노르웨이 Norway</span></li><li><span>10</span><span>숨고싶은날 Hiding Today</span></li></ol></section><div class="prose liner-notes">여전히 ‘얼터너티브’를 이야기하는 젊은 음악인 ‘소실’이 있다. 물론 지금도 ‘얼터너티브’란 용어는 힙합이나 R&amp;B 등의 장르 앞에서 계속해서 쓰이고 있다. ‘대안’이라는 의미를 넘어 ‘새로운’이라는 뜻까지를 내포하고 있는 듯하다. 소실은 첫 앨범 [몽상은나의조랑말]을 만들며 ‘대안’에 더 방점을 두고 ‘얼터너티브 포크’라 이름 붙였다. 그가 처음 음악에 빠져들 무렵 들었던, 너바나(Nirvana)를 위시한 얼터너티브 록은 많은 영향을 끼쳤다. 그 음악이 가진 ‘태도’ 또한 빼놓을 수 없었다. 소실의 음악을 포크라 규정지을 수 있다면 기존과는 또 다른 정서와 태도를 가진 포크 음악을 하고 싶었다. 그래서 자신의 음악을 얼터너티브 포크라 정의했다.
 
 사라질 소(消)에 잃을 실(失)을 쓴다. “사라져 없어짐. 또는 그렇게 잃어버림.”이란 뜻을 갖고 있다. 이렇게 ‘소실’이란 이름을 풀어 쓰고 보니, 정작 이름의 주인공에게 뜻을 물어본 적이 없다는 걸 깨달았다. 너무나 당연하게 이 한자어에서 이름을 지었을 거로 생각했다. 그의 음악이, 그의 노랫말이 그렇게 말해주고 있었다. 설령 아니라고 해도 아무 문제는 없다. 그의 음악이, 그의 노랫말이 줄곧 사라져 없어지는 것에 관해 이야기하고 있기 때문이다.
 
