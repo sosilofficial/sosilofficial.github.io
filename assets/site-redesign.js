@@ -1,11 +1,10 @@
 const HOME_MOTION_CONFIG = Object.freeze({
   speedSeconds: 58,
-  trailOpacity: 0.11,
-  trailBlur: 1.4,
-  trailLifetimeMs: 10500,
-  trailIntervalMinMs: 260,
-  trailIntervalMaxMs: 360,
-  trailScaleVariance: 0.004,
+  trailOpacity: 0.045,
+  trailBlur: 1.2,
+  trailIntervalMinMs: 280,
+  trailIntervalMaxMs: 380,
+  trailScaleVariance: 0.003,
   jitterPx: 0.45,
   brightnessVariation: 0.025,
   colorDriftAmount: 0.018,
@@ -101,17 +100,13 @@ function createHomeMotionPath() {
   });
 }
 
-function getHomeTrailOpacity(ageMs, config) {
-  const progress = Math.min(1, Math.max(0, ageMs / config.trailLifetimeMs));
-  return Math.pow(1 - progress, 1.35);
-}
-
 function setupHomeMotion() {
   const field = document.querySelector("[data-home-motion]");
   const cover = field?.querySelector(".moving-cover");
   if (!field || !cover || matchMedia("(max-width: 820px)").matches) return;
 
-  // Reduced-motion keeps the same quiet path and long-exposure traces, minus jitter and tonal modulation.
+  // Reduced-motion keeps the quiet path and persistent long-exposure traces,
+  // minus jitter and tonal modulation.
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const config = reducedMotion
     ? {
@@ -144,8 +139,6 @@ function setupHomeMotion() {
   let nextTrailDelay = config.trailIntervalMinMs;
   let frameId = 0;
   let trailTime = 0;
-  let lastPaint = -Infinity;
-  const trails = [];
   const history = document.createElement("canvas");
   history.className = "motion-history";
   history.setAttribute("aria-hidden", "true");
@@ -184,7 +177,6 @@ function setupHomeMotion() {
     history.width = width;
     history.height = height;
     historyScale = scale;
-    lastPaint = -Infinity;
   }
 
   if (context && stampContext) {
@@ -194,41 +186,25 @@ function setupHomeMotion() {
     artwork?.addEventListener("load", prepareStamp);
   }
 
+  // Paint each afterimage once onto the history canvas and never clear it.
+  // This behaves like a long exposure: the path accumulates for the life of the page.
   function makeTrail(now) {
     if (context && stampReady) {
-      trails.push({
-        born: now,
-        x: x / Math.max(1, field.clientWidth - cover.offsetWidth),
-        y: y / Math.max(1, field.clientHeight - cover.offsetHeight),
-        scale: 1 + (Math.random() - .5) * config.trailScaleVariance * 2,
-        opacity: config.trailOpacity * (.9 + Math.random() * .2)
-      });
+      const scale = 1 + (Math.random() - .5) * config.trailScaleVariance * 2;
+      const width = cover.offsetWidth * scale;
+      const height = cover.offsetHeight * scale;
+      const left = x + (cover.offsetWidth - width) / 2;
+      const top = y + (cover.offsetHeight - height) / 2;
+
+      context.save();
+      context.setTransform(historyScale, 0, 0, historyScale, 0, 0);
+      context.filter = `blur(${config.trailBlur}px) saturate(.7)`;
+      context.globalAlpha = config.trailOpacity * (.9 + Math.random() * .2);
+      context.drawImage(stamp, left, top, width, height);
+      context.restore();
     }
     lastTrail = now;
     nextTrailDelay = config.trailIntervalMinMs + Math.random() * (config.trailIntervalMaxMs - config.trailIntervalMinMs);
-  }
-
-  function paintTrails(now) {
-    if (!context || !stampReady || !field.clientHeight || now - lastPaint < 1000 / 30) return;
-    lastPaint = now;
-    context.clearRect(0, 0, history.width, history.height);
-    context.save();
-    context.setTransform(historyScale, 0, 0, historyScale, 0, 0);
-    context.filter = `blur(${config.trailBlur}px) saturate(.7)`;
-    let activeCount = 0;
-    for (const trail of trails) {
-      const age = now - trail.born;
-      if (age >= config.trailLifetimeMs) continue;
-      trails[activeCount++] = trail;
-      const width = cover.offsetWidth * trail.scale;
-      const height = cover.offsetHeight * trail.scale;
-      const left = trail.x * Math.max(0, field.clientWidth - cover.offsetWidth) + (cover.offsetWidth - width) / 2;
-      const top = trail.y * Math.max(0, field.clientHeight - cover.offsetHeight) + (cover.offsetHeight - height) / 2;
-      context.globalAlpha = trail.opacity * getHomeTrailOpacity(age, config);
-      context.drawImage(stamp, left, top, width, height);
-    }
-    trails.length = activeCount;
-    context.restore();
   }
 
   function animate(now) {
@@ -246,7 +222,6 @@ function setupHomeMotion() {
     cover.style.transform = `translate(${x + jitterX}px, ${y + jitterY}px)`;
     cover.style.filter = `saturate(${saturation}) contrast(.94) brightness(${exposure})`;
     if (trailTime - lastTrail > nextTrailDelay) makeTrail(trailTime);
-    paintTrails(trailTime);
     frameId = requestAnimationFrame(animate);
   }
 
