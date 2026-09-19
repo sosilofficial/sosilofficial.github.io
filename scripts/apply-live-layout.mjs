@@ -191,9 +191,14 @@ html = html.replace(
   /<time datetime="(\d{4})-(\d{2})-(\d{2})">\d{2}\.\d{2}<\/time>/g,
   (_match, year, month, day) => `<time datetime="${year}-${month}-${day}">${year}.${month}.${day}</time>`
 );
+
+/* Mark rows that have no separate performance title so their artist names occupy the title axis. */
 html = html.replace(
-  /<div class="live-row">(<time[^>]*>[\s\S]*?<\/time>)(?=<span class="live-artists">)/g,
-  '<div class="live-row live-row-artists-only">$1'
+  /<div class="live-row(?: live-row-artists-only)?">([\s\S]*?)<\/div>/g,
+  (_match, inner) => {
+    const artistsOnly = !inner.includes('class="live-title"') && inner.includes('class="live-artists"');
+    return `<div class="live-row${artistsOnly ? " live-row-artists-only" : ""}">${inner}</div>`;
+  }
 );
 
 if (html.includes('id="works-live-layout-style"')) {
