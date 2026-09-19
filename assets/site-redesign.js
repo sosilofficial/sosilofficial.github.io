@@ -1,13 +1,13 @@
 const HOME_MOTION_CONFIG = Object.freeze({
-  speedSeconds: 90,
+  speedSeconds: 58,
   trailCount: 6,
-  trailOpacity: 0.08,
+  trailOpacity: 0.10,
   trailBlur: 5,
   trailLifetimeMs: 2400,
   trailIntervalMinMs: 340,
   trailIntervalMaxMs: 540,
   trailScaleVariance: 0.012,
-  jitterPx: 1.2,
+  jitterPx: 1.4,
   brightnessVariation: 0.025,
   colorDriftAmount: 0.018,
   exposurePeriodMs: 4100
