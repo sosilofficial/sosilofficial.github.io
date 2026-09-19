@@ -75,11 +75,33 @@ async function assertHomeMotion(viewport, label) {
   await open(page, "/");
   const cover = page.locator(".moving-cover");
   await cover.waitFor({ state: "visible" });
-  const before = await cover.evaluate((node) => getComputedStyle(node).transform);
-  await page.waitForTimeout(500);
-  const after = await cover.evaluate((node) => getComputedStyle(node).transform);
-  assert(before !== after, `${label}: 홈 앨범커버 transform이 움직이지 않습니다 (${before})`);
-  assert(await page.locator(".home-motion-field canvas.motion-history").count() === 1, `${label}: 홈 잔상 canvas가 생성되지 않았습니다`);
+
+  const positions = [];
+  for (let i = 0; i < 7; i += 1) {
+    const box = await cover.boundingBox();
+    assert(box, `${label}: 홈 앨범커버 좌표를 읽지 못했습니다`);
+    positions.push({ x: box.x + box.width / 2, y: box.y + box.height / 2 });
+    await page.waitForTimeout(400);
+  }
+
+  const start = positions[0];
+  const maxDistance = Math.max(...positions.map((point) => Math.hypot(point.x - start.x, point.y - start.y)));
+  const minDistance = viewport.width > 820 ? 6 : 3;
+  assert(maxDistance >= minDistance, `${label}: 홈 앨범커버의 실제 이동량이 너무 작습니다 (${maxDistance.toFixed(2)}px)`);
+
+  const canvas = page.locator(".home-motion-field canvas.motion-history");
+  assert(await canvas.count() === 1, `${label}: 홈 잔상 canvas가 생성되지 않았습니다`);
+  const paintedTrail = await canvas.evaluate((node) => {
+    const context2d = node.getContext("2d");
+    if (!context2d || !node.width || !node.height) return false;
+    const pixels = context2d.getImageData(0, 0, node.width, node.height).data;
+    for (let index = 3; index < pixels.length; index += 32) {
+      if (pixels[index] > 0) return true;
+    }
+    return false;
+  });
+  assert(paintedTrail, `${label}: 잔상 canvas에 실제 픽셀이 그려지지 않았습니다`);
+
   await context.close();
 }
 
@@ -182,7 +204,7 @@ try {
     }
   }
   await context.close();
-  console.log(`Browser QA passed at ${viewports.map((viewport) => `${viewport.width}x${viewport.height}`).join(", ")}, verified Works/Archive rhythm, Discography/Video alignment, home News and desktop/mobile home motion, and checked ${checked.size} local links.`);
+  console.log(`Browser QA passed at ${viewports.map((viewport) => `${viewport.width}x${viewport.height}`).join(", ")}, verified Works/Archive rhythm, Discography/Video alignment, visibly moving homepage covers with painted trails, and checked ${checked.size} local links.`);
 } finally {
   await browser.close();
   await new Promise((resolve) => server.close(resolve));
