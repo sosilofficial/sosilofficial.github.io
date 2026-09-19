@@ -38,37 +38,6 @@ function setupDetailClose() {
   });
 }
 
-function setupWorksScrollMemory() {
-  const configs = [
-    {
-      match: (pathname) => pathname === "/works/videos/" || pathname.startsWith("/works/videos/"),
-      selector: '.video-index a[href^="/works/videos/"]',
-      key: "sosil:works-video-scroll-y"
-    },
-    {
-      match: (pathname) => pathname === "/works/discography/" || pathname.startsWith("/works/discography/"),
-      selector: '.release-index a[href^="/works/discography/"]',
-      key: "sosil:works-discography-scroll-y"
-    }
-  ];
-
-  const config = configs.find(({ match }) => match(location.pathname));
-  if (!config) return;
-
-  const links = [...document.querySelectorAll(config.selector)];
-  links.forEach((link) => link.addEventListener("click", () => {
-    sessionStorage.setItem(config.key, String(window.scrollY));
-  }));
-
-  const saved = Number(sessionStorage.getItem(config.key));
-  if (!Number.isFinite(saved) || saved <= 0) return;
-
-  history.scrollRestoration = "manual";
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => window.scrollTo({ top: saved, left: 0, behavior: "auto" }));
-  });
-}
-
 function setupHomeGrid() {
   const canvas = document.querySelector(".home-canvas");
   const anchor = document.querySelector(".home-grid-anchor");
@@ -242,7 +211,6 @@ function setupHomeMotion() {
 document.addEventListener("DOMContentLoaded", () => {
   setupPanels();
   setupDetailClose();
-  setupWorksScrollMemory();
   setupHomeGrid();
   setupHomeMotion();
 });
