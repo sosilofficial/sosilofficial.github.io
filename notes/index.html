@@ -339,6 +339,33 @@
   .works-top.category-top {
     transform: translateY(3px);
   }
+
+  /*
+   * Info should feel sparse but not disconnected. Keep the copy on a strict,
+   * compact vertical rhythm so the empty space belongs to the page, not between
+   * every sentence.
+   */
+  .info-split .info-copy {
+    width: min(100%, 40ch) !important;
+    max-width: 40ch !important;
+  }
+  .info-split .info-korean,
+  .info-split .info-english {
+    line-height: 1.66 !important;
+  }
+  .info-split .info-korean p,
+  .info-split .info-english p {
+    margin: 0 0 16px !important;
+  }
+  .info-split .info-korean p:last-child,
+  .info-split .info-english p:last-child {
+    margin-bottom: 0 !important;
+  }
+  .info-split .info-copy .section-mark {
+    display: block;
+    margin: 16px 0 !important;
+    line-height: 1 !important;
+  }
 }
 
 @media (max-width: 820px) {
@@ -351,6 +378,13 @@
   }
   .info-top-spacer {
     display: none;
+  }
+  .info-split .info-korean p,
+  .info-split .info-english p {
+    margin-bottom: 16px !important;
+  }
+  .info-split .info-copy .section-mark {
+    margin: 16px 0 !important;
   }
 }
 </style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography">works</a><a href="/news">news</a><a href="/notes" class="is-active" aria-current="page">notes</a><a href="/archive">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout "><section class="index-panel"><header class="category-top"><h1>notes</h1></header><div class="note-index"><a href="/notes/3"><span>2026.09.04</span><strong>Joseph Cornell</strong></a><a href="/notes/1"><span>2026.09.03</span><strong>Nebraska</strong></a></div></section><section class="detail-panel"></section></div></main></div></body></html>
