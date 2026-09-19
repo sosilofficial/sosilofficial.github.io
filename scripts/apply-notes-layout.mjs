@@ -19,12 +19,29 @@ const STYLE = `<style id="slow-notes-style">
   .note-index a.is-selected {
     background: rgba(72, 80, 91, .03);
   }
+
+  /*
+   * Put the detail date on the same horizontal row as the first item in the
+   * Notes index. The left column starts after the shared category heading,
+   * so mirror that exact vertical rhythm instead of using an arbitrary 10vh.
+   */
   .note-detail {
     max-width: 48rem;
-    margin-top: clamp(70px, 10vh, 108px);
+    margin-top: calc(
+      var(--category-top-y, clamp(48px, 6.8vh, 70px))
+      + 1.296rem
+      + 24px
+      + clamp(44px, 6vh, 72px)
+      + 4px
+      - var(--pad)
+    );
+  }
+  .note-detail > p:first-of-type {
+    margin: 0 0 8px !important;
+    line-height: 1.72;
   }
   .note-detail h1 {
-    margin-bottom: clamp(42px, 6vh, 70px);
+    margin: 0 0 clamp(42px, 6vh, 70px) !important;
   }
   .note-detail .prose p {
     max-width: 50ch;
@@ -68,4 +85,4 @@ for (const entry of fs.readdirSync(NOTES_DIR, { withFileTypes: true })) {
 }
 const landing = path.join(NOTES_DIR, "index.html");
 if (fs.existsSync(landing)) apply(landing);
-console.log("Applied slower Notes spacing and detail rhythm.");
+console.log("Applied Notes spacing and aligned detail dates to the shared index grid.");
