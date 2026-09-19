@@ -21,6 +21,7 @@ on:
       - "scripts/apply-notes-layout.mjs"
       - "scripts/apply-shared-ui.mjs"
       - "scripts/apply-mobile-detail-pages.mjs"
+      - "scripts/fix-archive-video-legacy.mjs"
       - "assets/site-redesign.css"
       - "assets/site-redesign.js"
 
@@ -74,6 +75,8 @@ jobs:
         run: node scripts/apply-mobile-detail-pages.mjs
       - name: Remove generated inline style copies
         run: node scripts/consolidate-layout-styles.mjs --strip-html
+      - name: Normalize Archive video legacy routes
+        run: node scripts/fix-archive-video-legacy.mjs
       - name: Validate generated site
         run: node scripts/validate-site.mjs
       - name: Run browser QA
