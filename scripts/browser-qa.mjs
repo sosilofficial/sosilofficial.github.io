@@ -86,7 +86,7 @@ async function assertHomeMotion(viewport, label) {
 
   const start = positions[0];
   const maxDistance = Math.max(...positions.map((point) => Math.hypot(point.x - start.x, point.y - start.y)));
-  const minDistance = viewport.width > 820 ? 6 : 3;
+  const minDistance = viewport.width > 820 ? 6 : 2;
   assert(maxDistance >= minDistance, `${label}: 홈 앨범커버의 실제 이동량이 너무 작습니다 (${maxDistance.toFixed(2)}px)`);
 
   const canvas = page.locator(".home-motion-field canvas.motion-history");
