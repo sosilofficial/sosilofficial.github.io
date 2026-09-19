@@ -6,6 +6,12 @@ const GENERATED_DIR = path.join(ROOT, "archive", "links");
 const LANDING = path.join(GENERATED_DIR, "index.html");
 const CONTENT_DIR = path.join(ROOT, "content", "archive", "links");
 const SITEMAP = path.join(ROOT, "sitemap.xml");
+const ARCHIVE_LANDINGS = [
+  path.join(ROOT, "archive", "index.html"),
+  path.join(ROOT, "archive", "photo-video", "index.html"),
+  path.join(ROOT, "archive", "videos", "index.html"),
+  LANDING,
+];
 
 if (!fs.existsSync(LANDING)) throw new Error("Archive/Text landing must be generated before layout postprocessing.");
 
@@ -79,19 +85,30 @@ const groupsHtml = order.map((group) => {
 const MAIN = `<main class="site-main"><div class="wide-page archive-text-flat-page"><div class="archive-text-top">${'<nav class="subnav" aria-label="archive 하위 메뉴"><a href="/archive/photo-video">photo</a><a href="/archive/videos">video</a><a href="/archive/links" class="is-active" aria-current="page">text</a></nav>'}</div><div class="archive-text-groups">${groupsHtml}</div></div></main>`;
 
 const STYLE = `<style id="archive-text-layout-style">
-.archive-text-page .archive-text-flat-page {
+/* Keep Photo, Video and Text on one shared Archive index coordinate. */
+.archive-index-page .wide-page {
   min-height: 100vh;
   max-width: none;
-  padding: clamp(42px, 5.5vh, 58px) clamp(38px, 5.5vw, 86px) 110px;
+  padding: clamp(42px, 5.5vh, 58px) clamp(38px, 5.5vw, 86px) 110px !important;
+}
+.archive-index-page .wide-page > .subnav {
+  margin-bottom: clamp(68px, 9vh, 110px) !important;
+}
+.archive-index-page .photo-post-grid,
+.archive-index-page .archive-video-grid,
+.archive-index-page .archive-text-groups {
+  width: min(100%, 1040px);
+}
+.archive-index-page .wide-empty {
+  width: min(100%, 1040px);
+  margin-top: 0;
+  text-align: left;
 }
 .archive-text-page .archive-text-top {
   margin-bottom: clamp(68px, 9vh, 110px);
 }
 .archive-text-page .archive-text-top .subnav {
   margin-bottom: 0;
-}
-.archive-text-page .archive-text-groups {
-  width: min(100%, 1040px);
 }
 .archive-text-page .archive-text-group {
   margin-bottom: clamp(54px, 7vh, 82px);
@@ -147,11 +164,12 @@ const STYLE = `<style id="archive-text-layout-style">
   font-family: var(--font-content, "Helvetica Neue", Helvetica, Arial, sans-serif);
 }
 @media (max-width: 820px) {
-  .archive-text-page .archive-text-flat-page {
-    padding: 24px 18px 80px;
+  .archive-index-page .wide-page {
+    padding: 24px 18px 80px !important;
   }
+  .archive-index-page .wide-page > .subnav,
   .archive-text-page .archive-text-top {
-    margin-bottom: 56px;
+    margin-bottom: 56px !important;
   }
   .archive-text-page .archive-text-group {
     margin-bottom: 52px;
@@ -163,18 +181,41 @@ const STYLE = `<style id="archive-text-layout-style">
 }
 </style>`;
 
+function addBodyClass(html, className) {
+  return html.replace(/<body class="([^"]*)">/, (_m, cls) => {
+    const classes = new Set(cls.split(/\s+/).filter(Boolean));
+    classes.add(className);
+    return `<body class="${[...classes].join(" ")}">`;
+  });
+}
+
+function ensureStyle(html) {
+  return html.includes('id="archive-text-layout-style"')
+    ? html.replace(/<style id="archive-text-layout-style">[\s\S]*?<\/style>/, STYLE)
+    : html.replace("</head>", `${STYLE}</head>`);
+}
+
 let html = fs.readFileSync(LANDING, "utf8");
 html = html.replace(/<body class="([^"]*)">/, (_m, cls) => {
   const classes = new Set(cls.split(/\s+/).filter(Boolean));
   classes.delete("archive-text-landing-page");
   classes.add("archive-text-page");
+  classes.add("archive-index-page");
   return `<body class="${[...classes].join(" ")}">`;
 });
-html = html.includes('id="archive-text-layout-style"')
-  ? html.replace(/<style id="archive-text-layout-style">[\s\S]*?<\/style>/, STYLE)
-  : html.replace("</head>", `${STYLE}</head>`);
+html = ensureStyle(html);
 html = html.replace(/<main class="site-main">[\s\S]*?<\/main>/, MAIN);
 fs.writeFileSync(LANDING, html);
+
+// Photo and Video use the Text landing as their fixed index reference:
+// same top inset, horizontal inset, subnav baseline and content width.
+for (const file of ARCHIVE_LANDINGS) {
+  if (!fs.existsSync(file)) continue;
+  let landingHtml = fs.readFileSync(file, "utf8");
+  landingHtml = addBodyClass(landingHtml, "archive-index-page");
+  landingHtml = ensureStyle(landingHtml);
+  fs.writeFileSync(file, landingHtml);
+}
 
 // Detail routes are no longer part of Archive/Text; every title links straight to its source.
 for (const entry of fs.readdirSync(GENERATED_DIR, { withFileTypes: true })) {
@@ -188,4 +229,4 @@ if (fs.existsSync(SITEMAP)) {
   fs.writeFileSync(SITEMAP, cleaned);
 }
 
-console.log("Flattened Archive/Text into features, interviews, and reviews with direct external links.");
+console.log("Aligned Archive Photo, Video and Text landings to one shared index grid; Text remains a flat external-link archive.");
