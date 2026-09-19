@@ -11,20 +11,25 @@ if (!fs.existsSync(FILE)) {
 const STYLE = `<style id="works-live-layout-style">
 @media (min-width: 821px) {
   .live-split .index-panel {
-    padding-right: clamp(32px, 3.8vw, 58px);
+    padding-right: var(--category-x, clamp(30px, 2.75vw, 44px)) !important;
+  }
+  .live-split .panel-headline {
+    margin-bottom: 48px !important;
   }
 
   /*
-   * Treat Live like a small performance notebook: compact repeated entries
-   * against a deliberately large empty field, rather than a portfolio table.
+   * Live uses one strict two-column notebook grid: dates are a small annotation
+   * rail, while every piece of performance information shares one text axis.
    */
   .live-log {
-    width: min(100%, 38rem);
+    --live-date-col: 3.3rem;
+    --live-col-gap: 14px;
+    width: min(100%, 36rem);
   }
   .live-log h2 {
-    margin: 52px 0 24px;
+    margin: 48px 0 24px;
     color: var(--ink);
-    opacity: .78;
+    opacity: .76;
     font-size: .69rem;
     font-weight: 400;
     line-height: 1;
@@ -36,9 +41,10 @@ const STYLE = `<style id="works-live-layout-style">
 
   .live-row {
     display: grid;
-    grid-template-columns: 4.25rem minmax(0, 1fr);
-    gap: 0 12px;
-    margin-bottom: 22px;
+    grid-template-columns: var(--live-date-col) minmax(0, 1fr);
+    column-gap: var(--live-col-gap);
+    row-gap: 0;
+    margin-bottom: 24px;
     align-items: baseline;
   }
   .live-row:last-child {
@@ -47,11 +53,12 @@ const STYLE = `<style id="works-live-layout-style">
   .live-row time {
     grid-row: 1 / span 3;
     color: var(--muted);
-    opacity: .66;
+    opacity: .64;
     font-size: .62rem;
-    line-height: 1.52;
-    letter-spacing: .03em;
+    line-height: 1.5;
+    letter-spacing: .025em;
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
   .live-row .live-title,
   .live-row .live-artists,
@@ -62,19 +69,20 @@ const STYLE = `<style id="works-live-layout-style">
   }
   .live-row .live-title {
     font-size: .80rem;
+    font-weight: 600 !important;
     line-height: 1.42;
   }
   .live-row .live-artists {
-    margin-top: 3px;
+    margin-top: 4px;
     color: var(--ink);
-    opacity: .82;
+    opacity: .80;
     font-size: .75rem;
     line-height: 1.42;
   }
   .live-row .live-venue {
-    margin-top: 3px;
+    margin-top: 4px;
     color: var(--muted);
-    opacity: .52;
+    opacity: .50;
     font-size: .59rem;
     line-height: 1.4;
     letter-spacing: .02em;
@@ -82,8 +90,12 @@ const STYLE = `<style id="works-live-layout-style">
 }
 
 @media (max-width: 820px) {
+  .live-log {
+    --live-date-col: 3.2rem;
+    --live-col-gap: 12px;
+  }
   .live-log h2 {
-    margin: 44px 0 22px;
+    margin: 40px 0 24px;
     font-size: .68rem;
     font-weight: 400;
     letter-spacing: .04em;
@@ -93,15 +105,17 @@ const STYLE = `<style id="works-live-layout-style">
   }
   .live-row {
     display: grid;
-    grid-template-columns: 4rem minmax(0, 1fr);
-    gap: 0 10px;
-    margin-bottom: 22px;
+    grid-template-columns: var(--live-date-col) minmax(0, 1fr);
+    column-gap: var(--live-col-gap);
+    row-gap: 0;
+    margin-bottom: 24px;
     align-items: baseline;
   }
   .live-row time {
     grid-row: 1 / span 3;
     font-size: .61rem;
     line-height: 1.5;
+    font-variant-numeric: tabular-nums;
   }
   .live-row .live-title,
   .live-row .live-artists,
@@ -111,19 +125,20 @@ const STYLE = `<style id="works-live-layout-style">
   }
   .live-row .live-title {
     font-size: .79rem;
+    font-weight: 600 !important;
     line-height: 1.42;
   }
   .live-row .live-artists {
-    margin-top: 3px;
+    margin-top: 4px;
     font-size: .74rem;
     line-height: 1.42;
-    opacity: .82;
+    opacity: .80;
   }
   .live-row .live-venue {
-    margin-top: 3px;
+    margin-top: 4px;
     font-size: .59rem;
     line-height: 1.4;
-    opacity: .52;
+    opacity: .50;
   }
 }
 </style>`;
@@ -166,4 +181,4 @@ if (html.includes('id="works-live-layout-style"')) {
   html = html.replace("</head>", `${STYLE}</head>`);
 }
 fs.writeFileSync(FILE, html);
-console.log("Refined Works/Live into a compact performance-log rhythm with year-scoped dates.");
+console.log("Bolded Live performance titles and tightened the page to one shared notebook grid.");
