@@ -89,10 +89,10 @@ const STYLE = `<style id="archive-text-layout-style">
 .archive-index-page .wide-page {
   min-height: 100vh;
   max-width: none;
-  padding: clamp(42px, 5.5vh, 58px) clamp(38px, 5.5vw, 86px) 110px !important;
+  padding: clamp(42px, 5.5vh, 58px) clamp(38px, 5.5vw, 86px) 110px;
 }
 .archive-index-page .wide-page > .subnav {
-  margin-bottom: clamp(68px, 9vh, 110px) !important;
+  margin-bottom: clamp(68px, 9vh, 110px);
 }
 .archive-index-page .photo-post-grid,
 .archive-index-page .archive-video-grid,
@@ -207,8 +207,6 @@ html = ensureStyle(html);
 html = html.replace(/<main class="site-main">[\s\S]*?<\/main>/, MAIN);
 fs.writeFileSync(LANDING, html);
 
-// Photo and Video use the Text landing as their fixed index reference:
-// same top inset, horizontal inset, subnav baseline and content width.
 for (const file of ARCHIVE_LANDINGS) {
   if (!fs.existsSync(file)) continue;
   let landingHtml = fs.readFileSync(file, "utf8");
@@ -217,16 +215,14 @@ for (const file of ARCHIVE_LANDINGS) {
   fs.writeFileSync(file, landingHtml);
 }
 
-// Detail routes are no longer part of Archive/Text; every title links straight to its source.
 for (const entry of fs.readdirSync(GENERATED_DIR, { withFileTypes: true })) {
   if (entry.isDirectory()) fs.rmSync(path.join(GENERATED_DIR, entry.name), { recursive: true, force: true });
 }
 
-// Keep sitemap in sync with the flattened Archive/Text route.
 if (fs.existsSync(SITEMAP)) {
   const xml = fs.readFileSync(SITEMAP, "utf8");
   const cleaned = xml.split("\n").filter((line) => !/https:\/\/sosilofficial\.github\.io\/archive\/links\/[^<]+\/<\/loc>/.test(line)).join("\n");
   fs.writeFileSync(SITEMAP, cleaned);
 }
 
-console.log("Aligned Archive Photo, Video and Text landings to one shared index grid; Text remains a flat external-link archive.");
+console.log("Aligned Archive Photo, Video and Text landings to the shared category grid; Text remains a flat external-link archive.");
