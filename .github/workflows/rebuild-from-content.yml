@@ -17,6 +17,7 @@ on:
       - "scripts/apply-notes-layout.mjs"
       - "scripts/apply-global-grid-lines.mjs"
       - "scripts/apply-content-fonts.mjs"
+      - "scripts/apply-category-grid.mjs"
       - "assets/site-redesign.css"
       - "assets/site-redesign.js"
 
@@ -61,6 +62,8 @@ jobs:
         run: node scripts/apply-global-grid-lines.mjs
       - name: Apply content font system
         run: node scripts/apply-content-fonts.mjs
+      - name: Apply category header grid
+        run: node scripts/apply-category-grid.mjs
       - name: Validate generated site
         run: node scripts/validate-site.mjs
       - name: Commit generated files
