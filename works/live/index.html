@@ -1,35 +1,97 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>works / live | 소실 SOSIL</title><link rel="icon" href="/favicon-sosil.svg"><link rel="stylesheet" href="/assets/site-redesign.css?v=20260919-5"><script src="/assets/site-redesign.js?v=20260919-5" defer></script><meta name="description" content="소실(Sosil)의 음반, 영상과 공연 기록."><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="https://sosilofficial.github.io/works/live/"><meta property="og:locale" content="ko_KR"><meta property="og:type" content="article"><meta property="og:site_name" content="소실 SOSIL"><meta property="og:title" content="works / live | 소실 SOSIL"><meta property="og:description" content="소실(Sosil)의 음반, 영상과 공연 기록."><meta property="og:url" content="https://sosilofficial.github.io/works/live/"><meta name="twitter:card" content="summary_large_image"><style id="works-live-layout-style">
 @media (min-width: 821px) {
   .live-split .index-panel {
-    padding-right: clamp(34px, 4.2vw, 72px);
+    padding-right: clamp(32px, 3.8vw, 58px);
   }
+
+  /*
+   * Treat Live like a small performance notebook: compact repeated entries
+   * against a deliberately large empty field, rather than a portfolio table.
+   */
   .live-log {
-    width: min(100%, 48rem);
+    width: min(100%, 38rem);
   }
   .live-log h2 {
-    margin: clamp(76px, 10vh, 116px) 0 28px;
+    margin: 52px 0 24px;
     color: var(--ink);
-    font-size: .98rem;
+    opacity: .78;
+    font-size: .69rem;
+    font-weight: 400;
     line-height: 1;
-    letter-spacing: .035em;
+    letter-spacing: .045em;
+  }
+  .live-log h2:first-child {
+    margin-top: 0;
+  }
+
+  .live-row {
+    display: grid;
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    gap: 0 12px;
+    margin-bottom: 22px;
+    align-items: baseline;
+  }
+  .live-row:last-child {
+    margin-bottom: 0;
+  }
+  .live-row time {
+    grid-row: 1 / span 3;
+    color: var(--muted);
+    opacity: .66;
+    font-size: .62rem;
+    line-height: 1.52;
+    letter-spacing: .03em;
+    white-space: nowrap;
+  }
+  .live-row .live-title,
+  .live-row .live-artists,
+  .live-row .live-venue {
+    grid-column: 2;
+    display: block;
+    min-width: 0;
+  }
+  .live-row .live-title {
+    font-size: .80rem;
+    line-height: 1.42;
+  }
+  .live-row .live-artists {
+    margin-top: 3px;
+    color: var(--ink);
+    opacity: .82;
+    font-size: .75rem;
+    line-height: 1.42;
+  }
+  .live-row .live-venue {
+    margin-top: 3px;
+    color: var(--muted);
+    opacity: .52;
+    font-size: .59rem;
+    line-height: 1.4;
+    letter-spacing: .02em;
+  }
+}
+
+@media (max-width: 820px) {
+  .live-log h2 {
+    margin: 44px 0 22px;
+    font-size: .68rem;
+    font-weight: 400;
+    letter-spacing: .04em;
   }
   .live-log h2:first-child {
     margin-top: 0;
   }
   .live-row {
     display: grid;
-    grid-template-columns: 6.2rem minmax(0, 1fr);
-    gap: 0 18px;
-    margin-bottom: clamp(28px, 4vh, 42px);
-    align-items: start;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: 0 10px;
+    margin-bottom: 22px;
+    align-items: baseline;
   }
   .live-row time {
     grid-row: 1 / span 3;
-    color: var(--muted);
-    opacity: .68;
-    font-size: .63rem;
-    line-height: 1.55;
-    letter-spacing: .025em;
+    font-size: .61rem;
+    line-height: 1.5;
   }
   .live-row .live-title,
   .live-row .live-artists,
@@ -38,25 +100,20 @@
     display: block;
   }
   .live-row .live-title {
-    font-size: .83rem;
-    line-height: 1.46;
-    letter-spacing: .004em;
+    font-size: .79rem;
+    line-height: 1.42;
   }
   .live-row .live-artists {
-    margin-top: 4px;
-    color: var(--ink);
-    opacity: 1;
-    font-size: .83rem;
-    line-height: 1.46;
-    letter-spacing: .004em;
+    margin-top: 3px;
+    font-size: .74rem;
+    line-height: 1.42;
+    opacity: .82;
   }
   .live-row .live-venue {
     margin-top: 3px;
-    color: var(--muted);
-    opacity: .64;
-    font-size: .61rem;
-    line-height: 1.45;
-    letter-spacing: .025em;
+    font-size: .59rem;
+    line-height: 1.4;
+    opacity: .52;
   }
 }
 </style><style id="global-grid-lines-style">
@@ -404,4 +461,4 @@
     margin: 16px 0 !important;
   }
 }
-</style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography" class="is-active" aria-current="page">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout live-split"><section class="index-panel"><div class="panel-headline"><header class="category-top works-top"><h1>works</h1><nav class="subnav" aria-label="works 하위 메뉴"><a href="/works/discography">discography</a><a href="/works/videos">video</a><a href="/works/live" class="is-active" aria-current="page">live</a><a href="/works/others">others</a></nav></header></div><div class="live-log"><h2>2026</h2><div class="live-row"><time>2026.08.29</time><span class="live-title">Patchroom Festival</span><small class="live-venue">Steam Punk Rock</small></div><div class="live-row"><time>2026.08.05</time><span class="live-title">Club Wednesday</span><span class="live-artists">김초원 Kim Chowon, 윤숭 &amp; 이형주 Yoonsoong &amp; Lee Hyungju</span><small class="live-venue">Unplugged Hongdae</small></div><div class="live-row"><time>2026.06.26</time><span class="live-title">grain of pastoral</span><span class="live-artists">archie, SURYEON</span><small class="live-venue">Senggi Studio</small></div><div class="live-row"><time>2026.05.01</time><span class="live-title">Sosil Solo Show</span><small class="live-venue">Studio Zemi</small></div><div class="live-row"><time>2026.04.24</time><span class="live-title">echoes of new green</span><span class="live-artists">전지선 Jeon Jisun, 수련 SURYEON</span><small class="live-venue">Unplugged Lounge</small></div><div class="live-row"><time>2026.03.28</time><span class="live-title">김진평 기획공연</span><span class="live-artists">Kimin (from PCR, Gorymurgy), 윰피 Eumfy, Fin Fior</span><small class="live-venue">Angelism</small></div><div class="live-row"><time>2026.01.25</time><span class="live-title">DELAY RELAY Festival - my slowly beating heart</span><span class="live-artists">유리조각소년 Glassboy, HIMINN, 김반월키 Kimbanourke</span></div><h2>2025</h2><div class="live-row"><time>2025.11.22</time><span class="live-artists">이토록평범한존재 leepyeongjon, 웰컴투초초랜드 Welcome to CHOCHOLAND</span><small class="live-venue">Cosmos Music Bar</small></div><div class="live-row"><time>2025.09.29</time><span class="live-artists">기묘말 Kimyomal, 이고요 Lee Goyo</span><small class="live-venue">Unplugged Lounge</small></div><div class="live-row"><time>2025.08.17</time><span class="live-title">blue hour club (Sosil Directed)</span><span class="live-artists">우희준 Woo Huijun, 전지선 Jeon Jisun</span><small class="live-venue">Senggi Studio</small></div><div class="live-row"><time>2025.07.19</time><span class="live-title">음악만세</span><span class="live-artists">단편선 &amp; 이보람 Danpyunsun and Lee Boram</span><small class="live-venue">Studio Sanbo</small></div><div class="live-row"><time>2025.06.21</time><span class="live-title">My Lost Playground</span><span class="live-artists">잠 zzzaam, 담담구구 Damdamgugu</span><small class="live-venue">Channel 1969</small></div><div class="live-row"><time>2025.06.05</time><span class="live-title">Reverie is My Pony Listening Session</span><small class="live-venue">Cafe Silence (카페 침묵)</small></div><div class="live-row"><time>2025.05.23</time><span class="live-title">Bedroom Campfire</span><span class="live-artists">이아직 eeajik, 유리조각소년 Glassboy, Hanbin</span></div><div class="live-row"><time>2025.05.02</time><span class="live-title">Sosil Reverie is My Pony Release Live Session</span><small class="live-venue">Studio Zemi</small></div><div class="live-row"><time>2025.02.23</time><span class="live-title">New Dawn 새새벽</span><span class="live-artists">고슴도치클럽 Hedgedog Club, 피슈 Pishu</span></div><h2>2024</h2><div class="live-row"><time>2024.04.19</time><span class="live-title">Loud Loud</span><span class="live-artists">일요일은형용사 Sunday is Adjective, 급한노새 Rosai in Hurry, 병아리블루 Chick Blue</span><small class="live-venue">Soundmind</small></div><h2>2023</h2><div class="live-row"><time>2023.07.30</time><span class="live-title">Fake Product Vol.2</span><span class="live-artists">녹이녹 Nokenok, 피아노슈게이저 Piano Shoegazer, 브로큰티스 Brokenteeth</span><small class="live-venue">Senggi Studio</small></div><div class="live-row"><time>2023.05.21</time><span class="live-title">Strangers in the Night</span><span class="live-artists">Cadejo, Marrakech, Tierpark</span></div><div class="live-row"><time>2023.05.06</time><span class="live-title">Tierpark &lt;Where Fish Sleeps&gt; Pre-Release Showcase</span><span class="live-artists">Tierpark, Dyonjoo</span></div></div></section><section class="detail-panel"></section></div></main></div></body></html>
+</style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography" class="is-active" aria-current="page">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="split-layout live-split"><section class="index-panel"><div class="panel-headline"><header class="category-top works-top"><h1>works</h1><nav class="subnav" aria-label="works 하위 메뉴"><a href="/works/discography">discography</a><a href="/works/videos">video</a><a href="/works/live" class="is-active" aria-current="page">live</a><a href="/works/others">others</a></nav></header></div><div class="live-log"><h2>2026</h2><div class="live-row"><time datetime="2026-08-29">08.29</time><span class="live-title">Patchroom Festival</span><small class="live-venue">Steam Punk Rock</small></div><div class="live-row"><time datetime="2026-08-05">08.05</time><span class="live-title">Club Wednesday</span><span class="live-artists">김초원 Kim Chowon, 윤숭 &amp; 이형주 Yoonsoong &amp; Lee Hyungju</span><small class="live-venue">Unplugged Hongdae</small></div><div class="live-row"><time datetime="2026-06-26">06.26</time><span class="live-title">grain of pastoral</span><span class="live-artists">archie, SURYEON</span><small class="live-venue">Senggi Studio</small></div><div class="live-row"><time datetime="2026-05-01">05.01</time><span class="live-title">Sosil Solo Show</span><small class="live-venue">Studio Zemi</small></div><div class="live-row"><time datetime="2026-04-24">04.24</time><span class="live-title">echoes of new green</span><span class="live-artists">전지선 Jeon Jisun, 수련 SURYEON</span><small class="live-venue">Unplugged Lounge</small></div><div class="live-row"><time datetime="2026-03-28">03.28</time><span class="live-title">김진평 기획공연</span><span class="live-artists">Kimin (from PCR, Gorymurgy), 윰피 Eumfy, Fin Fior</span><small class="live-venue">Angelism</small></div><div class="live-row"><time datetime="2026-01-25">01.25</time><span class="live-title">DELAY RELAY Festival - my slowly beating heart</span><span class="live-artists">유리조각소년 Glassboy, HIMINN, 김반월키 Kimbanourke</span></div><h2>2025</h2><div class="live-row"><time datetime="2025-11-22">11.22</time><span class="live-artists">이토록평범한존재 leepyeongjon, 웰컴투초초랜드 Welcome to CHOCHOLAND</span><small class="live-venue">Cosmos Music Bar</small></div><div class="live-row"><time datetime="2025-09-29">09.29</time><span class="live-artists">기묘말 Kimyomal, 이고요 Lee Goyo</span><small class="live-venue">Unplugged Lounge</small></div><div class="live-row"><time datetime="2025-08-17">08.17</time><span class="live-title">blue hour club (Sosil Directed)</span><span class="live-artists">우희준 Woo Huijun, 전지선 Jeon Jisun</span><small class="live-venue">Senggi Studio</small></div><div class="live-row"><time datetime="2025-07-19">07.19</time><span class="live-title">음악만세</span><span class="live-artists">단편선 &amp; 이보람 Danpyunsun and Lee Boram</span><small class="live-venue">Studio Sanbo</small></div><div class="live-row"><time datetime="2025-06-21">06.21</time><span class="live-title">My Lost Playground</span><span class="live-artists">잠 zzzaam, 담담구구 Damdamgugu</span><small class="live-venue">Channel 1969</small></div><div class="live-row"><time datetime="2025-06-05">06.05</time><span class="live-title">Reverie is My Pony Listening Session</span><small class="live-venue">Cafe Silence (카페 침묵)</small></div><div class="live-row"><time datetime="2025-05-23">05.23</time><span class="live-title">Bedroom Campfire</span><span class="live-artists">이아직 eeajik, 유리조각소년 Glassboy, Hanbin</span></div><div class="live-row"><time datetime="2025-05-02">05.02</time><span class="live-title">Sosil Reverie is My Pony Release Live Session</span><small class="live-venue">Studio Zemi</small></div><div class="live-row"><time datetime="2025-02-23">02.23</time><span class="live-title">New Dawn 새새벽</span><span class="live-artists">고슴도치클럽 Hedgedog Club, 피슈 Pishu</span></div><h2>2024</h2><div class="live-row"><time datetime="2024-04-19">04.19</time><span class="live-title">Loud Loud</span><span class="live-artists">일요일은형용사 Sunday is Adjective, 급한노새 Rosai in Hurry, 병아리블루 Chick Blue</span><small class="live-venue">Soundmind</small></div><h2>2023</h2><div class="live-row"><time datetime="2023-07-30">07.30</time><span class="live-title">Fake Product Vol.2</span><span class="live-artists">녹이녹 Nokenok, 피아노슈게이저 Piano Shoegazer, 브로큰티스 Brokenteeth</span><small class="live-venue">Senggi Studio</small></div><div class="live-row"><time datetime="2023-05-21">05.21</time><span class="live-title">Strangers in the Night</span><span class="live-artists">Cadejo, Marrakech, Tierpark</span></div><div class="live-row"><time datetime="2023-05-06">05.06</time><span class="live-title">Tierpark &lt;Where Fish Sleeps&gt; Pre-Release Showcase</span><span class="live-artists">Tierpark, Dyonjoo</span></div></div></section><section class="detail-panel"></section></div></main></div></body></html>
