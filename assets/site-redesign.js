@@ -1,11 +1,11 @@
 const HOME_MOTION_CONFIG = Object.freeze({
   speedSeconds: 58,
-  trailOpacity: 0.075,
-  trailBlur: 1.35,
-  trailIntervalMinMs: 220,
-  trailIntervalMaxMs: 320,
-  trailScaleVariance: 0.003,
-  jitterPx: 0.28,
+  trailOpacity: 0.22,
+  trailBlur: 3.5,
+  trailIntervalMinMs: 300,
+  trailIntervalMaxMs: 380,
+  trailScaleVariance: 0.012,
+  jitterPx: 0.6,
   brightnessVariation: 0.025,
   colorDriftAmount: 0.018,
   exposurePeriodMs: 4100
@@ -13,12 +13,12 @@ const HOME_MOTION_CONFIG = Object.freeze({
 
 const MOBILE_HOME_MOTION_CONFIG = Object.freeze({
   speedSeconds: 72,
-  trailOpacity: 0.045,
-  trailBlur: 0.95,
-  trailIntervalMinMs: 340,
-  trailIntervalMaxMs: 480,
+  trailOpacity: 0.028,
+  trailBlur: 0.8,
+  trailIntervalMinMs: 440,
+  trailIntervalMaxMs: 620,
   trailScaleVariance: 0.002,
-  jitterPx: 0.18,
+  jitterPx: 0.22,
   brightnessVariation: 0.012,
   colorDriftAmount: 0.008,
   exposurePeriodMs: 5200
@@ -91,20 +91,6 @@ function setupHomeGrid() {
   window.addEventListener("resize", sync, { passive: true });
 }
 
-function createDesktopHomeMotionPath() {
-  const tau = Math.PI * 2;
-  const phaseX = Math.random() * tau;
-  const phaseY = Math.random() * tau;
-  const bendX = Math.random() * tau;
-  const bendY = Math.random() * tau;
-  const rateX = .85 + Math.random() * .3;
-  const rateY = .9 + Math.random() * .35;
-  return (time) => ({
-    x: .5 + .34 * Math.sin(time * rateX + phaseX) + .1 * Math.sin(time * .53 + bendX),
-    y: .5 + .34 * Math.sin(time * rateY + phaseY) + .1 * Math.sin(time * .67 + bendY)
-  });
-}
-
 function setupDesktopHomeMotion(field, cover, artwork) {
   if (matchMedia("(max-width: 820px)").matches) return;
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -118,27 +104,19 @@ function setupDesktopHomeMotion(field, cover, artwork) {
   cover.style.setProperty("left", "0", "important");
   cover.style.setProperty("top", "0", "important");
 
-  const motionPath = createDesktopHomeMotionPath();
-  let motionTime = 0;
-  let x = 0;
-  let y = 0;
-  function syncMotionPosition() {
-    const point = motionPath(motionTime);
-    x = point.x * Math.max(0, field.clientWidth - cover.offsetWidth);
-    y = point.y * Math.max(0, field.clientHeight - cover.offsetHeight);
-  }
-
-  syncMotionPosition();
+  let x = field.clientWidth * .35;
+  let y = field.clientHeight * .32;
+  let vx = field.clientWidth / config.speedSeconds;
+  let vy = field.clientHeight / (config.speedSeconds * 1.18);
   let lastTime = performance.now();
   let lastTrail = 0;
   let nextTrailDelay = config.trailIntervalMinMs;
   let frameId = 0;
-  let trailTime = 0;
 
+  // Keep the earlier long-exposure behavior: every stamp remains for the whole page session.
   const history = document.createElement("canvas");
   history.className = "motion-history";
   history.setAttribute("aria-hidden", "true");
-  history.style.opacity = ".82";
   const context = history.getContext("2d");
   const stamp = document.createElement("canvas");
   stamp.width = stamp.height = 256;
@@ -170,8 +148,16 @@ function setupDesktopHomeMotion(field, cover, artwork) {
     const width = Math.max(1, Math.round(field.clientWidth * scale));
     const height = Math.max(1, Math.round(field.clientHeight * scale));
     if (history.width === width && history.height === height) return;
+
+    const previous = document.createElement("canvas");
+    previous.width = history.width;
+    previous.height = history.height;
+    const previousContext = previous.getContext("2d");
+    if (previousContext && history.width && history.height) previousContext.drawImage(history, 0, 0);
+
     history.width = width;
     history.height = height;
+    if (previousContext && previous.width && previous.height) context.drawImage(previous, 0, 0, width, height);
     historyScale = scale;
   }
 
@@ -187,14 +173,18 @@ function setupDesktopHomeMotion(field, cover, artwork) {
       const scale = 1 + (Math.random() - .5) * config.trailScaleVariance * 2;
       const width = cover.offsetWidth * scale;
       const height = cover.offsetHeight * scale;
-      const left = x + (cover.offsetWidth - width) / 2;
-      const top = y + (cover.offsetHeight - height) / 2;
 
       context.save();
       context.setTransform(historyScale, 0, 0, historyScale, 0, 0);
-      context.filter = `blur(${config.trailBlur}px) saturate(.7)`;
       context.globalAlpha = config.trailOpacity * (.9 + Math.random() * .2);
-      context.drawImage(stamp, left, top, width, height);
+      context.filter = `blur(${config.trailBlur}px) saturate(.65)`;
+      context.drawImage(
+        stamp,
+        x + (cover.offsetWidth - width) / 2,
+        y + (cover.offsetHeight - height) / 2,
+        width,
+        height
+      );
       context.restore();
     }
     lastTrail = now;
@@ -204,11 +194,15 @@ function setupDesktopHomeMotion(field, cover, artwork) {
   function animate(now) {
     frameId = 0;
     if (document.hidden) return;
+
     const dt = Math.min((now - lastTime) / 1000, .1);
     lastTime = now;
-    motionTime += dt * (Math.PI * 2) / config.speedSeconds;
-    trailTime += dt * 1000;
-    syncMotionPosition();
+    const maxX = Math.max(0, field.clientWidth - cover.offsetWidth);
+    const maxY = Math.max(0, field.clientHeight - cover.offsetHeight);
+    x += vx * dt;
+    y += vy * dt;
+    if (x <= 0 || x >= maxX) { x = Math.max(0, Math.min(maxX, x)); vx *= -1; }
+    if (y <= 0 || y >= maxY) { y = Math.max(0, Math.min(maxY, y)); vy *= -1; }
 
     const jitterX = (Math.random() - .5) * config.jitterPx;
     const jitterY = (Math.random() - .5) * config.jitterPx;
@@ -217,14 +211,19 @@ function setupDesktopHomeMotion(field, cover, artwork) {
     cover.style.setProperty("transform", `translate(${x + jitterX}px, ${y + jitterY}px)`, "important");
     cover.style.filter = `saturate(${saturation}) contrast(.94) brightness(${exposure})`;
 
-    if (trailTime - lastTrail > nextTrailDelay) makeTrail(trailTime);
+    if (now - lastTrail > nextTrailDelay) makeTrail(now);
     frameId = requestAnimationFrame(animate);
   }
 
   if ("ResizeObserver" in window) {
     new ResizeObserver(() => {
       resizeHistory();
-      syncMotionPosition();
+      const maxX = Math.max(0, field.clientWidth - cover.offsetWidth);
+      const maxY = Math.max(0, field.clientHeight - cover.offsetHeight);
+      x = Math.max(0, Math.min(maxX, x));
+      y = Math.max(0, Math.min(maxY, y));
+      vx = (Math.sign(vx) || 1) * field.clientWidth / config.speedSeconds;
+      vy = (Math.sign(vy) || 1) * field.clientHeight / (config.speedSeconds * 1.18);
     }).observe(field);
   }
 
@@ -268,7 +267,6 @@ function setupMobileHomeMotion(field, cover, artwork) {
   history.style.height = "100%";
   history.style.zIndex = "1";
   history.style.pointerEvents = "none";
-  history.style.opacity = ".74";
 
   const context = history.getContext("2d", { alpha: true });
   const stamp = document.createElement("canvas");
@@ -356,7 +354,7 @@ function setupMobileHomeMotion(field, cover, artwork) {
 
     const dt = Math.min((now - lastTime) / 1000, 0.1);
     lastTime = now;
-    motionTime += dt * (Math.PI * 2) / config.speedSeconds;
+    motionTime += dt * 2.0 / config.speedSeconds;
     trailClock += dt * 1000;
     syncPosition();
 
