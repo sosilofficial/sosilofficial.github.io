@@ -1,11 +1,11 @@
 const HOME_MOTION_CONFIG = Object.freeze({
   speedSeconds: 58,
-  trailOpacity: 0.045,
-  trailBlur: 1.2,
-  trailIntervalMinMs: 280,
-  trailIntervalMaxMs: 380,
+  trailOpacity: 0.075,
+  trailBlur: 1.35,
+  trailIntervalMinMs: 220,
+  trailIntervalMaxMs: 320,
   trailScaleVariance: 0.003,
-  jitterPx: 0.45,
+  jitterPx: 0.28,
   brightnessVariation: 0.025,
   colorDriftAmount: 0.018,
   exposurePeriodMs: 4100
@@ -13,12 +13,12 @@ const HOME_MOTION_CONFIG = Object.freeze({
 
 const MOBILE_HOME_MOTION_CONFIG = Object.freeze({
   speedSeconds: 72,
-  trailOpacity: 0.028,
-  trailBlur: 0.8,
-  trailIntervalMinMs: 440,
-  trailIntervalMaxMs: 620,
+  trailOpacity: 0.045,
+  trailBlur: 0.95,
+  trailIntervalMinMs: 340,
+  trailIntervalMaxMs: 480,
   trailScaleVariance: 0.002,
-  jitterPx: 0.22,
+  jitterPx: 0.18,
   brightnessVariation: 0.012,
   colorDriftAmount: 0.008,
   exposurePeriodMs: 5200
@@ -91,7 +91,6 @@ function setupHomeGrid() {
   window.addEventListener("resize", sync, { passive: true });
 }
 
-// Desktop keeps the original long-exposure motion path that was already working reliably.
 function createDesktopHomeMotionPath() {
   const tau = Math.PI * 2;
   const phaseX = Math.random() * tau;
@@ -139,6 +138,7 @@ function setupDesktopHomeMotion(field, cover, artwork) {
   const history = document.createElement("canvas");
   history.className = "motion-history";
   history.setAttribute("aria-hidden", "true");
+  history.style.opacity = ".82";
   const context = history.getContext("2d");
   const stamp = document.createElement("canvas");
   stamp.width = stamp.height = 256;
@@ -206,7 +206,7 @@ function setupDesktopHomeMotion(field, cover, artwork) {
     if (document.hidden) return;
     const dt = Math.min((now - lastTime) / 1000, .1);
     lastTime = now;
-    motionTime += dt * 2.2 / config.speedSeconds;
+    motionTime += dt * (Math.PI * 2) / config.speedSeconds;
     trailTime += dt * 1000;
     syncMotionPosition();
 
@@ -268,6 +268,7 @@ function setupMobileHomeMotion(field, cover, artwork) {
   history.style.height = "100%";
   history.style.zIndex = "1";
   history.style.pointerEvents = "none";
+  history.style.opacity = ".74";
 
   const context = history.getContext("2d", { alpha: true });
   const stamp = document.createElement("canvas");
@@ -355,7 +356,7 @@ function setupMobileHomeMotion(field, cover, artwork) {
 
     const dt = Math.min((now - lastTime) / 1000, 0.1);
     lastTime = now;
-    motionTime += dt * 2.0 / config.speedSeconds;
+    motionTime += dt * (Math.PI * 2) / config.speedSeconds;
     trailClock += dt * 1000;
     syncPosition();
 
