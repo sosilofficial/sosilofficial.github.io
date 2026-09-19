@@ -25,7 +25,7 @@ const server = http.createServer((request, response) => {
   const pathname = decodeURIComponent(new URL(request.url, "http://127.0.0.1").pathname);
   const relative = pathname.replace(/^\/+/, "");
   let file = path.join(ROOT, relative);
-  if (!path.extname(file)) file = path.join(file, "index.html");
+  if (fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, "index.html");
   if (!file.startsWith(ROOT) || !fs.existsSync(file) || !fs.statSync(file).isFile()) {
     file = path.join(ROOT, "404.html");
     response.statusCode = 404;
