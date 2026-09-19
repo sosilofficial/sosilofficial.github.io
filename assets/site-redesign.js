@@ -1,9 +1,7 @@
 const HOME_MOTION_CONFIG = Object.freeze({
   speedSeconds: 58,
-  trailCount: 24,
   trailOpacity: 0.22,
   trailBlur: 3.5,
-  trailLifetimeMs: 6000,
   trailIntervalMinMs: 300,
   trailIntervalMaxMs: 380,
   trailScaleVariance: 0.012,
@@ -104,10 +102,8 @@ function setupHomeMotion() {
       }
     : HOME_MOTION_CONFIG;
   document.documentElement.style.setProperty("--speed", `${config.speedSeconds}s`);
-  document.documentElement.style.setProperty("--trail-count", config.trailCount);
   document.documentElement.style.setProperty("--trail-opacity", config.trailOpacity);
   document.documentElement.style.setProperty("--trail-blur", `${config.trailBlur}px`);
-  document.documentElement.style.setProperty("--trail-lifetime", `${config.trailLifetimeMs}ms`);
   document.documentElement.style.setProperty("--jitter", `${config.jitterPx}px`);
 
   cover.style.left = "0";
@@ -120,37 +116,74 @@ function setupHomeMotion() {
   let lastTrail = 0;
   let nextTrailDelay = config.trailIntervalMinMs;
   let frameId = 0;
-  const trails = [];
+  // A fixed-size bitmap retains the whole session without growing the DOM.
+  const history = document.createElement("canvas");
+  history.className = "motion-history";
+  history.setAttribute("aria-hidden", "true");
+  const context = history.getContext("2d");
+  const artwork = cover.querySelector("img");
+  const stamp = document.createElement("canvas");
+  stamp.width = stamp.height = 256;
+  const stampContext = stamp.getContext("2d");
+  let stampReady = false;
+  let historyScale = 1;
+
+  function prepareStamp() {
+    if (!artwork?.naturalWidth || !stampContext) return;
+    stampContext.clearRect(0, 0, 256, 256);
+    stampContext.globalCompositeOperation = "source-over";
+    stampContext.drawImage(artwork, 0, 0, 256, 256);
+    stampContext.globalCompositeOperation = "destination-in";
+    // The same square feather as the moving cover, preserving its square shape.
+    for (const axis of ["x", "y"]) {
+      const feather = stampContext.createLinearGradient(0, 0, axis === "x" ? 256 : 0, axis === "y" ? 256 : 0);
+      feather.addColorStop(0, "transparent");
+      feather.addColorStop(.08, "#000");
+      feather.addColorStop(.92, "#000");
+      feather.addColorStop(1, "transparent");
+      stampContext.fillStyle = feather;
+      stampContext.fillRect(0, 0, 256, 256);
+    }
+    stampReady = true;
+  }
+
+  function resizeHistory() {
+    if (!context || !field.clientWidth || !field.clientHeight) return;
+    const scale = Math.min(window.devicePixelRatio || 1, 1.5, 1600 / field.clientWidth, 1600 / field.clientHeight);
+    const width = Math.max(1, Math.round(field.clientWidth * scale));
+    const height = Math.max(1, Math.round(field.clientHeight * scale));
+    if (history.width === width && history.height === height) return;
+    const previous = document.createElement("canvas");
+    previous.width = history.width;
+    previous.height = history.height;
+    const previousContext = previous.getContext("2d");
+    if (previousContext) previousContext.drawImage(history, 0, 0);
+    history.width = width;
+    history.height = height;
+    // Resizing a canvas clears it; restore the accumulated picture immediately.
+    if (previousContext) context.drawImage(previous, 0, 0, width, height);
+    historyScale = scale;
+  }
+
+  if (context && stampContext) {
+    field.insertBefore(history, cover);
+    resizeHistory();
+    if (artwork?.complete) prepareStamp();
+    artwork?.addEventListener("load", prepareStamp);
+  }
 
   function makeTrail(now) {
-    const trail = cover.cloneNode(true);
-    trail.removeAttribute("href");
-    trail.removeAttribute("target");
-    trail.removeAttribute("rel");
-    trail.removeAttribute("aria-label");
-    trail.setAttribute("aria-hidden", "true");
-    trail.className = "motion-trail";
-    const trailJitterX = (Math.random() - .5) * config.jitterPx * 1.8;
-    const trailJitterY = (Math.random() - .5) * config.jitterPx * 1.8;
-    const scale = 1 + (Math.random() - .5) * config.trailScaleVariance * 2;
-    const opacity = config.trailOpacity * (.72 + Math.random() * .5);
-    const blur = config.trailBlur * (.82 + Math.random() * .5);
-    const lifetime = config.trailLifetimeMs * (.84 + Math.random() * .32);
-    trail.style.transform = `translate(${x + trailJitterX}px, ${y + trailJitterY}px) scale(${scale})`;
-    trail.style.opacity = opacity;
-    trail.style.setProperty("--trail-alpha", opacity);
-    trail.style.setProperty("--trail-softness", `${blur}px`);
-    trail.style.filter = `blur(${blur}px) saturate(${.61 + Math.random() * .1})`;
-    trail.style.animationDuration = `${lifetime}ms`;
-    trail.style.setProperty("--trail-duration", `${lifetime}ms`);
-    field.insertBefore(trail, cover);
-    trails.push(trail);
-    while (trails.length > config.trailCount) trails.shift()?.remove();
-    window.setTimeout(() => {
-      trail.remove();
-      const index = trails.indexOf(trail);
-      if (index >= 0) trails.splice(index, 1);
-    }, lifetime + 50);
+    if (context && stampReady) {
+      const scale = 1 + (Math.random() - .5) * config.trailScaleVariance * 2;
+      const width = cover.offsetWidth * scale;
+      const height = cover.offsetHeight * scale;
+      context.save();
+      context.setTransform(historyScale, 0, 0, historyScale, 0, 0);
+      context.globalAlpha = config.trailOpacity * (.9 + Math.random() * .2);
+      context.filter = `blur(${config.trailBlur}px) saturate(.65)`;
+      context.drawImage(stamp, x + (cover.offsetWidth - width) / 2, y + (cover.offsetHeight - height) / 2, width, height);
+      context.restore();
+    }
     lastTrail = now;
     nextTrailDelay = config.trailIntervalMinMs + Math.random() * (config.trailIntervalMaxMs - config.trailIntervalMinMs);
   }
@@ -172,11 +205,12 @@ function setupHomeMotion() {
     const saturation = .82 + Math.sin(now / (config.exposurePeriodMs * 1.37)) * config.colorDriftAmount;
     cover.style.transform = `translate(${x + jitterX}px, ${y + jitterY}px)`;
     cover.style.filter = `saturate(${saturation}) contrast(.94) brightness(${exposure})`;
-    if (config.trailCount > 0 && now - lastTrail > nextTrailDelay) makeTrail(now);
+    if (now - lastTrail > nextTrailDelay) makeTrail(now);
     frameId = requestAnimationFrame(animate);
   }
 
   const resizeObserver = new ResizeObserver(() => {
+    resizeHistory();
     const maxX = Math.max(0, field.clientWidth - cover.offsetWidth);
     const maxY = Math.max(0, field.clientHeight - cover.offsetHeight);
     x = Math.max(0, Math.min(maxX, x));
