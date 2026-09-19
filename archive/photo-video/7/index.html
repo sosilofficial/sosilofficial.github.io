@@ -60,164 +60,15 @@
   .archive-photo-post-gallery { display: grid; gap: 24px; }
   .archive-photo-post-gallery img { width: 100%; height: auto; }
 }
-</style><style id="global-grid-lines-style">
-@media (min-width: 821px) {
-  /*
-   * One shared coordinate system for every desktop split page.
-   * Keeping a stable scrollbar gutter prevents long/short pages from shifting
-   * the content width by a few pixels relative to Discography.
-   */
-  html {
-    scrollbar-gutter: stable;
-  }
-
-  .site-main {
-    margin-left: max(var(--sidebar), 118px) !important;
-    width: calc(100% - max(var(--sidebar), 118px)) !important;
-    max-width: none !important;
-  }
-
-  /*
-   * The sidebar edge should feel like the other dividers: a quiet trace rather
-   * than a hard UI rule. Let it fade before reaching the viewport edges and
-   * keep it a little softer than the content divider.
-   */
-  .side-rail {
-    border-right: 0 !important;
-  }
-
-  .side-rail::after {
-    content: "" !important;
-    position: absolute !important;
-    z-index: 1 !important;
-    top: 9vh !important;
-    bottom: 9vh !important;
-    right: 0 !important;
-    width: 1px !important;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      var(--line) 14%,
-      var(--line) 86%,
-      transparent 100%
-    ) !important;
-    opacity: .24 !important;
-    pointer-events: none !important;
-  }
-
-  /* Discography remains the master split for regular list/detail pages. Live is flat/full-width. */
-  .split-layout:not(.info-split):not(.live-split) {
-    display: grid !important;
-    position: relative !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    grid-template-columns: minmax(0, 38.8888889%) minmax(0, 61.1111111%) !important;
-  }
-
-  .split-layout:not(.info-split):not(.live-split) > .index-panel {
-    grid-column: 1 !important;
-    width: auto !important;
-    min-width: 0 !important;
-    max-width: none !important;
-  }
-
-  .split-layout:not(.info-split):not(.live-split) > .detail-panel {
-    grid-column: 2 !important;
-    width: auto !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    left: auto !important;
-    right: auto !important;
-    box-sizing: border-box !important;
-    border-left: 0 !important;
-  }
-
-  /*
-   * Keep the structural divider, but let it read more like a faint trace than UI chrome:
-   * it stops short of the viewport edges and softly fades in/out.
-   */
-  .split-layout:not(.info-split):not(.live-split)::after {
-    content: "" !important;
-    position: absolute !important;
-    z-index: 40 !important;
-    top: 9vh !important;
-    bottom: 9vh !important;
-    left: 38.8888889% !important;
-    width: 1px !important;
-    background: linear-gradient(
-      to bottom,
-      transparent 0%,
-      var(--line) 12%,
-      var(--line) 88%,
-      transparent 100%
-    ) !important;
-    opacity: .30 !important;
-    pointer-events: none !important;
-  }
-
-  /* Info: media/links on the narrower left, biography on the wider right. */
-  .info-split {
-    display: grid !important;
-    position: relative !important;
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    grid-template-columns: minmax(0, 42.7%) minmax(0, 57.3%) !important;
-  }
-
-  .info-split > .index-panel,
-  .info-split > .detail-panel {
-    width: auto !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    box-sizing: border-box !important;
-    border-left: 0 !important;
-    padding: clamp(42px, 5.5vh, 58px) !important;
-  }
-
-  .info-split > .index-panel {
-    grid-column: 1 !important;
-  }
-
-  .info-split > .detail-panel {
-    grid-column: 2 !important;
-    left: auto !important;
-    right: auto !important;
-  }
-
-  .info-split .info-aside,
-  .info-split .info-copy {
-    margin-top: 0 !important;
-    justify-self: start !important;
-  }
-
-  .info-split .info-aside {
-    width: min(100%, 420px) !important;
-  }
-
-  .info-split .info-copy {
-    width: min(100%, 44ch) !important;
-    max-width: 44ch !important;
-  }
-
-  /* Info is read as one editorial spread, so whitespace does the separation here. */
-  .info-split::after {
-    content: none !important;
-    display: none !important;
-  }
-}
-</style><style id="content-font-system-style">
+</style><style id="shared-ui-style">
 :root {
   --font-ui: "American Typewriter", "Courier Prime", "Courier New", "Apple SD Gothic Neo", "Noto Sans KR", monospace;
   --font-content: "Helvetica Neue", Helvetica, Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --category-top-y: clamp(48px, 6.8vh, 70px);
+  --category-x: clamp(30px, 2.75vw, 44px);
 }
 
-/*
- * Keep the site's frame and taxonomy in the existing typewriter voice.
- * Apply the cleaner sans-serif only to material the visitor actually reads.
- * Dates, section labels, navigation, years and other metadata stay typewriter.
- */
+/* readable content */
 .home-intro p,
 .home-news > a:not(.small-link),
 .mailing-copy,
@@ -259,11 +110,11 @@
 .contact-page p,
 .contact-page dd,
 .contact-page dd a {
-  font-family: var(--font-content) !important;
-  letter-spacing: 0 !important;
+  font-family: var(--font-content);
+  letter-spacing: 0;
 }
 
-/* Keep structural labels explicitly in the original typewriter family. */
+/* structural labels */
 .site-brand,
 .rail-nav,
 .panel-title,
@@ -292,117 +143,178 @@
 .home-mailing h2,
 .home-news p,
 .home-news .small-link {
-  font-family: var(--font-ui) !important;
-}
-</style><style id="category-grid-style">
-:root {
-  --category-top-y: clamp(48px, 6.8vh, 70px);
-  --category-x: clamp(30px, 2.75vw, 44px);
+  font-family: var(--font-ui);
 }
 
 .category-top {
   margin: 0 0 clamp(44px, 6vh, 72px);
 }
 .category-top h1 {
-  margin: 0 0 24px !important;
-  font-family: var(--font-ui, "American Typewriter", "Courier Prime", "Courier New", monospace) !important;
-  font-size: 1.08rem !important;
-  font-weight: 400 !important;
-  line-height: 1.2 !important;
-  letter-spacing: .02em !important;
+  margin: 0 0 24px;
+  font-family: var(--font-ui);
+  font-size: 1.08rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: .02em;
   text-transform: lowercase;
 }
-.category-top .subnav {
-  margin: 0 !important;
-}
-.panel-headline > .category-top {
-  margin-bottom: 0 !important;
-}
+.category-top .subnav { margin: 0; }
+.panel-headline > .category-top { margin-bottom: 0; }
 .info-top-spacer {
   visibility: hidden;
   pointer-events: none;
 }
 
 @media (min-width: 821px) {
-  /* Category labels use the same top and inner-left coordinates as the sosil brand. */
+  html { scrollbar-gutter: stable; }
+
+  .site-main {
+    margin-left: max(var(--sidebar), 118px);
+    width: calc(100% - max(var(--sidebar), 118px));
+    max-width: none;
+  }
+
+  .side-rail { border-right: 0; }
+  .side-rail::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 9vh;
+    bottom: 9vh;
+    right: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--line) 14%,
+      var(--line) 86%,
+      transparent 100%
+    );
+    opacity: .24;
+    pointer-events: none;
+  }
+
+  .split-layout:not(.info-split):not(.live-split) {
+    display: grid;
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    grid-template-columns: minmax(0, 38.8888889%) minmax(0, 61.1111111%);
+  }
+  .split-layout:not(.info-split):not(.live-split) > .index-panel {
+    grid-column: 1;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+  }
+  .split-layout:not(.info-split):not(.live-split) > .detail-panel {
+    grid-column: 2;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    left: auto;
+    right: auto;
+    box-sizing: border-box;
+    border-left: 0;
+  }
+  .split-layout:not(.info-split):not(.live-split)::after {
+    content: "";
+    position: absolute;
+    z-index: 40;
+    top: 9vh;
+    bottom: 9vh;
+    left: 38.8888889%;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--line) 12%,
+      var(--line) 88%,
+      transparent 100%
+    );
+    opacity: .30;
+    pointer-events: none;
+  }
+
   .split-layout > .index-panel {
-    padding-top: var(--category-top-y) !important;
-    padding-left: var(--category-x) !important;
+    padding-top: var(--category-top-y);
+    padding-left: var(--category-x);
   }
   .site-main > .wide-page,
   .site-main > .archive-text-flat-page {
-    padding-top: var(--category-top-y) !important;
-    padding-left: var(--category-x) !important;
-  }
-  .info-split > .index-panel {
-    padding-top: var(--category-top-y) !important;
-    padding-left: var(--category-x) !important;
-  }
-  .info-split > .detail-panel {
-    padding-top: var(--category-top-y) !important;
-    padding-left: var(--category-x) !important;
-    padding-right: var(--category-x) !important;
+    padding-top: var(--category-top-y);
+    padding-left: var(--category-x);
   }
   .contact-page {
-    padding-top: var(--category-top-y) !important;
-    padding-left: var(--category-x) !important;
+    padding-top: var(--category-top-y);
+    padding-left: var(--category-x);
   }
 
-  .works-top.category-top h1,
-  .archive-top.category-top h1 {
-    font-size: 1.08rem !important;
-  }
-
-  /* Works reads a touch high because of its existing header rules; optically align it. */
-  .works-top.category-top {
+  .works-top.category-top,
+  .category-top.works-top {
     transform: translateY(3px);
   }
 
-  /*
-   * Info should feel sparse but not disconnected. Keep the copy on a strict,
-   * compact vertical rhythm so the empty space belongs to the page, not between
-   * every sentence.
-   */
+  .info-split {
+    display: grid;
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    grid-template-columns: minmax(0, 42.7%) minmax(0, 57.3%);
+  }
+  .info-split > .index-panel,
+  .info-split > .detail-panel {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    box-sizing: border-box;
+    border-left: 0;
+    padding-top: var(--category-top-y);
+    padding-left: var(--category-x);
+    padding-right: var(--category-x);
+    padding-bottom: clamp(42px, 5.5vh, 58px);
+  }
+  .info-split > .index-panel { grid-column: 1; }
+  .info-split > .detail-panel {
+    grid-column: 2;
+    left: auto;
+    right: auto;
+  }
+  .info-split .info-aside,
   .info-split .info-copy {
-    width: min(100%, 40ch) !important;
-    max-width: 40ch !important;
+    margin-top: 0;
+    justify-self: start;
+  }
+  .info-split .info-aside { width: min(100%, 420px); }
+  .info-split .info-copy {
+    width: min(100%, 40ch);
+    max-width: 40ch;
   }
   .info-split .info-korean,
-  .info-split .info-english {
-    line-height: 1.66 !important;
-  }
+  .info-split .info-english { line-height: 1.66; }
   .info-split .info-korean p,
-  .info-split .info-english p {
-    margin: 0 0 16px !important;
-  }
+  .info-split .info-english p { margin: 0 0 16px; }
   .info-split .info-korean p:last-child,
-  .info-split .info-english p:last-child {
-    margin-bottom: 0 !important;
-  }
+  .info-split .info-english p:last-child { margin-bottom: 0; }
   .info-split .info-copy .section-mark {
     display: block;
-    margin: 16px 0 !important;
-    line-height: 1 !important;
+    margin: 16px 0;
+    line-height: 1;
   }
+  .info-split::after { content: none; display: none; }
 }
 
 @media (max-width: 820px) {
-  .category-top {
-    margin-bottom: 44px;
-  }
+  .category-top { margin-bottom: 44px; }
   .category-top h1 {
-    margin-bottom: 18px !important;
-    font-size: .92rem !important;
+    margin-bottom: 18px;
+    font-size: .92rem;
   }
-  .info-top-spacer {
-    display: none;
-  }
+  .info-top-spacer { display: none; }
   .info-split .info-korean p,
-  .info-split .info-english p {
-    margin-bottom: 16px !important;
-  }
-  .info-split .info-copy .section-mark {
-    margin: 16px 0 !important;
-  }
+  .info-split .info-english p { margin-bottom: 16px; }
+  .info-split .info-copy .section-mark { margin: 16px 0; }
 }
 </style></head><body class=""><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴"><a href="/works/discography">works</a><a href="/news">news</a><a href="/notes">notes</a><a href="/archive" class="is-active" aria-current="page">archive</a><a href="/merch">merch</a><a href="/info">info</a><a href="/contact">contact</a></nav></aside><main class="site-main"><div class="wide-page archive-photo-detail-page"><header class="category-top archive-top"><h1>archive</h1><nav class="subnav" aria-label="archive 하위 메뉴"><a href="/archive/photo-video" class="is-active" aria-current="page">photo</a><a href="/archive/videos">video</a><a href="/archive/links">text</a></nav></header><header class="archive-photo-detail-head"><a class="archive-photo-back" href="/archive/photo-video">back to photo</a><h1>Sosil Solo @ Studio Zemi 재미공작소</h1><p>2026.05.01</p><div class="prose">Photo: YERIN @O0lynnn_</div></header><div class="archive-photo-post-gallery"><img class="archive-photo-full" src="/media/catalog/2026-09-03/bea73aac-1cd3-40a4-b56a-889b5a3b5ded.webp" alt="Sosil Solo @ Studio Zemi 재미공작소 1" loading="eager" decoding="async"><img class="archive-photo-full" src="/media/catalog/2026-09-03/dd86a65c-787f-4502-a47c-9e212f434482.webp" alt="Sosil Solo @ Studio Zemi 재미공작소 2" loading="lazy" decoding="async"><img class="archive-photo-full" src="/media/catalog/2026-09-03/7b330747-22d8-46e2-b3a2-f0bda1150fa3.webp" alt="Sosil Solo @ Studio Zemi 재미공작소 3" loading="lazy" decoding="async"></div></div></main></div></body></html>
