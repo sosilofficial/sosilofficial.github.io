@@ -105,15 +105,26 @@
     border-left: 0 !important;
   }
 
+  /*
+   * Keep the structural divider, but let it read more like a faint trace than UI chrome:
+   * it stops short of the viewport edges and softly fades in/out.
+   */
   .split-layout:not(.info-split)::after {
     content: "" !important;
     position: absolute !important;
     z-index: 40 !important;
-    top: 0 !important;
-    bottom: 0 !important;
+    top: 9vh !important;
+    bottom: 9vh !important;
     left: 38.8888889% !important;
     width: 1px !important;
-    background: var(--line) !important;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--line) 12%,
+      var(--line) 88%,
+      transparent 100%
+    ) !important;
+    opacity: .42 !important;
     pointer-events: none !important;
   }
 
@@ -162,16 +173,10 @@
     max-width: 44ch !important;
   }
 
+  /* Info is read as one editorial spread, so whitespace does the separation here. */
   .info-split::after {
-    content: "" !important;
-    position: absolute !important;
-    z-index: 40 !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    left: 42.7% !important;
-    width: 1px !important;
-    background: var(--line) !important;
-    pointer-events: none !important;
+    content: none !important;
+    display: none !important;
   }
 }
 </style><style id="content-font-system-style">
