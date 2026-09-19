@@ -289,7 +289,16 @@ h1, h2, strong { font-weight: 400; }
   animation: trail-fade var(--trail-lifetime) linear forwards;
 }
 .motion-trail img { width: 100%; aspect-ratio: 1; object-fit: cover; }
-@keyframes trail-fade { to { opacity: 0; filter: blur(calc(var(--trail-blur) * 1.8)) saturate(.55); } }
+@keyframes trail-fade {
+  0%, 25% {
+    opacity: var(--trail-alpha, var(--trail-opacity));
+    filter: blur(var(--trail-softness, var(--trail-blur))) saturate(.65);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(calc(var(--trail-softness, var(--trail-blur)) * 2)) saturate(.55);
+  }
+}
 .home-news { position: absolute; z-index: 5; top: 42.5vh; right: 6.5vw; width: min(29vw, 443px); }
 .home-mailing { position: absolute; z-index: 5; top: 68.8vh; right: 6.5vw; width: min(29vw, 443px); }
 .home-news h2, .home-mailing h2 { margin-bottom: 18px; font-size: .76rem; }

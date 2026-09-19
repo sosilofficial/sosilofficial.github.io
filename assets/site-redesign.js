@@ -1,13 +1,13 @@
 const HOME_MOTION_CONFIG = Object.freeze({
   speedSeconds: 58,
-  trailCount: 6,
-  trailOpacity: 0.10,
-  trailBlur: 5,
-  trailLifetimeMs: 2400,
-  trailIntervalMinMs: 340,
-  trailIntervalMaxMs: 540,
+  trailCount: 24,
+  trailOpacity: 0.22,
+  trailBlur: 3.5,
+  trailLifetimeMs: 6000,
+  trailIntervalMinMs: 300,
+  trailIntervalMaxMs: 380,
   trailScaleVariance: 0.012,
-  jitterPx: 1.4,
+  jitterPx: 0.6,
   brightnessVariation: 0.025,
   colorDriftAmount: 0.018,
   exposurePeriodMs: 4100
@@ -98,8 +98,6 @@ function setupHomeMotion() {
     ? {
         ...HOME_MOTION_CONFIG,
         jitterPx: 0,
-        trailCount: 4,
-        trailOpacity: 0.08,
         trailScaleVariance: 0,
         brightnessVariation: 0,
         colorDriftAmount: 0
@@ -140,6 +138,8 @@ function setupHomeMotion() {
     const lifetime = config.trailLifetimeMs * (.84 + Math.random() * .32);
     trail.style.transform = `translate(${x + trailJitterX}px, ${y + trailJitterY}px) scale(${scale})`;
     trail.style.opacity = opacity;
+    trail.style.setProperty("--trail-alpha", opacity);
+    trail.style.setProperty("--trail-softness", `${blur}px`);
     trail.style.filter = `blur(${blur}px) saturate(${.61 + Math.random() * .1})`;
     trail.style.animationDuration = `${lifetime}ms`;
     trail.style.setProperty("--trail-duration", `${lifetime}ms`);
