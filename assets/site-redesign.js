@@ -4,7 +4,13 @@ const HOME_MOTION_CONFIG = Object.freeze({
   trailOpacity: 0.08,
   trailBlur: 5,
   trailLifetimeMs: 2400,
-  jitterPx: 1.2
+  trailIntervalMinMs: 340,
+  trailIntervalMaxMs: 540,
+  trailScaleVariance: 0.012,
+  jitterPx: 1.2,
+  brightnessVariation: 0.025,
+  colorDriftAmount: 0.018,
+  exposurePeriodMs: 4100
 });
 
 function setupPanels() {
@@ -102,14 +108,28 @@ function setupHomeMotion() {
   let vy = field.clientHeight / (config.speedSeconds * 1.18);
   let lastTime = performance.now();
   let lastTrail = 0;
+  let nextTrailDelay = config.trailIntervalMinMs;
+  let frameId = 0;
   const trails = [];
 
   function makeTrail(now) {
     const trail = cover.cloneNode(true);
     trail.removeAttribute("href");
+    trail.removeAttribute("target");
+    trail.removeAttribute("rel");
     trail.removeAttribute("aria-label");
+    trail.setAttribute("aria-hidden", "true");
     trail.className = "motion-trail";
-    trail.style.transform = `translate(${x}px, ${y}px)`;
+    const trailJitterX = (Math.random() - .5) * config.jitterPx * 1.8;
+    const trailJitterY = (Math.random() - .5) * config.jitterPx * 1.8;
+    const scale = 1 + (Math.random() - .5) * config.trailScaleVariance * 2;
+    const opacity = config.trailOpacity * (.72 + Math.random() * .5);
+    const blur = config.trailBlur * (.82 + Math.random() * .5);
+    const lifetime = config.trailLifetimeMs * (.84 + Math.random() * .32);
+    trail.style.transform = `translate(${x + trailJitterX}px, ${y + trailJitterY}px) scale(${scale})`;
+    trail.style.opacity = opacity;
+    trail.style.filter = `blur(${blur}px) saturate(${.61 + Math.random() * .1})`;
+    trail.style.animationDuration = `${lifetime}ms`;
     field.insertBefore(trail, cover);
     trails.push(trail);
     while (trails.length > config.trailCount) trails.shift()?.remove();
@@ -117,11 +137,14 @@ function setupHomeMotion() {
       trail.remove();
       const index = trails.indexOf(trail);
       if (index >= 0) trails.splice(index, 1);
-    }, config.trailLifetimeMs);
+    }, lifetime + 50);
     lastTrail = now;
+    nextTrailDelay = config.trailIntervalMinMs + Math.random() * (config.trailIntervalMaxMs - config.trailIntervalMinMs);
   }
 
   function animate(now) {
+    frameId = 0;
+    if (document.hidden) return;
     const dt = Math.min((now - lastTime) / 1000, .1);
     lastTime = now;
     const maxX = Math.max(0, field.clientWidth - cover.offsetWidth);
@@ -132,13 +155,30 @@ function setupHomeMotion() {
     if (y <= 0 || y >= maxY) { y = Math.max(0, Math.min(maxY, y)); vy *= -1; }
     const jitterX = (Math.random() - .5) * config.jitterPx;
     const jitterY = (Math.random() - .5) * config.jitterPx;
-    const exposure = .98 + Math.sin(now / 4100) * .025;
+    const exposure = .98 + Math.sin(now / config.exposurePeriodMs) * config.brightnessVariation;
+    const saturation = .82 + Math.sin(now / (config.exposurePeriodMs * 1.37)) * config.colorDriftAmount;
     cover.style.transform = `translate(${x + jitterX}px, ${y + jitterY}px)`;
-    cover.style.filter = `saturate(.82) contrast(.94) brightness(${exposure})`;
-    if (now - lastTrail > 420) makeTrail(now);
-    requestAnimationFrame(animate);
+    cover.style.filter = `saturate(${saturation}) contrast(.94) brightness(${exposure})`;
+    if (now - lastTrail > nextTrailDelay) makeTrail(now);
+    frameId = requestAnimationFrame(animate);
   }
-  requestAnimationFrame(animate);
+
+  const resizeObserver = new ResizeObserver(() => {
+    const maxX = Math.max(0, field.clientWidth - cover.offsetWidth);
+    const maxY = Math.max(0, field.clientHeight - cover.offsetHeight);
+    x = Math.max(0, Math.min(maxX, x));
+    y = Math.max(0, Math.min(maxY, y));
+    vx = (Math.sign(vx) || 1) * field.clientWidth / config.speedSeconds;
+    vy = (Math.sign(vy) || 1) * field.clientHeight / (config.speedSeconds * 1.18);
+  });
+  resizeObserver.observe(field);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && !frameId) {
+      lastTime = performance.now();
+      frameId = requestAnimationFrame(animate);
+    }
+  });
+  frameId = requestAnimationFrame(animate);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
