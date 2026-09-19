@@ -54,13 +54,20 @@ if (!home.includes('href="/notes"') || !home.includes('href="/works/discography"
 if (!home.includes('/assets/site-redesign.css') || !home.includes('/assets/site-redesign.js')) failures.push("index.html: 리디자인 자산 연결 오류");
 if (!home.includes('https://www.youtube.com/watch?v=zZtQdgaWjBI')) failures.push("index.html: 홈 앨범 YouTube 링크 오류");
 if (!home.includes('method="get" target="_blank"') || !home.includes('name="emailAddress"') || !home.includes('/viewform') || /formResponse|data-mailing-form|mailing-status|sending\.\.\.|thank you\./i.test(home)) failures.push("index.html: Mailing List Google Form 동작 오류");
-if (home.includes("no news yet.")) failures.push("index.html: 홈 News 빈 상태가 노출됩니다");
+if (!home.includes('class="home-news"') || !home.includes('<h2>latest news</h2>')) failures.push("index.html: 홈 latest news 영역이 없습니다");
+if (home.includes("i make music,<br>and moving images.")) failures.push("index.html: 삭제한 홈 소개 문구가 남아 있습니다");
 if (!/site-redesign\.css\?v=[a-f0-9]{12}/.test(home) || !/site-redesign\.js\?v=[a-f0-9]{12}/.test(home)) failures.push("index.html: 자산 cache version이 content hash가 아닙니다");
 
 const notesIndex = fs.readFileSync(path.join(ROOT, "notes/index.html"), "utf8");
 const noteList = notesIndex.match(/<div class="note-index">([\s\S]*?)<\/div>/)?.[1] || "";
 if (/<img\b/.test(noteList)) failures.push("notes/index.html: 목록 썸네일이 남아 있습니다");
 if (/\d{4}-\d{2}-\d{2}\s+\d{2}:/.test(noteList)) failures.push("notes/index.html: 날짜에 시간이 남아 있습니다");
+
+const discographyIndex = fs.readFileSync(path.join(ROOT, "works", "discography", "index.html"), "utf8");
+const worksSubnav = discographyIndex.match(/<nav class="subnav" aria-label="works 하위 메뉴">([\s\S]*?)<\/nav>/)?.[1] || "";
+for (const href of ["/works/discography", "/works/videos", "/works/live", "/works/others"]) {
+  if (!worksSubnav.includes(`href="${href}"`)) failures.push(`works/discography/index.html: Works 하위 메뉴 누락 ${href}`);
+}
 
 const css = fs.readFileSync(path.join(ROOT, "assets/site-redesign.css"), "utf8");
 if (/\.track-list li[^}]*border-bottom/s.test(css) || /\.text-index a[^}]*border-bottom/s.test(css) || /\.note-index a[^}]*border-bottom/s.test(css)) failures.push("site-redesign.css: 목록 horizontal divider가 남아 있습니다");
