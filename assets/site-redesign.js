@@ -51,6 +51,79 @@ function setupDetailClose() {
   });
 }
 
+function setupDetailScrollMemory() {
+  if (matchMedia("(max-width: 820px)").matches) return;
+
+  const configs = [
+    {
+      match: (pathname) => pathname === "/works/videos/" || pathname.startsWith("/works/videos/"),
+      selector: '.video-index a[href^="/works/videos/"]',
+      key: "sosil:detail-scroll:works-videos"
+    },
+    {
+      match: (pathname) => pathname === "/works/discography/" || pathname.startsWith("/works/discography/"),
+      selector: '.release-index a[href^="/works/discography/"]',
+      key: "sosil:detail-scroll:discography"
+    },
+    {
+      match: (pathname) => pathname === "/notes/" || pathname.startsWith("/notes/"),
+      selector: '.note-index a[href^="/notes/"]',
+      key: "sosil:detail-scroll:notes"
+    },
+    {
+      match: (pathname) => pathname === "/news/" || pathname.startsWith("/news/"),
+      selector: '.news-index a[href^="/news/"]',
+      key: "sosil:detail-scroll:news"
+    },
+    {
+      match: (pathname) => pathname === "/merch/" || pathname.startsWith("/merch/"),
+      selector: '.merch-index a[href^="/merch/"]',
+      key: "sosil:detail-scroll:merch"
+    },
+    {
+      match: (pathname) => pathname === "/archive/photo-video/" || pathname.startsWith("/archive/photo-video/"),
+      selector: '.photo-index a[href^="/archive/photo-video/"], .photo-post-grid a[href^="/archive/photo-video/"]',
+      key: "sosil:detail-scroll:archive-photo"
+    },
+    {
+      match: (pathname) => pathname === "/archive/videos/" || pathname.startsWith("/archive/videos/"),
+      selector: '.video-index a[href^="/archive/videos/"], .archive-video-grid a[href^="/archive/videos/"]',
+      key: "sosil:detail-scroll:archive-video"
+    }
+  ];
+
+  const config = configs.find(({ match }) => match(location.pathname));
+  if (!config) return;
+
+  const positionKey = `${config.key}:y`;
+  const pendingKey = `${config.key}:pending`;
+  const links = [...document.querySelectorAll(config.selector)];
+
+  links.forEach((link) => link.addEventListener("click", (event) => {
+    if (
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) return;
+
+    sessionStorage.setItem(positionKey, String(window.scrollY));
+    sessionStorage.setItem(pendingKey, "1");
+  }));
+
+  if (sessionStorage.getItem(pendingKey) !== "1") return;
+  sessionStorage.removeItem(pendingKey);
+
+  const saved = Number(sessionStorage.getItem(positionKey));
+  if (!Number.isFinite(saved) || saved < 0) return;
+
+  history.scrollRestoration = "manual";
+  const restore = () => window.scrollTo({ top: saved, left: 0, behavior: "auto" });
+  requestAnimationFrame(() => requestAnimationFrame(restore));
+  window.addEventListener("load", restore, { once: true });
+}
+
 function setupNoteNavigation() {
   const links = [...document.querySelectorAll(".note-index a[href]")];
   if (!links.length) return;
@@ -405,6 +478,7 @@ function setupHomeMotion() {
 document.addEventListener("DOMContentLoaded", () => {
   setupPanels();
   setupDetailClose();
+  setupDetailScrollMemory();
   setupNoteNavigation();
   setupHomeGrid();
   setupHomeMotion();
