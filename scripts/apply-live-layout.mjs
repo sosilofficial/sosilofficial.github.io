@@ -11,35 +11,97 @@ if (!fs.existsSync(FILE)) {
 const STYLE = `<style id="works-live-layout-style">
 @media (min-width: 821px) {
   .live-split .index-panel {
-    padding-right: clamp(34px, 4.2vw, 72px);
+    padding-right: clamp(32px, 3.8vw, 58px);
   }
+
+  /*
+   * Treat Live like a small performance notebook: compact repeated entries
+   * against a deliberately large empty field, rather than a portfolio table.
+   */
   .live-log {
-    width: min(100%, 48rem);
+    width: min(100%, 38rem);
   }
   .live-log h2 {
-    margin: clamp(76px, 10vh, 116px) 0 28px;
+    margin: 52px 0 24px;
     color: var(--ink);
-    font-size: .98rem;
+    opacity: .78;
+    font-size: .69rem;
+    font-weight: 400;
     line-height: 1;
-    letter-spacing: .035em;
+    letter-spacing: .045em;
+  }
+  .live-log h2:first-child {
+    margin-top: 0;
+  }
+
+  .live-row {
+    display: grid;
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    gap: 0 12px;
+    margin-bottom: 22px;
+    align-items: baseline;
+  }
+  .live-row:last-child {
+    margin-bottom: 0;
+  }
+  .live-row time {
+    grid-row: 1 / span 3;
+    color: var(--muted);
+    opacity: .66;
+    font-size: .62rem;
+    line-height: 1.52;
+    letter-spacing: .03em;
+    white-space: nowrap;
+  }
+  .live-row .live-title,
+  .live-row .live-artists,
+  .live-row .live-venue {
+    grid-column: 2;
+    display: block;
+    min-width: 0;
+  }
+  .live-row .live-title {
+    font-size: .80rem;
+    line-height: 1.42;
+  }
+  .live-row .live-artists {
+    margin-top: 3px;
+    color: var(--ink);
+    opacity: .82;
+    font-size: .75rem;
+    line-height: 1.42;
+  }
+  .live-row .live-venue {
+    margin-top: 3px;
+    color: var(--muted);
+    opacity: .52;
+    font-size: .59rem;
+    line-height: 1.4;
+    letter-spacing: .02em;
+  }
+}
+
+@media (max-width: 820px) {
+  .live-log h2 {
+    margin: 44px 0 22px;
+    font-size: .68rem;
+    font-weight: 400;
+    letter-spacing: .04em;
   }
   .live-log h2:first-child {
     margin-top: 0;
   }
   .live-row {
     display: grid;
-    grid-template-columns: 6.2rem minmax(0, 1fr);
-    gap: 0 18px;
-    margin-bottom: clamp(28px, 4vh, 42px);
-    align-items: start;
+    grid-template-columns: 4rem minmax(0, 1fr);
+    gap: 0 10px;
+    margin-bottom: 22px;
+    align-items: baseline;
   }
   .live-row time {
     grid-row: 1 / span 3;
-    color: var(--muted);
-    opacity: .68;
-    font-size: .63rem;
-    line-height: 1.55;
-    letter-spacing: .025em;
+    font-size: .61rem;
+    line-height: 1.5;
   }
   .live-row .live-title,
   .live-row .live-artists,
@@ -48,25 +110,20 @@ const STYLE = `<style id="works-live-layout-style">
     display: block;
   }
   .live-row .live-title {
-    font-size: .83rem;
-    line-height: 1.46;
-    letter-spacing: .004em;
+    font-size: .79rem;
+    line-height: 1.42;
   }
   .live-row .live-artists {
-    margin-top: 4px;
-    color: var(--ink);
-    opacity: 1;
-    font-size: .83rem;
-    line-height: 1.46;
-    letter-spacing: .004em;
+    margin-top: 3px;
+    font-size: .74rem;
+    line-height: 1.42;
+    opacity: .82;
   }
   .live-row .live-venue {
     margin-top: 3px;
-    color: var(--muted);
-    opacity: .64;
-    font-size: .61rem;
-    line-height: 1.45;
-    letter-spacing: .025em;
+    font-size: .59rem;
+    line-height: 1.4;
+    opacity: .52;
   }
 }
 </style>`;
@@ -97,10 +154,16 @@ html = html.replace(
   }
 );
 
+/* Keep the full authored date in datetime, but let the year heading carry the year visually. */
+html = html.replace(
+  /<time>(\d{4})\.(\d{2})\.(\d{2})<\/time>/g,
+  (_match, year, month, day) => `<time datetime="${year}-${month}-${day}">${month}.${day}</time>`
+);
+
 if (html.includes('id="works-live-layout-style"')) {
   html = html.replace(/<style id="works-live-layout-style">[\s\S]*?<\/style>/, STYLE);
 } else {
   html = html.replace("</head>", `${STYLE}</head>`);
 }
 fs.writeFileSync(FILE, html);
-console.log("Matched Works/Live artist names to the performance title type size.");
+console.log("Refined Works/Live into a compact performance-log rhythm with year-scoped dates.");
