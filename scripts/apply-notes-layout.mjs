@@ -5,40 +5,47 @@ const ROOT = process.cwd();
 const NOTES_DIR = path.join(ROOT, "notes");
 const STYLE = `<style id="slow-notes-style">
 @media (min-width: 821px) {
+  /*
+   * Notes should read like a compact archive rather than isolated cards.
+   * Use an 8px-based rhythm so the two rows feel deliberately related.
+   */
   .note-index {
     display: grid;
-    gap: clamp(38px, 5.2vh, 64px);
+    gap: 24px;
     max-width: 32rem;
   }
   .note-index a {
+    display: grid;
     grid-template-columns: 7.2rem minmax(0, 1fr);
-    gap: 3px 13px;
-    padding: 4px 6px;
-    line-height: 1.72;
+    align-items: baseline;
+    gap: 0 12px;
+    padding: 0;
+    line-height: 1.6;
   }
   .note-index a.is-selected {
-    background: rgba(72, 80, 91, .03);
+    background: rgba(72, 80, 91, .022);
   }
 
   /*
-   * Put the detail date on the same horizontal row as the first item in the
-   * Notes index. The left column starts after the shared category heading,
-   * so mirror that exact vertical rhythm instead of using an arbitrary 10vh.
+   * Mirror the real Notes heading in the detail column instead of estimating
+   * its height with a calc(). The invisible heading occupies the exact same
+   * vertical space as the left heading, so the detail date and first index row
+   * share one horizontal baseline even if typography changes later.
    */
+  .split-layout > .detail-panel {
+    padding-top: var(--category-top-y, clamp(48px, 6.8vh, 70px)) !important;
+  }
+  .notes-top-spacer {
+    visibility: hidden;
+    pointer-events: none;
+  }
   .note-detail {
     max-width: 48rem;
-    margin-top: calc(
-      var(--category-top-y, clamp(48px, 6.8vh, 70px))
-      + 1.296rem
-      + 24px
-      + clamp(44px, 6vh, 72px)
-      + 4px
-      - var(--pad)
-    );
+    margin: 0 auto !important;
   }
   .note-detail > p:first-of-type {
     margin: 0 0 8px !important;
-    line-height: 1.72;
+    line-height: 1.6;
   }
   .note-detail h1 {
     margin: 0 0 clamp(42px, 6vh, 70px) !important;
@@ -56,18 +63,31 @@ const STYLE = `<style id="slow-notes-style">
   }
 }
 @media (max-width: 820px) {
-  .note-index { gap: 30px; }
+  .note-index { gap: 24px; }
   .note-index a {
     grid-template-columns: 6.4rem minmax(0, 1fr);
-    gap: 4px 12px;
-    padding: 4px 2px;
-    line-height: 1.65;
+    align-items: baseline;
+    gap: 0 12px;
+    padding: 0;
+    line-height: 1.6;
   }
+  .notes-top-spacer { display: none; }
 }
 </style>`;
 
 function apply(file) {
   let html = fs.readFileSync(file, "utf8");
+
+  if (
+    html.includes('<section class="detail-panel"><article class="text-detail note-detail">') &&
+    !html.includes('notes-top-spacer')
+  ) {
+    html = html.replace(
+      '<section class="detail-panel"><article class="text-detail note-detail">',
+      '<section class="detail-panel"><div class="category-top notes-top-spacer" aria-hidden="true"><h1>notes</h1></div><article class="text-detail note-detail">'
+    );
+  }
+
   if (html.includes('id="slow-notes-style"')) {
     html = html.replace(/<style id="slow-notes-style">[\s\S]*?<\/style>/, STYLE);
   } else {
@@ -85,4 +105,4 @@ for (const entry of fs.readdirSync(NOTES_DIR, { withFileTypes: true })) {
 }
 const landing = path.join(NOTES_DIR, "index.html");
 if (fs.existsSync(landing)) apply(landing);
-console.log("Applied Notes spacing and aligned detail dates to the shared index grid.");
+console.log("Tightened Notes list rhythm and locked detail dates to the exact shared heading grid.");
