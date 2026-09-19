@@ -47,12 +47,11 @@ const STYLE = `<style id="home-mailing-join-style">
   .home-mailing {
     margin-top: 0 !important;
   }
-  .home-news h2,
-  .home-mailing h2 {
+  .home-news h2 {
     margin-bottom: 10px !important;
   }
-  .mailing-copy {
-    margin-bottom: 12px !important;
+  .home-mailing h2 {
+    margin-bottom: 16px !important;
   }
 }
 
@@ -72,6 +71,9 @@ const STYLE = `<style id="home-mailing-join-style">
   }
 }
 
+.home-mailing h2 {
+  margin-bottom: 18px;
+}
 .home-mailing form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -124,6 +126,9 @@ html = html.replace(
   '<p><span class="home-grid-anchor">slowcore / alternative folk musician</span><br>based in seoul, south korea</p>'
 );
 
+/* Keep the signup intentionally bare: heading, email line, join. */
+html = html.replace(/<p class="mailing-copy">[\s\S]*?<\/p>/, "");
+
 html = html.replace(
   /<form action="(https:\/\/docs\.google\.com\/forms\/d\/e\/[^\"]+)\/viewform" method="get" target="_blank">(?:<input type="hidden" name="usp" value="pp_url">)?/,
   (_match, base) => `<form action="${base}/formResponse" method="post" data-mailing-form data-fallback-url="${base}/viewform">`
@@ -137,4 +142,4 @@ if (html.includes("data-mailing-form") && !html.includes("data-mailing-status"))
 }
 
 fs.writeFileSync(file, html);
-console.log("Aligned the homepage grid, opened the mobile News/Mailing List rhythm, and preserved in-page signup.");
+console.log("Simplified Mailing List copy, preserved the 32px mobile break after News, and kept a sparse signup rhythm.");
