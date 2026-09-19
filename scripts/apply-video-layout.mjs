@@ -44,6 +44,11 @@ const STYLE = `<style id="stable-video-index-style">
     position: relative;
     margin: clamp(28px, 4vh, 44px) auto 0;
   }
+  .video-split .works-video-detail h1 {
+    margin: 0 0 clamp(18px, 2.5vh, 26px);
+    font-size: .9rem;
+    line-height: 1.45;
+  }
   .video-split .detail-panel:empty {
     pointer-events: none;
   }
@@ -55,6 +60,13 @@ function ensureStyle(html) {
     return html.replace(/<style id="stable-video-index-style">[\s\S]*?<\/style>/, STYLE);
   }
   return html.replace("</head>", `${STYLE}</head>`);
+}
+
+function moveTitleAboveVideo(html) {
+  return html.replace(
+    /(<article class="video-detail works-video-detail">[\s\S]*?<button[\s\S]*?<\/button>)(<div class="video-embed">[\s\S]*?<\/div>|<a class="media-fallback"[\s\S]*?<\/a>)(<h1>[\s\S]*?<\/h1>)/,
+    "$1$3$2"
+  );
 }
 
 if (!fs.existsSync(LANDING)) {
@@ -93,8 +105,10 @@ landing = ensureStyle(landing.replace(/<main class="site-main">[\s\S]*?<\/main>/
 fs.writeFileSync(LANDING, landing);
 
 for (const file of detailFiles) {
-  const html = ensureStyle(fs.readFileSync(file, "utf8"));
+  let html = fs.readFileSync(file, "utf8");
+  html = moveTitleAboveVideo(html);
+  html = ensureStyle(html);
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied stable Works video index layout with grid-aligned sticky detail for every video.");
+console.log("Applied stable Works video layout with the detail title above the player.");
