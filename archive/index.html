@@ -118,32 +118,49 @@
     pointer-events: none !important;
   }
 
-  /* Info is intentionally weighted toward the biography column. */
+  /* Info: media/links on the narrower left, biography on the wider right. */
   .info-split {
     display: grid !important;
     position: relative !important;
     width: 100% !important;
     min-width: 0 !important;
     max-width: none !important;
-    grid-template-columns: minmax(0, 57.3%) minmax(0, 42.7%) !important;
+    grid-template-columns: minmax(0, 42.7%) minmax(0, 57.3%) !important;
+  }
+
+  .info-split > .index-panel,
+  .info-split > .detail-panel {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    box-sizing: border-box !important;
+    border-left: 0 !important;
+    padding: clamp(42px, 5.5vh, 58px) !important;
   }
 
   .info-split > .index-panel {
     grid-column: 1 !important;
-    width: auto !important;
-    min-width: 0 !important;
-    max-width: none !important;
   }
 
   .info-split > .detail-panel {
     grid-column: 2 !important;
-    width: auto !important;
-    min-width: 0 !important;
-    max-width: none !important;
     left: auto !important;
     right: auto !important;
-    box-sizing: border-box !important;
-    border-left: 0 !important;
+  }
+
+  .info-split .info-aside,
+  .info-split .info-copy {
+    margin-top: 0 !important;
+    justify-self: start !important;
+  }
+
+  .info-split .info-aside {
+    width: min(100%, 420px) !important;
+  }
+
+  .info-split .info-copy {
+    width: min(100%, 44ch) !important;
+    max-width: 44ch !important;
   }
 
   .info-split::after {
@@ -152,7 +169,7 @@
     z-index: 40 !important;
     top: 0 !important;
     bottom: 0 !important;
-    left: 57.3% !important;
+    left: 42.7% !important;
     width: 1px !important;
     background: var(--line) !important;
     pointer-events: none !important;
