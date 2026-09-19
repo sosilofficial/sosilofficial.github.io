@@ -4,7 +4,55 @@ import path from "node:path";
 const ROOT = process.cwd();
 const STYLE = `<style id="mobile-detail-screen-style">
 @media (max-width: 820px) {
-  /* Keep Discography cover art explicit on small screens, including the list. */
+  /*
+   * Treat the Discography landing as a real single-column mobile page.
+   * Do not leave the empty desktop detail column participating in layout.
+   */
+  .release-split:not(.has-detail) {
+    display: block !important;
+    min-height: auto !important;
+  }
+
+  .release-split:not(.has-detail) > .index-panel {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 24px 18px 80px !important;
+  }
+
+  .release-split:not(.has-detail) > .detail-panel {
+    display: none !important;
+  }
+
+  .release-split:not(.has-detail) .release-index {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 32px 16px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .release-split:not(.has-detail) .release-index > a {
+    display: block !important;
+    position: relative !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .release-split:not(.has-detail) .release-index span {
+    display: flex !important;
+    width: 100% !important;
+    margin-top: 9px !important;
+  }
+
   .release-split:not(.has-detail) .release-index img {
     display: block !important;
     visibility: visible !important;
@@ -158,4 +206,4 @@ for (const file of detailFiles(path.join(ROOT, "merch"))) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Kept Discography covers visible on mobile and preserved dedicated Discography/Merch detail screens.");
+console.log("Forced Discography landing into a visible two-column mobile list and preserved dedicated Discography/Merch detail screens.");
