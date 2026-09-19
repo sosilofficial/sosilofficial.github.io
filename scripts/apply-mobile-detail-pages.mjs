@@ -129,4 +129,4 @@ for (const file of detailFiles(path.join(ROOT, "merch"))) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Turned Discography and Merch detail routes into dedicated mobile detail screens with close-to-list behavior.");
+console.log("Applied dedicated mobile detail screens to Discography and Merch, with x returning to their lists.");
