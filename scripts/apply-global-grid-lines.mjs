@@ -6,7 +6,6 @@ const STYLE = `<style id="global-grid-lines-style">
 @media (min-width: 821px) {
   /*
    * One shared coordinate system for every desktop split page.
-   * The sidebar itself is unchanged; only the content canvas is normalized.
    * Keeping a stable scrollbar gutter prevents long/short pages from shifting
    * the content width by a few pixels relative to Discography.
    */
@@ -18,6 +17,34 @@ const STYLE = `<style id="global-grid-lines-style">
     margin-left: max(var(--sidebar), 118px) !important;
     width: calc(100% - max(var(--sidebar), 118px)) !important;
     max-width: none !important;
+  }
+
+  /*
+   * The sidebar edge should feel like the other dividers: a quiet trace rather
+   * than a hard UI rule. Let it fade before reaching the viewport edges and
+   * keep it a little softer than the content divider.
+   */
+  .side-rail {
+    border-right: 0 !important;
+  }
+
+  .side-rail::after {
+    content: "" !important;
+    position: absolute !important;
+    z-index: 1 !important;
+    top: 9vh !important;
+    bottom: 9vh !important;
+    right: 0 !important;
+    width: 1px !important;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--line) 14%,
+      var(--line) 86%,
+      transparent 100%
+    ) !important;
+    opacity: .24 !important;
+    pointer-events: none !important;
   }
 
   /* Discography remains the master split for all regular list/detail pages. */
@@ -67,7 +94,7 @@ const STYLE = `<style id="global-grid-lines-style">
       var(--line) 88%,
       transparent 100%
     ) !important;
-    opacity: .42 !important;
+    opacity: .30 !important;
     pointer-events: none !important;
   }
 
@@ -149,4 +176,4 @@ for (const file of walk(ROOT)) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Softened regular split dividers into faint vertical traces, removed the Info divider, and preserved the shared grid.");
+console.log("Softened sidebar and regular split dividers into faint vertical traces, removed the Info divider, and preserved the shared grid.");
