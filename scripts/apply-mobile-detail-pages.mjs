@@ -4,6 +4,18 @@ import path from "node:path";
 const ROOT = process.cwd();
 const STYLE = `<style id="mobile-detail-screen-style">
 @media (max-width: 820px) {
+  /* Keep Discography cover art explicit on small screens, including the list. */
+  .release-split:not(.has-detail) .release-index img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: cover !important;
+  }
+
   /*
    * Discography and Merch details should read as their own mobile screen,
    * not as the second half of a stacked desktop split.
@@ -44,6 +56,7 @@ const STYLE = `<style id="mobile-detail-screen-style">
   }
 
   .mobile-detail-screen.has-detail .release-detail {
+    display: block !important;
     padding: 0 !important;
   }
 
@@ -59,9 +72,16 @@ const STYLE = `<style id="mobile-detail-screen-style">
   }
 
   .mobile-detail-screen.has-detail .release-hero {
+    display: block !important;
+    position: static !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     width: 100% !important;
     max-width: none !important;
+    height: auto !important;
     margin: 0 !important;
+    aspect-ratio: auto !important;
+    object-fit: contain !important;
   }
 
   .mobile-detail-screen.has-detail .release-detail .detail-section,
@@ -109,6 +129,15 @@ function detailFiles(dir) {
     .filter((file) => fs.existsSync(file));
 }
 
+const discographyLanding = path.join(ROOT, "works", "discography", "index.html");
+if (fs.existsSync(discographyLanding)) {
+  let html = ensureStyle(fs.readFileSync(discographyLanding, "utf8"));
+  html = html.replace(/(<div class="release-index">[\s\S]*?<\/div>)/, (index) =>
+    index.replace(/loading="lazy"/g, 'loading="eager"')
+  );
+  fs.writeFileSync(discographyLanding, html);
+}
+
 for (const file of detailFiles(path.join(ROOT, "works", "discography"))) {
   let html = fs.readFileSync(file, "utf8");
   html = html.replace(
@@ -129,4 +158,4 @@ for (const file of detailFiles(path.join(ROOT, "merch"))) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Applied dedicated mobile detail screens to Discography and Merch, with x returning to their lists.");
+console.log("Kept Discography covers visible on mobile and preserved dedicated Discography/Merch detail screens.");
