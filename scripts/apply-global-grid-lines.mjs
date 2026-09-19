@@ -47,8 +47,8 @@ const STYLE = `<style id="global-grid-lines-style">
     pointer-events: none !important;
   }
 
-  /* Discography remains the master split for all regular list/detail pages. */
-  .split-layout:not(.info-split) {
+  /* Discography remains the master split for regular list/detail pages. Live is flat/full-width. */
+  .split-layout:not(.info-split):not(.live-split) {
     display: grid !important;
     position: relative !important;
     width: 100% !important;
@@ -57,14 +57,14 @@ const STYLE = `<style id="global-grid-lines-style">
     grid-template-columns: minmax(0, 38.8888889%) minmax(0, 61.1111111%) !important;
   }
 
-  .split-layout:not(.info-split) > .index-panel {
+  .split-layout:not(.info-split):not(.live-split) > .index-panel {
     grid-column: 1 !important;
     width: auto !important;
     min-width: 0 !important;
     max-width: none !important;
   }
 
-  .split-layout:not(.info-split) > .detail-panel {
+  .split-layout:not(.info-split):not(.live-split) > .detail-panel {
     grid-column: 2 !important;
     width: auto !important;
     min-width: 0 !important;
@@ -79,7 +79,7 @@ const STYLE = `<style id="global-grid-lines-style">
    * Keep the structural divider, but let it read more like a faint trace than UI chrome:
    * it stops short of the viewport edges and softly fades in/out.
    */
-  .split-layout:not(.info-split)::after {
+  .split-layout:not(.info-split):not(.live-split)::after {
     content: "" !important;
     position: absolute !important;
     z-index: 40 !important;
@@ -176,4 +176,4 @@ for (const file of walk(ROOT)) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Softened sidebar and regular split dividers into faint vertical traces, removed the Info divider, and preserved the shared grid.");
+console.log("Softened sidebar and regular split dividers, let Live use its own flat table grid, removed the Info divider, and preserved the shared coordinates.");
