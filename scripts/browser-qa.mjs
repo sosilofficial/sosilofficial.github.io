@@ -83,6 +83,14 @@ async function assertHomeMotion(viewport, label) {
   await context.close();
 }
 
+async function categoryRhythm(page) {
+  const heading = await page.locator(".category-top h1").boundingBox();
+  const subnav = await page.locator(".category-top .subnav").boundingBox();
+  const gap = await page.locator(".category-top .subnav").evaluate((node) => getComputedStyle(node).columnGap || getComputedStyle(node).gap);
+  assert(heading && subnav, "category heading/subnav 좌표를 읽지 못했습니다");
+  return { verticalGap: subnav.y - (heading.y + heading.height), gap };
+}
+
 try {
   for (const viewport of viewports) {
     const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height }, reducedMotion: "reduce" });
@@ -112,11 +120,30 @@ try {
     })));
     assert(worksTabs.length === 4, `${viewport.name}: Works 하위 메뉴가 4개가 아닙니다`);
     assert(worksTabs.every((tab) => tab.display !== "none" && tab.visibility !== "hidden"), `${viewport.name}: Works 하위 메뉴 중 숨겨진 항목이 있습니다`);
+    const worksRhythm = await categoryRhythm(page);
     await visibleImages(page, ".release-index img", `${viewport.name} discography`);
     if (viewport.width <= 430) {
       const columns = await page.locator(".release-index").evaluate((node) => getComputedStyle(node).gridTemplateColumns.split(" ").length);
       assert(columns === 2, `${viewport.name}: Discography가 2열이 아닙니다`);
     }
+
+    if (viewport.width > 820) {
+      const coverBox = await page.locator(".release-index img").first().boundingBox();
+      const detailBox = await page.locator(".release-split > .detail-panel").boundingBox();
+      assert(coverBox && detailBox, `${viewport.name}: Discography 좌표를 읽지 못했습니다`);
+      assert(coverBox.x + coverBox.width <= detailBox.x + 1, `${viewport.name}: Discography 앨범커버가 detail panel을 침범합니다`);
+
+      await open(page, "/works/videos");
+      const videoBox = await page.locator(".video-index img").first().boundingBox();
+      assert(videoBox, `${viewport.name}: Video 썸네일 좌표를 읽지 못했습니다`);
+      assert(Math.abs(coverBox.y - videoBox.y) <= 2, `${viewport.name}: Discography 첫 커버와 Video 첫 썸네일 시작 위치가 ${Math.abs(coverBox.y - videoBox.y)}px 다릅니다`);
+    }
+
+    await open(page, "/archive/photo-video");
+    const archiveRhythm = await categoryRhythm(page);
+    assert(worksRhythm.gap === archiveRhythm.gap, `${viewport.name}: Works와 Archive 하위 메뉴 간격이 다릅니다 (${worksRhythm.gap} / ${archiveRhythm.gap})`);
+    assert(Math.abs(worksRhythm.verticalGap - archiveRhythm.verticalGap) <= 1, `${viewport.name}: Works와 Archive 제목-하위메뉴 간격이 다릅니다 (${worksRhythm.verticalGap}px / ${archiveRhythm.verticalGap}px)`);
+
     await closeDetail(page, "/works/discography", ".release-index a", ".release-detail", `${viewport.name} discography`);
     await closeDetail(page, "/works/videos", ".video-index a", ".works-video-detail", `${viewport.name} video`);
     await closeDetail(page, "/merch", ".merch-index a", ".merch-detail", `${viewport.name} merch`);
@@ -155,7 +182,7 @@ try {
     }
   }
   await context.close();
-  console.log(`Browser QA passed at ${viewports.map((viewport) => `${viewport.width}x${viewport.height}`).join(", ")}, verified home News/Works tabs and desktop/mobile home motion, and checked ${checked.size} local links.`);
+  console.log(`Browser QA passed at ${viewports.map((viewport) => `${viewport.width}x${viewport.height}`).join(", ")}, verified Works/Archive rhythm, Discography/Video alignment, home News and desktop/mobile home motion, and checked ${checked.size} local links.`);
 } finally {
   await browser.close();
   await new Promise((resolve) => server.close(resolve));
