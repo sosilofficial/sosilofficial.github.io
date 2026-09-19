@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 
 const ROOT = process.cwd();
 const CONTENT = path.join(ROOT, "content");
@@ -27,8 +28,17 @@ function youtubeId(url = "") {
   } catch {}
   return "";
 }
-const youtubeThumbnail = (url = "") => youtubeId(url) ? `https://i.ytimg.com/vi/${youtubeId(url)}/mqdefault.jpg` : "";
+const youtubeThumbnail = (url = "") => youtubeId(url) ? `https://i.ytimg.com/vi/${youtubeId(url)}/hqdefault.jpg` : "";
 const firstImage = (item = {}) => item.thumbnail || item.images?.[0] || youtubeThumbnail(item.video) || "";
+const normalizedImage = (url = "") => url.replace("/mqdefault.jpg", "/hqdefault.jpg");
+const imageFor = (item = {}) => normalizedImage(firstImage(item));
+const imageAlt = (item, kind) => `${item.title} ${kind}`;
+
+const assetVersion = crypto.createHash("sha256")
+  .update(fs.readFileSync(path.join(ROOT, "assets", "site-redesign.css")))
+  .update(fs.readFileSync(path.join(ROOT, "assets", "site-redesign.js")))
+  .digest("hex")
+  .slice(0, 12);
 
 function parseFile(file) {
   const raw = fs.readFileSync(file, "utf8");
@@ -87,7 +97,7 @@ function titleFor(name) { return name === "소실 SOSIL" ? "소실 SOSIL — 김
 function head(name, description, route, image = "", detail = false) {
   const title = titleFor(name);
   const canonical = `${ORIGIN}${route === "/" ? "/" : `${route.replace(/\/$/, "")}/`}`;
-  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><link rel="icon" href="/favicon-sosil.svg"><link rel="stylesheet" href="/assets/site-redesign.css?v=20260919-5"><script src="/assets/site-redesign.js?v=20260919-5" defer></script><meta name="description" content="${esc(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${canonical}"><meta property="og:locale" content="ko_KR"><meta property="og:type" content="${detail ? "article" : "website"}"><meta property="og:site_name" content="소실 SOSIL"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}">${image ? `<meta property="og:image" content="${esc(absolute(image))}">` : ""}<meta name="twitter:card" content="summary_large_image">${route === "/" ? '<script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicGroup","name":"소실","alternateName":"Sosil","member":{"@type":"Person","name":"김성빈"},"genre":["slowcore","folk"],"url":"https://sosilofficial.github.io/"}</script>' : ""}</head>`;
+  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><link rel="icon" href="/favicon-sosil.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap"><link rel="stylesheet" href="/assets/site-redesign.css?v=${assetVersion}"><script src="/assets/site-redesign.js?v=${assetVersion}" defer></script><meta name="description" content="${esc(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${canonical}"><meta property="og:locale" content="ko_KR"><meta property="og:type" content="${detail ? "article" : "website"}"><meta property="og:site_name" content="소실 SOSIL"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}">${image ? `<meta property="og:image" content="${esc(absolute(normalizedImage(image)))}">` : ""}<meta name="twitter:card" content="summary_large_image">${route === "/" ? '<script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicGroup","name":"소실","alternateName":"Sosil","member":{"@type":"Person","name":"김성빈"},"genre":["slowcore","folk"],"url":"https://sosilofficial.github.io/"}</script>' : ""}</head>`;
 }
 function shell(active, main, bodyClass = "") {
   const nav = [["works", "/works/discography"], ["news", "/news"], ["notes", "/notes"], ["archive", "/archive"], ["merch", "/merch"], ["info", "/info"], ["contact", "/contact"]].map(([label, href]) => `<a href="${href}"${active === label ? ' class="is-active" aria-current="page"' : ""}>${label}</a>`).join("");
@@ -98,6 +108,10 @@ function writeRoute(route, contents) {
   const dir = route === "/" ? ROOT : path.join(ROOT, route.replace(/^\//, ""));
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "index.html"), contents);
+}
+function redirectPage(target, label) {
+  const canonical = `${ORIGIN}${target.endsWith("/") ? target : `${target}/`}`;
+  return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(label)} | 소실 SOSIL</title><link rel="icon" href="/favicon-sosil.svg"><link rel="stylesheet" href="/assets/site-redesign.css?v=${assetVersion}"><meta name="robots" content="noindex,follow"><link rel="canonical" href="${canonical}"><meta http-equiv="refresh" content="0; url=${esc(target)}"><script>location.replace(${JSON.stringify(target)});</script></head><body class="redirect-page"><main><a class="site-brand" href="/">sosil</a><p><a href="${esc(target)}">${esc(label)}</a></p></main></body></html>`;
 }
 function clearDetails(route) {
   const dir = path.join(ROOT, route.replace(/^\//, ""));
@@ -135,7 +149,7 @@ function videoEmbed(item) {
   return url ? `<a class="media-fallback" href="${esc(url)}" target="_blank" rel="noreferrer">${firstImage(item) ? `<img src="${esc(firstImage(item))}" alt="" loading="lazy">` : ""}<span>open video</span></a>` : "";
 }
 function releaseIndex(items, selected = "") {
-  return `<div class="release-index">${items.map((item) => `<a href="/works/discography/${esc(item.slug)}"${selected === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${firstImage(item) ? `<img src="${esc(firstImage(item))}" alt="" loading="lazy" decoding="async">` : ""}<span><strong>${esc(item.title)}</strong><small>${esc(displayDate(item.date))}</small></span></a>`).join("")}</div>`;
+  return `<div class="release-index">${items.map((item) => `<a href="/works/discography/${esc(item.slug)}"${selected === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${imageFor(item) ? `<img src="${esc(imageFor(item))}" alt="${esc(imageAlt(item, "album cover"))}" loading="lazy" decoding="async">` : ""}<span><strong>${esc(item.title)}</strong><small>${esc(displayDate(item.date))}</small></span></a>`).join("")}</div>`;
 }
 function releaseDetail(item) {
   const tracks = item.tracklist?.length ? `<section class="detail-section"><h2>tracklist</h2><ol class="track-list">${item.tracklist.map((track, i) => `<li><span>${String(i + 1).padStart(2, "0")}</span><span>${esc(track)}</span></li>`).join("")}</ol></section>` : "";
@@ -156,7 +170,7 @@ const live = by("works", "live");
 const others = by("works", "others");
 const discGrid = `<div class="release-grid">${discography.map((item) => `<article><a href="/works/discography/${esc(item.slug)}">${firstImage(item) ? `<img src="${esc(firstImage(item))}" alt="${esc(item.title)} 앨범 커버" loading="lazy" decoding="async">` : ""}<span><strong>${esc(item.title)}</strong><small>${esc(displayDate(item.date))}</small></span></a></article>`).join("")}</div>`;
 const worksDiscographyLanding = `<div class="wide-page works-section-page">${worksTop("discography")}<p class="section-kicker">discography</p>${discGrid}</div>`;
-publish("/works", page("works", worksDescription, "/works", "works", worksDiscographyLanding, firstImage(discography[0])));
+writeRoute("/works", redirectPage("/works/discography", "works / discography"));
 publish("/works/discography", page("works / discography", worksDescription, "/works/discography", "works", worksDiscographyLanding, firstImage(discography[0]), true));
 for (const item of discography) {
   const main = split(`<div class="panel-headline">${worksTop("discography")}</div>${releaseIndex(discography, item.slug)}`, releaseDetail(item), "release-split");
@@ -164,10 +178,10 @@ for (const item of discography) {
 }
 
 const videoMeta = (item) => [displayDate(item.date), item.runtime, item.type_label || item.media_type || item.meta].filter(Boolean);
-const workVideoGrid = workVideos.length ? `<div class="work-video-grid">${workVideos.map((item) => `<a href="/works/videos/${esc(item.slug)}">${firstImage(item) ? `<img src="${esc(firstImage(item))}" alt="${esc(item.title)} thumbnail" loading="lazy" decoding="async">` : '<span class="media-placeholder">video</span>'}<span><strong>${esc(item.title)}</strong>${videoMeta(item).map((value) => `<small>${esc(value)}</small>`).join("")}</span></a>`).join("")}</div>` : '<p class="empty-note wide-empty">more soon.</p>';
+const workVideoGrid = workVideos.length ? `<div class="work-video-grid">${workVideos.map((item) => `<a href="/works/videos/${esc(item.slug)}">${imageFor(item) ? `<img src="${esc(imageFor(item))}" alt="${esc(imageAlt(item, "video thumbnail"))}" loading="lazy" decoding="async">` : '<span class="media-placeholder">video</span>'}<span><strong>${esc(item.title)}</strong>${videoMeta(item).map((value) => `<small>${esc(value)}</small>`).join("")}</span></a>`).join("")}</div>` : '<p class="empty-note wide-empty">more soon.</p>';
 publish("/works/videos", page("works / video", worksDescription, "/works/videos", "works", `<div class="wide-page works-section-page">${worksTop("video")}${workVideoGrid}</div>`, firstImage(workVideos[0]), false));
 for (const item of workVideos) {
-  const videoIndex = `<div class="video-index">${workVideos.map((listed) => `<a href="/works/videos/${esc(listed.slug)}"${listed.slug === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${firstImage(listed) ? `<img src="${esc(firstImage(listed))}" alt="" loading="lazy" decoding="async">` : ""}<span><strong>${esc(listed.title)}</strong>${videoMeta(listed).map((value) => `<small>${esc(value)}</small>`).join("")}</span></a>`).join("")}</div>`;
+  const videoIndex = `<div class="video-index">${workVideos.map((listed) => `<a href="/works/videos/${esc(listed.slug)}"${listed.slug === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${imageFor(listed) ? `<img src="${esc(imageFor(listed))}" alt="${esc(imageAlt(listed, "video thumbnail"))}" loading="lazy" decoding="async">` : ""}<span><strong>${esc(listed.title)}</strong>${videoMeta(listed).map((value) => `<small>${esc(value)}</small>`).join("")}</span></a>`).join("")}</div>`;
   const credit = item.credit || item.credits || "";
   const detail = `<article class="video-detail works-video-detail">${closeLink("/works/videos", "video")}<h1>${esc(item.title)}</h1>${videoMeta(item).length ? `<p class="media-meta">${videoMeta(item).map(esc).join(" · ")}</p>` : ""}${credit ? `<p class="media-credit">${esc(credit)}</p>` : ""}${videoEmbed(item)}${item.note ? `<div class="prose">${esc(item.note)}</div>` : ""}${bodyHtml(item)}</article>`;
   publish(`/works/videos/${item.slug}`, page(item.title, item.description || item.title, `/works/videos/${item.slug}`, "works", split(`<div class="panel-headline">${worksTop("video")}</div>${videoIndex}`, detail, "video-split"), firstImage(item), true));
@@ -220,12 +234,12 @@ const notes = by("notes");
 const notesIndex = (selected = "") => `<div class="note-index">${notes.map((item) => `<a href="/notes/${esc(item.slug)}"${selected === item.slug ? ' class="is-selected" aria-current="page"' : ""}><span>${esc(displayDate(item.date))}</span><strong>${esc(item.title)}</strong></a>`).join("")}</div>`;
 const notesList = page("notes", "소실(Sosil)의 작업 노트와 기록.", "/notes", "notes", split(`<div class="panel-title">notes</div>${notesIndex()}`, ""), firstImage(notes[0]));
 publish("/notes", notesList);
-writeRoute("/gibberish", notesList);
+writeRoute("/gibberish", redirectPage("/notes", "notes"));
 for (const item of notes) {
   const detail = `<article class="text-detail note-detail">${closeLink("/notes", "notes")}<p>${esc(displayDate(item.date))}</p><h1>${esc(item.title)}</h1>${videoEmbed(item)}${imageGallery(item)}${bodyHtml(item)}${externalLinks(item)}</article>`;
   const detailPage = page(item.title, item.description || item.body.slice(0, 150) || item.title, `/notes/${item.slug}`, "notes", split(`<div class="panel-title">notes</div>${notesIndex(item.slug)}`, detail), firstImage(item), true);
   publish(`/notes/${item.slug}`, detailPage);
-  writeRoute(`/gibberish/${item.slug}`, detailPage);
+  writeRoute(`/gibberish/${item.slug}`, redirectPage(`/notes/${item.slug}`, item.title));
 }
 
 clearDetails("/archive/photo-video");
@@ -252,10 +266,10 @@ for (const item of archivePhotos) {
   publish(`/archive/photo-video/${item.slug}`, page(item.title, item.description || item.title, `/archive/photo-video/${item.slug}`, "archive", split(`<div class="panel-headline">${subnav("archive", "photo")}</div>${thumbs}`, detail), firstImage(item), true));
 }
 
-const archiveVideoGrid = archiveVideos.length ? `<div class="archive-video-grid">${archiveVideos.map((item) => `<a href="/archive/videos/${esc(item.slug)}">${firstImage(item) ? `<img src="${esc(firstImage(item))}" alt="" loading="lazy">` : '<span class="media-placeholder">video</span>'}<span>${item.runtime ? `<small>${esc(item.runtime)}</small>` : ""}<strong>${esc(item.title)}</strong><small>${esc(displayDate(item.date))}</small>${sampleMark(item)}</span></a>`).join("")}</div>` : '<p class="empty-note wide-empty">more soon.</p>';
+const archiveVideoGrid = archiveVideos.length ? `<div class="archive-video-grid">${archiveVideos.map((item) => `<a href="/archive/videos/${esc(item.slug)}">${imageFor(item) ? `<img src="${esc(imageFor(item))}" alt="${esc(imageAlt(item, "archive video thumbnail"))}" loading="lazy">` : '<span class="media-placeholder">video</span>'}<span>${item.runtime ? `<small>${esc(item.runtime)}</small>` : ""}<strong>${esc(item.title)}</strong><small>${esc(displayDate(item.date))}</small>${sampleMark(item)}</span></a>`).join("")}</div>` : '<p class="empty-note wide-empty">more soon.</p>';
 publish("/archive/videos", page("archive / video", archiveDescription, "/archive/videos", "archive", `<div class="wide-page">${subnav("archive", "video")}${archiveVideoGrid}</div>`));
 for (const item of archiveVideos) {
-  const archiveVideoIndex = `<div class="video-index archive-video-index">${archiveVideos.map((listed) => `<a href="/archive/videos/${esc(listed.slug)}"${listed.slug === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${firstImage(listed) ? `<img src="${esc(firstImage(listed))}" alt="" loading="lazy">` : '<span class="media-placeholder">video</span>'}<span><strong>${esc(listed.title)}</strong>${listed.runtime ? `<small>${esc(listed.runtime)}</small>` : ""}<small>${esc(displayDate(listed.date))}</small></span></a>`).join("")}</div>`;
+  const archiveVideoIndex = `<div class="video-index archive-video-index">${archiveVideos.map((listed) => `<a href="/archive/videos/${esc(listed.slug)}"${listed.slug === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${imageFor(listed) ? `<img src="${esc(imageFor(listed))}" alt="${esc(imageAlt(listed, "archive video thumbnail"))}" loading="lazy">` : '<span class="media-placeholder">video</span>'}<span><strong>${esc(listed.title)}</strong>${listed.runtime ? `<small>${esc(listed.runtime)}</small>` : ""}<small>${esc(displayDate(listed.date))}</small></span></a>`).join("")}</div>`;
   const detail = `<article class="video-detail">${closeLink("/archive/videos", "video")}${videoEmbed(item)}<h1>${esc(item.title)}</h1><p>${esc(displayDate(item.date))}</p>${item.note ? `<div class="prose">${esc(item.note)}</div>` : ""}${bodyHtml(item)}</article>`;
   const detailPage = page(item.title, item.description || item.title, `/archive/videos/${item.slug}`, "archive", split(`<div class="panel-headline">${subnav("archive", "video")}</div>${archiveVideoIndex}`, detail), firstImage(item), true);
   publish(`/archive/videos/${item.slug}`, detailPage);
@@ -267,7 +281,7 @@ publish("/archive/links", page("archive / text", archiveDescription, "/archive/l
 for (const item of archiveLinks) {
   const original = linkUrl(item) || item.video;
   const publisher = linkPublisher(item);
-  const detail = `<article class="text-detail archive-text-detail">${closeLink("/archive/links", "text")}<p>${esc(displayDate(item.date))}</p><h1>${esc(item.title)}</h1><p class="publisher">${esc(publisher)}</p>${firstImage(item) ? `<img class="archive-text-image" src="${esc(firstImage(item))}" alt="" loading="lazy">` : ""}${item.description ? `<p class="summary">${esc(item.description)}</p>` : ""}${bodyHtml(item)}${original ? `<dl class="source-link"><dt>original</dt><dd><a href="${esc(original)}" target="_blank" rel="noreferrer">${esc(publisher)}</a></dd><dt>url</dt><dd><a href="${esc(original)}" target="_blank" rel="noreferrer">${esc(original)}</a></dd></dl>` : ""}</article>`;
+  const detail = `<article class="text-detail archive-text-detail">${closeLink("/archive/links", "text")}<p>${esc(displayDate(item.date))}</p><h1>${esc(item.title)}</h1><p class="publisher">${esc(publisher)}</p>${imageFor(item) ? `<img class="archive-text-image" src="${esc(imageFor(item))}" alt="${esc(imageAlt(item, "archive image"))}" loading="lazy">` : ""}${item.description ? `<p class="summary">${esc(item.description)}</p>` : ""}${bodyHtml(item)}${original ? `<dl class="source-link"><dt>original</dt><dd><a href="${esc(original)}" target="_blank" rel="noreferrer">${esc(publisher)}</a></dd><dt>url</dt><dd><a href="${esc(original)}" target="_blank" rel="noreferrer">${esc(original)}</a></dd></dl>` : ""}</article>`;
   publish(`/archive/links/${item.slug}`, page(item.title, item.description || item.title, `/archive/links/${item.slug}`, "archive", split(`<div class="panel-headline">${subnav("archive", "text")}</div>${archiveTextIndex(item.slug)}`, detail), firstImage(item), true));
 }
 
@@ -280,7 +294,7 @@ const merchMeta = (item) => {
   if (!price && !status) return "";
   return `<span class="merch-data"${price ? ` data-price-krw="${Number(item.price_krw)}"` : ""}>${price ? `<small>${esc(price)} KRW</small>` : ""}${status ? `<small>${esc(status)}</small>` : ""}</span>`;
 };
-const merchIndex = (selected = "") => `<div class="merch-index">${merch.map((item) => `<a href="/merch/${esc(item.slug)}"${selected === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${firstImage(item) ? `<img src="${esc(firstImage(item))}" alt="" loading="lazy">` : ""}<span><strong>${esc(item.title)}</strong>${merchMeta(item)}${sampleMark(item)}${item.meta ? `<small>${esc(item.meta)}</small>` : ""}</span></a>`).join("")}</div>`;
+const merchIndex = (selected = "") => `<div class="merch-index">${merch.map((item) => `<a href="/merch/${esc(item.slug)}"${selected === item.slug ? ' class="is-selected" aria-current="page"' : ""}>${imageFor(item) ? `<img src="${esc(imageFor(item))}" alt="${esc(imageAlt(item, "merch image"))}" loading="lazy">` : ""}<span><strong>${esc(item.title)}</strong>${merchMeta(item)}${sampleMark(item)}${item.meta ? `<small>${esc(item.meta)}</small>` : ""}</span></a>`).join("")}</div>`;
 const merchFirst = merch[0];
 const merchDetail = (item) => item ? `<article class="merch-detail">${closeLink("/merch", "merch")}<h1>${esc(item.title)}</h1>${merchMeta(item)}${item.description ? `<p>${esc(item.description)}</p>` : ""}${imageGallery(item, "merch-gallery")}${bodyHtml(item)}${externalLinks(item, "purchase-links")}</article>` : "";
 publish("/merch", page("merch", "소실(Sosil)의 음반과 머천다이즈.", "/merch", "merch", split(`<div class="panel-title">merch</div>${merchIndex(merchFirst?.slug)}`, merchDetail(merchFirst), "merch-split"), firstImage(merchFirst)));
@@ -309,9 +323,11 @@ const home = site("home");
 const featured = discography.find((item) => firstImage(item)) || discography[0];
 const latestNews = news[0];
 const mailingUrl = linkUrl(home, "newsletter").split("?")[0];
-const homeNews = latestNews ? `<p>${esc(displayDate(latestNews.date))}</p><a href="/news/${esc(latestNews.slug)}">${esc(latestNews.title)}</a><a class="small-link" href="/news">more</a>` : '<p>no news yet.</p>';
-const homeMain = `<div class="home-canvas"><section class="home-intro"><p>slowcore / alternative folk musician<br>based in seoul, south korea</p><p>i make music,<br>and moving images.</p></section><div class="home-motion-field" data-home-motion><a class="moving-cover" href="${ALBUM_YOUTUBE}" target="_blank" rel="noreferrer" aria-label="${esc(featured?.title || "몽상은나의조랑말")} YouTube에서 듣기">${featured ? `<img src="${esc(firstImage(featured))}" alt="${esc(featured.title)} 앨범 커버" decoding="async">` : ""}</a></div><section class="home-news"><h2>news</h2>${homeNews}</section><section class="home-mailing"><h2>mailing list</h2><p class="mailing-copy">소실의 소식을 보내드립니다.<br>sending news of sosil</p><form action="${esc(mailingUrl)}" method="get" target="_blank"><label for="mailing-email">your email</label><input id="mailing-email" name="emailAddress" type="email" autocomplete="email" placeholder="your email" required><button type="submit">join</button></form></section></div>`;
-publish("/", page("소실 SOSIL", home.description, "/", "", homeMain, firstImage(featured), false, "home-body"));
+const homeNews = latestNews ? `<section class="home-news"><h2>news</h2><p>${esc(displayDate(latestNews.date))}</p><a href="/news/${esc(latestNews.slug)}">${esc(latestNews.title)}</a><a class="small-link" href="/news">more</a></section>` : "";
+const homeMain = `<div class="home-canvas"><section class="home-intro"><p>slowcore / alternative folk musician<br>based in seoul, south korea</p><p>i make music,<br>and moving images.</p></section><div class="home-motion-field" data-home-motion><a class="moving-cover" href="${ALBUM_YOUTUBE}" target="_blank" rel="noreferrer" aria-label="${esc(featured?.title || "몽상은나의조랑말")} YouTube에서 듣기">${featured ? `<img src="${esc(imageFor(featured))}" alt="${esc(featured.title)} 앨범 커버" decoding="async">` : ""}</a></div>${homeNews}<section class="home-mailing"><h2>mailing list</h2><p class="mailing-copy">소실의 소식을 보내드립니다.<br>sending news of sosil</p><form action="${esc(mailingUrl)}" method="get" target="_blank"><label for="mailing-email">your email</label><input id="mailing-email" name="emailAddress" type="email" autocomplete="email" placeholder="your email" required><button type="submit">join</button></form></section></div>`;
+publish("/", page("소실 SOSIL", home.description, "/", "", homeMain, imageFor(featured), false, `home-body${latestNews ? "" : " home-no-news"}`));
+
+fs.writeFileSync(path.join(ROOT, "404.html"), `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>nothing here. | 소실 SOSIL</title><link rel="icon" href="/favicon-sosil.svg"><link rel="stylesheet" href="/assets/site-redesign.css?v=${assetVersion}"><meta name="robots" content="noindex,follow"></head><body class="not-found-page"><main><a class="site-brand" href="/">sosil</a><p>nothing here.</p><a href="/">home</a></main></body></html>`);
 
 routes.sort((a, b) => a.localeCompare(b));
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/sitemap/0.9">\n${uniq(routes).map((route) => `  <url><loc>${ORIGIN}${route === "/" ? "/" : `${route}/`}</loc></url>`).join("\n")}\n</urlset>\n`;

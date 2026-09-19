@@ -32,7 +32,8 @@ const STYLE = `<style id="stable-video-index-style">
     top: 0;
     align-self: start;
     height: 100vh;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     background: var(--bg);
     z-index: 5;
   }

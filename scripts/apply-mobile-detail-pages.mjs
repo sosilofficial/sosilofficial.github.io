@@ -70,7 +70,7 @@ const STYLE = `<style id="mobile-detail-screen-style">
    */
   .mobile-detail-screen.has-detail {
     display: block !important;
-    min-height: calc(100vh - 60px) !important;
+    min-height: auto !important;
   }
 
   .mobile-detail-screen.has-detail > .index-panel {
@@ -80,7 +80,7 @@ const STYLE = `<style id="mobile-detail-screen-style">
   .mobile-detail-screen.has-detail > .detail-panel {
     display: block !important;
     width: 100% !important;
-    min-height: calc(100vh - 60px) !important;
+    min-height: auto !important;
     padding: 24px 18px 80px !important;
     border-left: 0 !important;
   }
@@ -98,8 +98,8 @@ const STYLE = `<style id="mobile-detail-screen-style">
     right: 0 !important;
     float: none !important;
     margin: 0 !important;
-    width: 28px !important;
-    height: 28px !important;
+    width: 44px !important;
+    height: 44px !important;
     z-index: 4 !important;
   }
 

@@ -6,7 +6,7 @@ const ROOT = process.cwd();
 
 const STYLE = `<style id="shared-ui-style">
 :root {
-  --font-ui: "American Typewriter", "Courier Prime", "Courier New", "Apple SD Gothic Neo", "Noto Sans KR", monospace;
+  --font-ui: "Courier Prime", "Courier New", "Apple SD Gothic Neo", "Noto Sans KR", monospace;
   --font-content: "Helvetica Neue", Helvetica, Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   --category-top-y: clamp(48px, 6.8vh, 70px);
   --category-x: clamp(30px, 2.75vw, 44px);

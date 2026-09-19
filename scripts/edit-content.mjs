@@ -44,7 +44,7 @@ function youtubeThumbnail(url) {
     const parsed = new URL(url);
     const host = parsed.hostname.replace(/^www\./, "");
     const id = host === "youtu.be" ? parsed.pathname.split("/").filter(Boolean)[0] : ["youtube.com", "m.youtube.com"].includes(host) ? parsed.searchParams.get("v") || parsed.pathname.match(/^\/(?:embed|shorts)\/([^/]+)/)?.[1] : "";
-    return id && /^[\w-]{6,}$/.test(id) ? `https://i.ytimg.com/vi/${id}/mqdefault.jpg` : "";
+    return id && /^[\w-]{6,}$/.test(id) ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : "";
   } catch { return ""; }
 }
 function parseLinks(value) {

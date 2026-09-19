@@ -28,7 +28,7 @@ const STYLE = `<style id="home-mailing-join-style">
  */
 @media (max-width: 820px) {
   .home-canvas {
-    min-height: calc(100dvh - 60px) !important;
+    min-height: auto !important;
     padding: 18px 18px 32px !important;
   }
   .home-intro {

@@ -7,6 +7,10 @@ on:
       - "content/**"
       - "scripts/build-content.mjs"
       - "scripts/validate-site.mjs"
+      - "scripts/browser-qa.mjs"
+      - "scripts/consolidate-layout-styles.mjs"
+      - "package.json"
+      - "package-lock.json"
       - "scripts/apply-home-layout.mjs"
       - "scripts/apply-video-layout.mjs"
       - "scripts/apply-discography-layout.mjs"
@@ -39,6 +43,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+      - name: Install browser QA dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Consolidate shared layout styles
+        run: node scripts/consolidate-layout-styles.mjs
       - name: Build static pages
         run: node scripts/build-content.mjs
       - name: Apply stable video layout
@@ -61,8 +72,12 @@ jobs:
         run: node scripts/apply-shared-ui.mjs
       - name: Apply dedicated mobile detail screens
         run: node scripts/apply-mobile-detail-pages.mjs
+      - name: Remove generated inline style copies
+        run: node scripts/consolidate-layout-styles.mjs --strip-html
       - name: Validate generated site
         run: node scripts/validate-site.mjs
+      - name: Run browser QA
+        run: node scripts/browser-qa.mjs
       - name: Commit generated files
         run: |
           if [ -z "$(git status --porcelain)" ]; then

@@ -1,0 +1,12 @@
+{
+  "name": "sosil-site",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build-content.mjs",
+    "validate": "node scripts/validate-site.mjs",
+    "qa:browser": "node scripts/browser-qa.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

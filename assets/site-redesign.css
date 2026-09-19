@@ -33,7 +33,7 @@ body {
   min-height: 100vh;
   background: var(--bg);
   color: var(--ink);
-  font-family: "American Typewriter", "Courier Prime", "Courier New", "Apple SD Gothic Neo", "Noto Sans KR", monospace;
+  font-family: "Courier Prime", "Courier New", "Apple SD Gothic Neo", "Noto Sans KR", monospace;
   font-size: .76rem;
   line-height: 1.55;
   letter-spacing: .012em;
@@ -332,7 +332,7 @@ h1, h2, strong { font-weight: 400; }
   }
   .site-brand { margin: 0; font-size: .86rem; letter-spacing: .02em; }
   .rail-nav { flex: 1; flex-direction: row; justify-content: flex-end; flex-wrap: wrap; gap: 1px 7px; }
-  .site-main { min-height: calc(100vh - 60px); margin-left: 0; }
+  .site-main { min-height: auto; margin-left: 0; }
   .split-layout { min-height: auto; grid-template-columns: 1fr; }
   .index-panel, .detail-panel { padding: 24px 18px; }
   .detail-panel { border-left: 0; }
@@ -348,8 +348,8 @@ h1, h2, strong { font-weight: 400; }
   .release-detail header { margin-top: 64px; }
   .photo-masonry { columns: 2; }
   .archive-video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .contact-page { min-height: calc(100vh - 60px); padding: 42px 18px 80px; }
-  .home-canvas { min-height: calc(100vh - 60px); padding: 24px 18px 60px; overflow: visible; }
+  .contact-page { min-height: auto; padding: 42px 18px 80px; }
+  .home-canvas { min-height: auto; padding: 24px 18px 60px; overflow: visible; }
   .home-intro, .home-news, .home-mailing { position: relative; inset: auto; width: 100%; }
   .home-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
   .home-motion-field { position: relative; inset: auto; height: 44vh; margin: 38px 0; overflow: hidden; }
@@ -569,3 +569,1279 @@ h1, h2, strong { font-weight: 400; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+
+.home-no-news .home-mailing { top: 49vh; }
+.redirect-page main,
+.not-found-page main {
+  min-height: 100svh;
+  padding: clamp(32px, 7vw, 96px);
+}
+.redirect-page p,
+.not-found-page p { margin-top: clamp(72px, 16vh, 180px); }
+
+@media (max-width: 820px) {
+  .home-no-news .home-mailing { top: auto; }
+  .note-detail .prose,
+  .info-korean,
+  .info-english,
+  .contact-page p,
+  .contact-page dd,
+  .text-detail .prose,
+  .video-detail .prose,
+  .merch-detail > p,
+  .liner-notes {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .rail-nav a,
+  .subnav a,
+  .small-link,
+  .external-links a,
+  .purchase-links a {
+    position: relative;
+  }
+  .rail-nav a::after,
+  .subnav a::after,
+  .small-link::after,
+  .external-links a::after,
+  .purchase-links a::after {
+    content: "";
+    position: absolute;
+    inset: -10px -6px;
+  }
+  .close-detail {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* generated postprocessor styles:start */
+/* stable-video-index-style */
+@media (min-width: 821px) {
+  /* Outer split coordinates now come from the shared UI pass. */
+  .video-split .video-index {
+    display: grid;
+    gap: clamp(34px, 4.2vh, 48px);
+    width: 100%;
+  }
+  .video-split .video-index a {
+    display: block;
+    width: 100%;
+    padding: 0;
+  }
+  .video-split .video-index img {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .video-split .video-index span {
+    width: 100%;
+    margin-top: 9px;
+  }
+  .video-split .detail-panel {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: var(--bg);
+    z-index: 5;
+  }
+  .video-split .works-video-detail {
+    position: relative;
+    margin: clamp(28px, 4vh, 44px) auto 0;
+  }
+  .video-split .works-video-detail h1 {
+    margin: 0 0 clamp(18px, 2.5vh, 26px);
+    font-size: .9rem;
+    line-height: 1.45;
+  }
+  .video-split .detail-panel:empty { pointer-events: none; }
+}
+
+@media (max-width: 820px) {
+  /* On a selected video, keep Works context but remove the long thumbnail list above the player. */
+  .video-split.has-detail .video-index { display: none !important; }
+  .video-split.has-detail > .index-panel { padding-bottom: 0; }
+  .video-split.has-detail .panel-headline { margin-bottom: 18px; }
+  .video-split.has-detail > .detail-panel { padding-top: 0; }
+  .video-split.has-detail .works-video-detail { margin-top: 0; }
+}
+
+/* stable-discography-layout-style */
+@media (min-width: 821px) {
+  /* Outer split coordinates now come from the shared UI pass. */
+  .release-split > .detail-panel {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bg);
+  }
+
+  .release-split .release-index {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(34px, 4.2vh, 48px);
+    width: 100%;
+  }
+  .release-split .release-index > a {
+    display: block;
+    width: 100%;
+    padding: 0;
+  }
+  .release-split .release-index > a.is-selected { background: rgba(72, 80, 91, .018); }
+  .release-split .release-index img {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+  .release-split .release-index span {
+    width: 100%;
+    margin-top: 9px;
+  }
+  .release-split .release-index strong {
+    font-size: .8rem;
+    line-height: 1.4;
+  }
+  .release-split .release-index small {
+    margin-top: 3px;
+    color: var(--muted);
+    opacity: .66;
+    font-size: .6rem;
+    letter-spacing: .02em;
+  }
+
+  .release-split .release-detail {
+    --detail-grid-gap: clamp(28px, 3vw, 44px);
+    position: relative;
+    display: grid;
+    grid-template-columns: clamp(112px, 12vw, 150px) minmax(0, 1fr);
+    column-gap: var(--detail-grid-gap);
+    row-gap: var(--detail-grid-gap);
+    align-items: start;
+    width: min(100%, 760px);
+    max-width: 760px;
+    margin: 0 auto;
+    padding: clamp(28px, 4vh, 42px) clamp(4px, .5vw, 10px) 72px;
+  }
+  .release-split .release-detail .close-detail {
+    position: absolute;
+    top: 0;
+    right: 0;
+    float: none;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin: 0;
+    padding: 0;
+    color: var(--ink);
+    font-size: 1.15rem;
+    opacity: .62;
+  }
+  .release-split .release-detail .close-detail::after { content: none; }
+  .release-split .release-detail header {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding-right: 40px;
+  }
+  .release-split .release-detail header p {
+    margin: 0 0 4px;
+    color: var(--muted);
+    opacity: .72;
+    font-size: .72rem;
+    line-height: 1.45;
+    letter-spacing: .035em;
+  }
+  .release-split .release-detail header h1 {
+    max-width: 30ch;
+    margin: 0 0 5px;
+    font-size: clamp(.97rem, 1.05vw, 1.13rem);
+    line-height: 1.42;
+    letter-spacing: .008em;
+  }
+
+  .release-split .release-hero {
+    grid-column: 1;
+    grid-row: 2;
+    display: block;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    filter: saturate(.84) contrast(.95);
+  }
+  .release-split .detail-section {
+    width: auto;
+    margin: 0;
+  }
+  .release-split .release-tracklist-section {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: start;
+  }
+  .release-split .release-credits-section {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+  .release-split .detail-section h2 {
+    margin: 0 0 13px;
+    color: var(--muted);
+    opacity: .66;
+    font-size: .68rem;
+    font-weight: 400;
+    letter-spacing: .08em;
+    text-transform: lowercase;
+  }
+  .release-split .track-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(5, auto);
+    grid-auto-flow: column;
+    column-gap: clamp(16px, 1.8vw, 26px);
+    row-gap: 7px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .release-split .track-list li {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 1.25rem max-content;
+    gap: 0 5px;
+    padding: 0;
+    font-size: .73rem;
+    line-height: 1.46;
+    letter-spacing: 0;
+  }
+  .release-split .track-list li span:first-child {
+    color: var(--muted);
+    opacity: .48;
+    font-size: .67rem;
+  }
+  .release-split .track-list li span:last-child { white-space: nowrap; }
+  .release-split .release-credits-section p {
+    margin: 0;
+    color: var(--muted);
+    font-size: .74rem;
+    line-height: 1.7;
+    white-space: pre-line;
+  }
+  .release-split .liner-notes {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    font-size: .77rem;
+    line-height: 1.86;
+    letter-spacing: .003em;
+  }
+  .release-split .liner-notes p {
+    max-width: none;
+    margin: 0 0 1.9em;
+  }
+  .release-split .external-links {
+    grid-column: 1 / -1;
+    display: flex;
+    margin: 0;
+    padding-bottom: 18px;
+    gap: 12px 24px;
+    font-size: .74rem;
+  }
+  .release-split .external-links a { border-bottom-color: rgba(17, 21, 27, .5); }
+}
+
+@media (max-width: 820px) {
+  /* On a selected release, keep Works context but remove the long list above the detail. */
+  .release-split.has-detail .release-index { display: none !important; }
+  .release-split.has-detail > .index-panel { padding-bottom: 0; }
+  .release-split.has-detail .panel-headline { margin-bottom: 18px; }
+  .release-split.has-detail > .detail-panel { padding-top: 0; }
+  .release-split.has-detail .release-detail {
+    max-width: none;
+    margin-top: 0;
+  }
+  .release-split.has-detail .release-detail header { margin-top: 0; }
+}
+
+/* works-live-layout-style */
+@media (min-width: 821px) {
+  /*
+   * Live is intentionally flatter than the other Works sections: one quiet,
+   * full-width performance table with lots of air around it and almost no UI chrome.
+   */
+  .live-split {
+    display: block !important;
+    width: 100% !important;
+    min-height: 100vh;
+  }
+  .live-split > .index-panel {
+    width: 100% !important;
+    max-width: none !important;
+    padding-right: var(--category-x, clamp(30px, 2.75vw, 44px)) !important;
+  }
+  .live-split > .detail-panel {
+    display: none !important;
+  }
+  .live-split .panel-headline {
+    margin-bottom: 44px !important;
+  }
+
+  .live-log {
+    width: 100%;
+    max-width: none;
+    border-top: 1px solid rgba(47, 55, 67, .075);
+  }
+  .live-log h2 {
+    display: none;
+  }
+  .live-row {
+    display: grid;
+    grid-template-columns:
+      7.2rem
+      minmax(10rem, 1.15fr)
+      minmax(12rem, 1.55fr)
+      minmax(8rem, .9fr);
+    column-gap: clamp(14px, 1.6vw, 24px);
+    align-items: baseline;
+    min-height: 38px;
+    margin: 0;
+    padding: 10px 0 11px;
+    border-bottom: 1px solid rgba(47, 55, 67, .06);
+  }
+  .live-row time,
+  .live-row .live-title,
+  .live-row .live-artists,
+  .live-row .live-venue {
+    display: block;
+    min-width: 0;
+    margin: 0;
+  }
+  .live-row time {
+    grid-column: 1;
+    color: var(--muted);
+    opacity: .66;
+    font-size: .61rem;
+    line-height: 1.45;
+    letter-spacing: .02em;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .live-row .live-title {
+    grid-column: 2;
+    color: var(--ink);
+    font-size: .78rem;
+    font-weight: 600 !important;
+    line-height: 1.42;
+  }
+  .live-row .live-artists {
+    grid-column: 3;
+    color: var(--ink);
+    opacity: .72;
+    font-size: .72rem;
+    line-height: 1.42;
+  }
+  .live-row .live-venue {
+    grid-column: 4;
+    color: var(--muted);
+    opacity: .52;
+    font-size: .60rem;
+    line-height: 1.42;
+    letter-spacing: .015em;
+  }
+  .live-row-artists-only .live-artists {
+    grid-column: 2 / 4;
+    opacity: .92;
+    font-size: .77rem;
+    font-weight: 600;
+  }
+}
+
+@media (max-width: 820px) {
+  .live-log {
+    border-top: 1px solid rgba(47, 55, 67, .075);
+  }
+  .live-log h2 {
+    display: none;
+  }
+  .live-row {
+    display: grid;
+    grid-template-columns: 6.4rem minmax(0, 1fr);
+    column-gap: 12px;
+    row-gap: 2px;
+    margin: 0;
+    padding: 11px 0 12px;
+    border-bottom: 1px solid rgba(47, 55, 67, .06);
+  }
+  .live-row time {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    color: var(--muted);
+    opacity: .66;
+    font-size: .60rem;
+    line-height: 1.45;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .live-row .live-title,
+  .live-row .live-artists,
+  .live-row .live-venue {
+    grid-column: 2;
+    display: block;
+    min-width: 0;
+    margin: 0;
+  }
+  .live-row .live-title {
+    font-size: .78rem;
+    font-weight: 600 !important;
+    line-height: 1.4;
+  }
+  .live-row .live-artists {
+    opacity: .74;
+    font-size: .72rem;
+    line-height: 1.4;
+  }
+  .live-row .live-venue {
+    color: var(--muted);
+    opacity: .52;
+    font-size: .60rem;
+    line-height: 1.4;
+  }
+  .live-row-artists-only .live-artists {
+    opacity: .92;
+    font-size: .77rem;
+    font-weight: 600;
+  }
+}
+
+/* stable-merch-layout-style */
+@media (min-width: 821px) {
+  .merch-split .index-panel {
+    padding-left: var(--pad);
+    padding-right: var(--pad);
+  }
+  .merch-split .merch-index {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(34px, 4.2vh, 48px);
+    width: 100%;
+  }
+  .merch-split .merch-index > a {
+    display: block;
+    width: 100%;
+    padding: 0;
+  }
+  .merch-split .merch-index > a.is-selected {
+    background: rgba(72, 80, 91, .025);
+  }
+  .merch-split .merch-index img {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+  .merch-split .merch-index span {
+    width: 100%;
+    margin-top: 9px;
+  }
+  .merch-split .detail-panel {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .merch-split .merch-detail {
+    width: min(100%, 620px);
+    max-width: 620px;
+    margin: calc(1.55em + clamp(44px, 8vh, 100px)) auto 0;
+  }
+  .merch-split .merch-detail h1 {
+    max-width: 34ch;
+    margin: 0 0 clamp(22px, 3vh, 32px);
+    font-size: clamp(.92rem, 1.35vw, 1.2rem);
+    line-height: 1.42;
+  }
+  .merch-split .merch-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(10px, 1.4vw, 18px);
+    margin: 0 0 clamp(24px, 3.5vh, 36px);
+  }
+  .merch-split .merch-gallery img {
+    width: 100%;
+    max-width: none;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+  .merch-split .purchase-links {
+    margin-top: 0;
+    padding-bottom: 24px;
+  }
+}
+
+/* archive-photo-post-style */
+@media (min-width: 821px) {
+  .photo-post-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 220px));
+    justify-content: start;
+    gap: clamp(42px, 5vw, 76px) clamp(28px, 3.6vw, 58px);
+  }
+  .photo-post-grid a { display: block; }
+  .photo-post-grid img {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+    object-fit: cover;
+  }
+  .archive-photo-detail-page { position: relative; }
+  .archive-photo-detail-page > .subnav { margin-bottom: clamp(52px, 7vh, 86px); }
+  .archive-photo-detail-head {
+    position: relative;
+    width: min(100%, 980px);
+    margin-bottom: clamp(34px, 5vh, 58px);
+    padding-right: 150px;
+  }
+  .archive-photo-detail-head h1 {
+    max-width: 34ch;
+    margin: 0 0 8px;
+    font-size: clamp(1.02rem, 1.35vw, 1.28rem);
+    line-height: 1.35;
+  }
+  .archive-photo-detail-head > p { margin: 0 0 18px; color: var(--muted); }
+  .archive-photo-detail-head .prose { max-width: 54ch; color: var(--muted); }
+  .archive-photo-back {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: var(--muted);
+  }
+  .archive-photo-post-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: clamp(24px, 3.2vw, 52px);
+    width: min(100%, 980px);
+  }
+  .archive-photo-post-gallery img {
+    width: 100%;
+    max-width: 470px;
+    height: auto;
+  }
+}
+@media (max-width: 820px) {
+  .photo-post-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 34px 16px;
+  }
+  .photo-post-grid img { width: 100%; height: auto; }
+  .archive-photo-detail-head { margin-bottom: 34px; }
+  .archive-photo-back { display: inline-block; margin-bottom: 28px; color: var(--muted); }
+  .archive-photo-post-gallery { display: grid; gap: 24px; }
+  .archive-photo-post-gallery img { width: 100%; height: auto; }
+}
+
+/* archive-text-layout-style */
+/* Keep Photo, Video and Text on one shared Archive index coordinate. */
+.archive-index-page .wide-page {
+  min-height: 100vh;
+  max-width: none;
+  padding: clamp(42px, 5.5vh, 58px) clamp(38px, 5.5vw, 86px) 110px;
+}
+.archive-index-page .wide-page > .subnav {
+  margin-bottom: clamp(68px, 9vh, 110px);
+}
+.archive-index-page .photo-post-grid,
+.archive-index-page .archive-video-grid,
+.archive-index-page .archive-text-groups {
+  width: min(100%, 1040px);
+}
+.archive-index-page .wide-empty {
+  width: min(100%, 1040px);
+  margin-top: 0;
+  text-align: left;
+}
+.archive-text-page .archive-text-top {
+  margin-bottom: clamp(68px, 9vh, 110px);
+}
+.archive-text-page .archive-text-top .subnav {
+  margin-bottom: 0;
+}
+.archive-text-page .archive-text-group {
+  margin-bottom: clamp(54px, 7vh, 82px);
+}
+.archive-text-page .archive-text-group:last-child {
+  margin-bottom: 0;
+}
+.archive-text-page .archive-text-group h2 {
+  margin: 0 0 clamp(24px, 3vh, 34px);
+  font-family: var(--font-ui, "American Typewriter", "Courier Prime", "Courier New", monospace);
+  font-size: .76rem;
+  font-weight: 600;
+  letter-spacing: .035em;
+  text-transform: lowercase;
+}
+.archive-text-page .archive-text-flat-list {
+  display: grid;
+  gap: 13px;
+}
+.archive-text-page .archive-text-entry {
+  margin: 0;
+}
+.archive-text-page .archive-text-entry-line,
+.archive-text-page .archive-text-entry-description {
+  margin: 0;
+  font-family: var(--font-content, "Helvetica Neue", Helvetica, Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif);
+}
+.archive-text-page .archive-text-entry-line {
+  font-size: clamp(.84rem, .95vw, .96rem);
+  line-height: 1.48;
+}
+.archive-text-page .archive-text-entry-line a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.archive-text-page .archive-text-entry-line em {
+  margin-left: 7px;
+  color: var(--muted);
+  font-size: .88em;
+  font-style: italic;
+}
+.archive-text-page .archive-text-entry-description {
+  max-width: 76ch;
+  margin-top: 4px;
+  color: var(--ink);
+  font-size: clamp(.78rem, .86vw, .88rem);
+  line-height: 1.5;
+}
+.archive-text-page .archive-text-empty {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-content, "Helvetica Neue", Helvetica, Arial, sans-serif);
+}
+@media (max-width: 820px) {
+  .archive-index-page .wide-page {
+    padding: 24px 18px 80px !important;
+  }
+  .archive-index-page .wide-page > .subnav,
+  .archive-text-page .archive-text-top {
+    margin-bottom: 56px !important;
+  }
+  .archive-text-page .archive-text-group {
+    margin-bottom: 52px;
+  }
+  .archive-text-page .archive-text-entry-line em {
+    display: block;
+    margin: 2px 0 0;
+  }
+}
+
+/* slow-notes-style */
+@media (min-width: 821px) {
+  /*
+   * Notes should read like a compact archive rather than isolated cards.
+   * Use an 8px-based rhythm so the two rows feel deliberately related.
+   */
+  .note-index {
+    display: grid;
+    gap: 24px;
+    max-width: 32rem;
+  }
+  .note-index a {
+    display: grid;
+    grid-template-columns: 7.2rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0 12px;
+    padding: 0;
+    line-height: 1.6;
+  }
+  .note-index a.is-selected {
+    background: rgba(72, 80, 91, .022);
+  }
+
+  /*
+   * Mirror the real Notes heading in the detail column instead of estimating
+   * its height with a calc(). This spacer intentionally does not use the
+   * category-top class, so the later category-grid pass can still normalize
+   * the visible Notes heading on the left.
+   */
+  .split-layout > .detail-panel {
+    padding-top: var(--category-top-y, clamp(48px, 6.8vh, 70px)) !important;
+  }
+  .notes-top-spacer {
+    visibility: hidden;
+    pointer-events: none;
+    margin: 0 0 clamp(44px, 6vh, 72px);
+  }
+  .notes-top-spacer h1 {
+    margin: 0 0 24px !important;
+    font-size: 1.08rem !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+    letter-spacing: .02em !important;
+  }
+  .note-detail {
+    max-width: 48rem;
+    margin: 0 auto !important;
+  }
+  .note-detail > p:first-of-type {
+    margin: 0 0 8px !important;
+    line-height: 1.6;
+  }
+  .note-detail h1 {
+    margin: 0 0 clamp(42px, 6vh, 70px) !important;
+  }
+  .note-detail .prose p {
+    max-width: 50ch;
+    margin-bottom: 2.15em;
+    line-height: 1.82;
+  }
+  .note-detail .prose img,
+  .note-detail .detail-gallery,
+  .note-detail .video-embed {
+    margin-top: clamp(42px, 6vh, 72px);
+    margin-bottom: clamp(42px, 6vh, 72px);
+  }
+}
+@media (max-width: 820px) {
+  .note-index { gap: 24px; }
+  .note-index a {
+    grid-template-columns: 6.4rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: 0 12px;
+    padding: 0;
+    line-height: 1.6;
+  }
+  .notes-top-spacer { display: none; }
+}
+
+/* home-mailing-join-style */
+@media (min-width: 821px) {
+  .home-canvas {
+    --home-copy-width: min(29vw, 443px);
+  }
+  .home-intro,
+  .home-news,
+  .home-mailing {
+    width: var(--home-copy-width) !important;
+  }
+  .home-grid-anchor {
+    display: inline-block;
+    width: max-content;
+    max-width: none;
+    white-space: nowrap;
+  }
+}
+
+/*
+ * On mobile, keep the whole first-page rhythm inside the initial viewport as
+ * often as possible. The cover remains present, but it no longer consumes
+ * almost half the screen before News and Mailing List appear.
+ */
+@media (max-width: 820px) {
+  .home-canvas {
+    min-height: auto !important;
+    padding: 18px 18px 32px !important;
+  }
+  .home-intro {
+    gap: 14px !important;
+  }
+  .home-motion-field {
+    height: clamp(150px, 26dvh, 220px) !important;
+    margin: 18px 0 20px !important;
+  }
+  .moving-cover {
+    width: min(36vw, 160px) !important;
+  }
+  .home-news {
+    margin: 0 0 32px !important;
+  }
+  .home-mailing {
+    margin-top: 0 !important;
+  }
+  .home-news h2 {
+    margin-bottom: 10px !important;
+  }
+  .home-mailing h2 {
+    margin-bottom: 16px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .home-intro {
+    gap: 12px !important;
+  }
+  .home-motion-field {
+    height: clamp(140px, 23dvh, 190px) !important;
+    margin: 16px 0 18px !important;
+  }
+  .moving-cover {
+    width: min(38vw, 150px) !important;
+  }
+  .home-news {
+    margin-bottom: 32px !important;
+  }
+}
+
+.home-mailing h2 {
+  margin-bottom: 18px;
+}
+.home-mailing form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px;
+  border-bottom: 1px solid var(--ink);
+}
+.home-mailing input {
+  min-width: 0;
+  width: 100%;
+  padding: 6px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+}
+.home-mailing button {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  padding: 6px 0;
+  border: 0;
+  background: transparent;
+  clip-path: none;
+  cursor: pointer;
+  text-transform: lowercase;
+}
+.home-mailing button:hover { opacity: .56; }
+
+/* shared-ui-style */
+:root {
+  --font-ui: "Courier Prime", "Courier New", "Apple SD Gothic Neo", "Noto Sans KR", monospace;
+  --font-content: "Helvetica Neue", Helvetica, Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --category-top-y: clamp(48px, 6.8vh, 70px);
+  --category-x: clamp(30px, 2.75vw, 44px);
+}
+
+/* readable content */
+.home-intro p,
+.home-news > a:not(.small-link),
+.mailing-copy,
+.home-mailing input,
+.release-grid strong,
+.release-index strong,
+.release-detail header h1,
+.track-list li span:last-child,
+.release-credits-section p,
+.liner-notes,
+.external-links a,
+.work-video-grid strong,
+.video-index strong,
+.video-detail h1,
+.video-detail .prose,
+.media-credit,
+.summary,
+.live-row .live-title,
+.live-row .live-artists,
+.live-row .live-venue,
+.text-index strong,
+.note-index strong,
+.others-index strong,
+.others-index em,
+.text-detail h1,
+.text-detail .prose,
+.photo-detail h1,
+.photo-detail .prose,
+.archive-video-grid strong,
+.archive-text-detail h1,
+.archive-text-detail .prose,
+.merch-index strong,
+.merch-detail h1,
+.merch-detail p,
+.purchase-links a,
+.info-korean,
+.info-english,
+.info-aside figcaption,
+.contact-page p,
+.contact-page dd,
+.contact-page dd a {
+  font-family: var(--font-content);
+  letter-spacing: 0;
+}
+
+/* structural labels */
+.site-brand,
+.rail-nav,
+.panel-title,
+.panel-headline,
+.works-top,
+.subnav,
+.section-kicker,
+.live-log h2,
+.live-row time,
+.release-detail header p,
+.detail-section h2,
+.track-list li span:first-child,
+.release-grid small,
+.release-index small,
+.video-index small,
+.work-video-grid small,
+.archive-video-grid small,
+.text-index span,
+.note-index span,
+.merch-data,
+.info-copy h1,
+.info-aside nav,
+.contact-page h1,
+.contact-page dt,
+.home-news h2,
+.home-mailing h2,
+.home-news p,
+.home-news .small-link {
+  font-family: var(--font-ui);
+}
+
+.category-top {
+  margin: 0 0 clamp(44px, 6vh, 72px);
+}
+.category-top h1 {
+  margin: 0 0 24px;
+  font-family: var(--font-ui);
+  font-size: 1.08rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: .02em;
+  text-transform: lowercase;
+}
+.category-top .subnav { margin: 0; }
+.panel-headline > .category-top { margin-bottom: 0; }
+.info-top-spacer {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (min-width: 821px) {
+  html { scrollbar-gutter: stable; }
+
+  .site-main {
+    margin-left: max(var(--sidebar), 118px);
+    width: calc(100% - max(var(--sidebar), 118px));
+    max-width: none;
+  }
+
+  .side-rail { border-right: 0; }
+  .side-rail::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 9vh;
+    bottom: 9vh;
+    right: 0;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--line) 14%,
+      var(--line) 86%,
+      transparent 100%
+    );
+    opacity: .24;
+    pointer-events: none;
+  }
+
+  .split-layout:not(.info-split):not(.live-split) {
+    display: grid;
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    grid-template-columns: minmax(0, 38.8888889%) minmax(0, 61.1111111%);
+  }
+  .split-layout:not(.info-split):not(.live-split) > .index-panel {
+    grid-column: 1;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+  }
+  .split-layout:not(.info-split):not(.live-split) > .detail-panel {
+    grid-column: 2;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    left: auto;
+    right: auto;
+    box-sizing: border-box;
+    border-left: 0;
+  }
+  .split-layout:not(.info-split):not(.live-split)::after {
+    content: "";
+    position: absolute;
+    z-index: 40;
+    top: 9vh;
+    bottom: 9vh;
+    left: 38.8888889%;
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--line) 12%,
+      var(--line) 88%,
+      transparent 100%
+    );
+    opacity: .30;
+    pointer-events: none;
+  }
+
+  .split-layout > .index-panel {
+    padding-top: var(--category-top-y);
+    padding-left: var(--category-x);
+  }
+  .site-main > .wide-page,
+  .site-main > .archive-text-flat-page {
+    padding-top: var(--category-top-y);
+    padding-left: var(--category-x);
+  }
+  .contact-page {
+    padding-top: var(--category-top-y);
+    padding-left: var(--category-x);
+  }
+
+  .works-top.category-top,
+  .category-top.works-top {
+    transform: translateY(3px);
+  }
+
+  .info-split {
+    display: grid;
+    position: relative;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    grid-template-columns: minmax(0, 42.7%) minmax(0, 57.3%);
+  }
+  .info-split > .index-panel,
+  .info-split > .detail-panel {
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    box-sizing: border-box;
+    border-left: 0;
+    padding-top: var(--category-top-y);
+    padding-left: var(--category-x);
+    padding-right: var(--category-x);
+    padding-bottom: clamp(42px, 5.5vh, 58px);
+  }
+  .info-split > .index-panel { grid-column: 1; }
+  .info-split > .detail-panel {
+    grid-column: 2;
+    left: auto;
+    right: auto;
+  }
+  .info-split .info-aside,
+  .info-split .info-copy {
+    margin-top: 0;
+    justify-self: start;
+  }
+  .info-split .info-aside { width: min(100%, 420px); }
+  .info-split .info-copy {
+    width: min(100%, 40ch);
+    max-width: 40ch;
+  }
+  .info-split .info-korean,
+  .info-split .info-english { line-height: 1.66; }
+  .info-split .info-korean p,
+  .info-split .info-english p { margin: 0 0 16px; }
+  .info-split .info-korean p:last-child,
+  .info-split .info-english p:last-child { margin-bottom: 0; }
+  .info-split .info-copy .section-mark {
+    display: block;
+    margin: 16px 0;
+    line-height: 1;
+  }
+  .info-split::after { content: none; display: none; }
+}
+
+@media (max-width: 820px) {
+  .category-top { margin-bottom: 44px; }
+  .category-top h1 {
+    margin-bottom: 18px;
+    font-size: .92rem;
+  }
+  .contact-page {
+    padding: 24px 18px 80px;
+  }
+  .info-top-spacer { display: none; }
+  .info-split .info-korean p,
+  .info-split .info-english p { margin-bottom: 16px; }
+  .info-split .info-copy .section-mark { margin: 16px 0; }
+}
+
+/* mobile-detail-screen-style */
+@media (max-width: 820px) {
+  /*
+   * Treat the Discography landing as a real single-column mobile page.
+   * Do not leave the empty desktop detail column participating in layout.
+   */
+  .release-split:not(.has-detail) {
+    display: block !important;
+    min-height: auto !important;
+  }
+
+  .release-split:not(.has-detail) > .index-panel {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 24px 18px 80px !important;
+  }
+
+  .release-split:not(.has-detail) > .detail-panel {
+    display: none !important;
+  }
+
+  .release-split:not(.has-detail) .release-index {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 32px 16px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .release-split:not(.has-detail) .release-index > a {
+    display: block !important;
+    position: relative !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .release-split:not(.has-detail) .release-index span {
+    display: flex !important;
+    width: 100% !important;
+    margin-top: 9px !important;
+  }
+
+  .release-split:not(.has-detail) .release-index img {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: cover !important;
+  }
+
+  /*
+   * Discography and Merch details should read as their own mobile screen,
+   * not as the second half of a stacked desktop split.
+   */
+  .mobile-detail-screen.has-detail {
+    display: block !important;
+    min-height: auto !important;
+  }
+
+  .mobile-detail-screen.has-detail > .index-panel {
+    display: none !important;
+  }
+
+  .mobile-detail-screen.has-detail > .detail-panel {
+    display: block !important;
+    width: 100% !important;
+    min-height: auto !important;
+    padding: 24px 18px 80px !important;
+    border-left: 0 !important;
+  }
+
+  .mobile-detail-screen.has-detail > .detail-panel > article {
+    position: relative !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+
+  .mobile-detail-screen.has-detail .close-detail {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    float: none !important;
+    margin: 0 !important;
+    width: 44px !important;
+    height: 44px !important;
+    z-index: 4 !important;
+  }
+
+  .mobile-detail-screen.has-detail .release-detail {
+    display: block !important;
+    padding: 0 !important;
+  }
+
+  .mobile-detail-screen.has-detail .release-detail header {
+    margin: 0 0 32px !important;
+    padding-right: 42px !important;
+  }
+
+  .mobile-detail-screen.has-detail .release-detail header h1 {
+    margin-bottom: 5px !important;
+    font-size: 1rem !important;
+    line-height: 1.42 !important;
+  }
+
+  .mobile-detail-screen.has-detail .release-hero {
+    display: block !important;
+    position: static !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    margin: 0 !important;
+    aspect-ratio: auto !important;
+    object-fit: contain !important;
+  }
+
+  .mobile-detail-screen.has-detail .release-detail .detail-section,
+  .mobile-detail-screen.has-detail .release-detail .liner-notes,
+  .mobile-detail-screen.has-detail .release-detail .external-links {
+    margin-top: 44px !important;
+  }
+
+  .mobile-detail-screen.has-detail .merch-detail h1 {
+    max-width: none !important;
+    margin: 0 42px 28px 0 !important;
+    font-size: 1rem !important;
+    line-height: 1.42 !important;
+  }
+
+  .mobile-detail-screen.has-detail .merch-gallery {
+    gap: 18px !important;
+    margin: 0 0 32px !important;
+  }
+
+  .mobile-detail-screen.has-detail .merch-gallery img {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .mobile-detail-screen.has-detail .purchase-links {
+    margin-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+/* generated postprocessor styles:end */

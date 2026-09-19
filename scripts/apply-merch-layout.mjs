@@ -40,7 +40,8 @@ const STYLE = `<style id="stable-merch-layout-style">
     top: 0;
     align-self: start;
     height: 100vh;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
   .merch-split .merch-detail {
     width: min(100%, 620px);

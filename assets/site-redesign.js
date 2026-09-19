@@ -128,18 +128,9 @@ function setupHomeMotion() {
   const cover = field?.querySelector(".moving-cover");
   if (!field || !cover || matchMedia("(max-width: 820px)").matches) return;
 
-  // Reduced-motion keeps the quiet path and persistent long-exposure traces,
-  // minus jitter and tonal modulation.
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const config = reducedMotion
-    ? {
-        ...HOME_MOTION_CONFIG,
-        jitterPx: 0,
-        trailScaleVariance: 0,
-        brightnessVariation: 0,
-        colorDriftAmount: 0
-      }
-    : HOME_MOTION_CONFIG;
+  if (reducedMotion) return;
+  const config = HOME_MOTION_CONFIG;
   document.documentElement.style.setProperty("--speed", `${config.speedSeconds}s`);
   document.documentElement.style.setProperty("--trail-opacity", config.trailOpacity);
   document.documentElement.style.setProperty("--trail-blur", `${config.trailBlur}px`);
