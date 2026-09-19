@@ -67,6 +67,33 @@ const STYLE = `<style id="category-grid-style">
   .works-top.category-top {
     transform: translateY(3px);
   }
+
+  /*
+   * Info should feel sparse but not disconnected. Keep the copy on a strict,
+   * compact vertical rhythm so the empty space belongs to the page, not between
+   * every sentence.
+   */
+  .info-split .info-copy {
+    width: min(100%, 40ch) !important;
+    max-width: 40ch !important;
+  }
+  .info-split .info-korean,
+  .info-split .info-english {
+    line-height: 1.66 !important;
+  }
+  .info-split .info-korean p,
+  .info-split .info-english p {
+    margin: 0 0 16px !important;
+  }
+  .info-split .info-korean p:last-child,
+  .info-split .info-english p:last-child {
+    margin-bottom: 0 !important;
+  }
+  .info-split .info-copy .section-mark {
+    display: block;
+    margin: 16px 0 !important;
+    line-height: 1 !important;
+  }
 }
 
 @media (max-width: 820px) {
@@ -79,6 +106,13 @@ const STYLE = `<style id="category-grid-style">
   }
   .info-top-spacer {
     display: none;
+  }
+  .info-split .info-korean p,
+  .info-split .info-english p {
+    margin-bottom: 16px !important;
+  }
+  .info-split .info-copy .section-mark {
+    margin: 16px 0 !important;
   }
 }
 </style>`;
@@ -167,4 +201,4 @@ for (const file of walk(ROOT)) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Unified category headers, added Archive hierarchy, aligned Info biography with its media grid, and kept category coordinates on the sosil brand grid.");
+console.log("Unified category headers, tightened the Info editorial rhythm, aligned the biography with its media grid, and kept category coordinates on the sosil brand grid.");
