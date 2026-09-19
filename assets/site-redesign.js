@@ -90,9 +90,13 @@ function setupHomeGrid() {
 function setupHomeMotion() {
   const field = document.querySelector("[data-home-motion]");
   const cover = field?.querySelector(".moving-cover");
-  if (!field || !cover || matchMedia("(prefers-reduced-motion: reduce)").matches || matchMedia("(max-width: 820px)").matches) return;
+  if (!field || !cover || matchMedia("(max-width: 820px)").matches) return;
 
-  const config = HOME_MOTION_CONFIG;
+  // Keep a gentle drift visible with reduced motion, without jitter or afterimages.
+  const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const config = reducedMotion
+    ? { ...HOME_MOTION_CONFIG, jitterPx: 0, trailCount: 0, brightnessVariation: 0, colorDriftAmount: 0 }
+    : HOME_MOTION_CONFIG;
   document.documentElement.style.setProperty("--speed", `${config.speedSeconds}s`);
   document.documentElement.style.setProperty("--trail-count", config.trailCount);
   document.documentElement.style.setProperty("--trail-opacity", config.trailOpacity);
@@ -159,7 +163,7 @@ function setupHomeMotion() {
     const saturation = .82 + Math.sin(now / (config.exposurePeriodMs * 1.37)) * config.colorDriftAmount;
     cover.style.transform = `translate(${x + jitterX}px, ${y + jitterY}px)`;
     cover.style.filter = `saturate(${saturation}) contrast(.94) brightness(${exposure})`;
-    if (now - lastTrail > nextTrailDelay) makeTrail(now);
+    if (config.trailCount > 0 && now - lastTrail > nextTrailDelay) makeTrail(now);
     frameId = requestAnimationFrame(animate);
   }
 
