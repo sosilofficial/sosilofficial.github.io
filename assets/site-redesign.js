@@ -1,13 +1,12 @@
 const HOME_MOTION_CONFIG = Object.freeze({
   speedSeconds: 58,
-  trailOpacity: 0.22,
-  trailBlur: 3.5,
-  trailHoldMs: 3000,
-  trailStretchMs: 12000,
-  trailIntervalMinMs: 300,
-  trailIntervalMaxMs: 380,
-  trailScaleVariance: 0.012,
-  jitterPx: 0.6,
+  trailOpacity: 0.11,
+  trailBlur: 1.4,
+  trailLifetimeMs: 10500,
+  trailIntervalMinMs: 260,
+  trailIntervalMaxMs: 360,
+  trailScaleVariance: 0.004,
+  jitterPx: 0.45,
   brightnessVariation: 0.025,
   colorDriftAmount: 0.018,
   exposurePeriodMs: 4100
@@ -102,15 +101,9 @@ function createHomeMotionPath() {
   });
 }
 
-// Stay still for three seconds, then flow downward at constant opacity.
-function getHomeTrailState(ageMs, fallSpeed, stretch, config) {
-  const flowSeconds = Math.max(0, ageMs - config.trailHoldMs) / 1000;
-  const progress = Math.min(1, flowSeconds * 1000 / config.trailStretchMs);
-  const ease = progress * progress * (3 - 2 * progress);
-  return {
-    offsetY: fallSpeed * (flowSeconds - 1 + Math.exp(-flowSeconds)),
-    scaleY: 1 + stretch * ease
-  };
+function getHomeTrailOpacity(ageMs, config) {
+  const progress = Math.min(1, Math.max(0, ageMs / config.trailLifetimeMs));
+  return Math.pow(1 - progress, 1.35);
 }
 
 function setupHomeMotion() {
@@ -118,7 +111,7 @@ function setupHomeMotion() {
   const cover = field?.querySelector(".moving-cover");
   if (!field || !cover || matchMedia("(max-width: 820px)").matches) return;
 
-  // Preserve soft afterimages with reduced motion, without jitter or exposure shifts.
+  // Reduced-motion keeps the same quiet path and long-exposure traces, minus jitter and tonal modulation.
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const config = reducedMotion
     ? {
@@ -150,7 +143,6 @@ function setupHomeMotion() {
   let lastTrail = 0;
   let nextTrailDelay = config.trailIntervalMinMs;
   let frameId = 0;
-  // Keep traces until they have flowed completely outside the canvas.
   let trailTime = 0;
   let lastPaint = -Infinity;
   const trails = [];
@@ -171,7 +163,6 @@ function setupHomeMotion() {
     stampContext.globalCompositeOperation = "source-over";
     stampContext.drawImage(artwork, 0, 0, 256, 256);
     stampContext.globalCompositeOperation = "destination-in";
-    // The same square feather as the moving cover, preserving its square shape.
     for (const axis of ["x", "y"]) {
       const feather = stampContext.createLinearGradient(0, 0, axis === "x" ? 256 : 0, axis === "y" ? 256 : 0);
       feather.addColorStop(0, "transparent");
@@ -210,9 +201,7 @@ function setupHomeMotion() {
         x: x / Math.max(1, field.clientWidth - cover.offsetWidth),
         y: y / Math.max(1, field.clientHeight - cover.offsetHeight),
         scale: 1 + (Math.random() - .5) * config.trailScaleVariance * 2,
-        opacity: config.trailOpacity * (.9 + Math.random() * .2),
-        fallSpeed: 4 + Math.random() * 4,
-        stretch: .2 + Math.random() * .25
+        opacity: config.trailOpacity * (.9 + Math.random() * .2)
       });
     }
     lastTrail = now;
@@ -225,21 +214,18 @@ function setupHomeMotion() {
     context.clearRect(0, 0, history.width, history.height);
     context.save();
     context.setTransform(historyScale, 0, 0, historyScale, 0, 0);
-    context.filter = `blur(${config.trailBlur}px) saturate(.65)`;
+    context.filter = `blur(${config.trailBlur}px) saturate(.7)`;
     let activeCount = 0;
     for (const trail of trails) {
-      const state = getHomeTrailState(now - trail.born, trail.fallSpeed, trail.stretch, config);
+      const age = now - trail.born;
+      if (age >= config.trailLifetimeMs) continue;
+      trails[activeCount++] = trail;
       const width = cover.offsetWidth * trail.scale;
       const height = cover.offsetHeight * trail.scale;
-      const top = trail.y * Math.max(0, field.clientHeight - cover.offsetHeight) + (cover.offsetHeight - height) / 2 + state.offsetY;
-      // Remove only after the softened upper edge has left the visible field.
-      if (top - config.trailBlur * 4 > field.clientHeight) continue;
-      trails[activeCount++] = trail;
-      context.globalAlpha = trail.opacity;
-      context.drawImage(stamp,
-        trail.x * Math.max(0, field.clientWidth - cover.offsetWidth) + (cover.offsetWidth - width) / 2,
-        top,
-        width, height * state.scaleY);
+      const left = trail.x * Math.max(0, field.clientWidth - cover.offsetWidth) + (cover.offsetWidth - width) / 2;
+      const top = trail.y * Math.max(0, field.clientHeight - cover.offsetHeight) + (cover.offsetHeight - height) / 2;
+      context.globalAlpha = trail.opacity * getHomeTrailOpacity(age, config);
+      context.drawImage(stamp, left, top, width, height);
     }
     trails.length = activeCount;
     context.restore();
