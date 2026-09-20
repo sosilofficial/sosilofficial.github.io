@@ -34,7 +34,7 @@ const STYLE = `<style id="works-live-layout-style">
   .live-log {
     width: 100%;
     max-width: none;
-    border-top: 1px solid rgba(47, 55, 67, .075);
+    border-top: 1px solid rgba(47, 55, 67, .052);
   }
   .live-log h2 {
     display: none;
@@ -51,7 +51,7 @@ const STYLE = `<style id="works-live-layout-style">
     min-height: 42px;
     margin: 0;
     padding: 13px 0 14px;
-    border-bottom: 1px solid rgba(47, 55, 67, .06);
+    border-bottom: 1px solid rgba(47, 55, 67, .052);
   }
   .live-row time,
   .live-row .live-title,
@@ -104,7 +104,7 @@ const STYLE = `<style id="works-live-layout-style">
 
 @media (max-width: 820px) {
   .live-log {
-    border-top: 1px solid rgba(47, 55, 67, .075);
+    border-top: 1px solid rgba(47, 55, 67, .052);
   }
   .live-log h2 {
     display: none;
@@ -116,7 +116,7 @@ const STYLE = `<style id="works-live-layout-style">
     row-gap: 4px;
     margin: 0;
     padding: 14px 0 15px;
-    border-bottom: 1px solid rgba(47, 55, 67, .06);
+    border-bottom: 1px solid rgba(47, 55, 67, .052);
   }
   .live-row time {
     grid-column: 1;

@@ -149,6 +149,12 @@ try {
     await mailing.waitFor({ state: "visible" });
     const mailingBox = await mailing.boundingBox();
     assert(mailingBox && mailingBox.width > 0, `${viewport.name}: Mailing List가 렌더링되지 않습니다`);
+    const mailingUi = await mailing.evaluate((form) => {
+      const button = form.querySelector("button");
+      return { formBackground: getComputedStyle(form).backgroundColor, buttonBackground: getComputedStyle(button).backgroundColor };
+    });
+    assert(mailingUi.formBackground !== "rgba(0, 0, 0, 0)", `${viewport.name}: Mailing List 입력 영역이 구분되지 않습니다`);
+    assert(mailingUi.buttonBackground !== "rgba(0, 0, 0, 0)", `${viewport.name}: Mailing List join 버튼이 구분되지 않습니다`);
     const homeLines = await page.locator(".home-news, .home-mailing, .home-mailing form").evaluateAll((nodes) => nodes.map((node) => {
       const style = getComputedStyle(node);
       return { top: style.borderTopWidth, bottom: style.borderBottomWidth };
@@ -160,6 +166,7 @@ try {
       const homeNewsBox = await homeNews.boundingBox();
       const mobileCoverBox = await page.locator(".moving-cover").boundingBox();
       assert(motionFieldBox && homeNewsBox && mobileCoverBox, `${viewport.name}: 모바일 홈 그리드 좌표를 읽지 못했습니다`);
+      assert(mailingBox.width <= 260, `${viewport.name}: 모바일 Mailing List가 지나치게 큽니다`);
       assert(mobileCoverBox.width <= viewport.width * .27, `${viewport.name}: 모바일 앨범커버가 충분히 작아지지 않았습니다`);
       assert(homeNewsBox.y >= motionFieldBox.y + motionFieldBox.height + 20, `${viewport.name}: Latest News가 앨범 영역과 충분히 떨어져 있지 않습니다`);
       assert(Math.abs(homeNewsBox.x - mailingBox.x) <= 2, `${viewport.name}: Latest News와 Mailing List의 시작선이 다릅니다`);
@@ -208,6 +215,12 @@ try {
     });
     assert(Number(liveTypography.titleWeight) <= 400, `${viewport.name}: Live 제목에 굵은 글꼴이 남아 있습니다`);
     assert(liveTypography.titleColor === liveTypography.artistsColor, `${viewport.name}: Live 제목과 출연진의 기본 글자색이 다릅니다`);
+    const liveLines = await page.locator(".live-log").evaluate((log) => ({
+      top: getComputedStyle(log).borderTopColor,
+      row: getComputedStyle(log.querySelector(".live-row")).borderBottomColor,
+    }));
+    const liveLineAlpha = Number(liveLines.row.match(/([\d.]+)\)$/)?.[1] || 1);
+    assert(liveLines.top === liveLines.row && liveLineAlpha <= .055, `${viewport.name}: Live 가로선이 세로선보다 진합니다`);
 
     await open(page, "/archive/photo-video");
     const archiveRhythm = await categoryRhythm(page);

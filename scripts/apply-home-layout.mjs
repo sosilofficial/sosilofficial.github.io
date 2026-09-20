@@ -47,7 +47,7 @@ const STYLE = `<style id="home-mailing-join-style">
     border-top: 0;
   }
   .home-mailing {
-    width: min(82%, 310px) !important;
+    width: min(72%, 260px) !important;
     margin: 0 0 0 2px !important;
     padding-top: 0;
     border-top: 0;
@@ -85,41 +85,51 @@ const STYLE = `<style id="home-mailing-join-style">
     margin-bottom: 48px !important;
   }
   .home-mailing {
-    width: 86% !important;
+    width: min(72%, 260px) !important;
   }
 }
 
 .home-mailing h2 {
-  margin-bottom: 18px;
+  margin-bottom: 10px;
 }
 .home-mailing form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 12px;
+  align-items: stretch;
+  gap: 0;
+  width: min(100%, 240px);
   border-bottom: 0;
+  background: rgba(17, 21, 27, .035);
 }
 .home-mailing input {
   min-width: 0;
   width: 100%;
-  padding: 6px 0;
+  padding: 7px 9px;
   border: 0;
   outline: 0;
   background: transparent;
+  font-size: .69rem;
+}
+.home-mailing input:focus-visible {
+  outline: 1px solid rgba(17, 21, 27, .42);
+  outline-offset: 2px;
 }
 .home-mailing button {
   position: static;
   width: auto;
   height: auto;
   overflow: visible;
-  padding: 6px 0;
+  padding: 7px 10px;
   border: 0;
-  background: transparent;
+  background: var(--ink);
+  color: var(--bg);
   clip-path: none;
   cursor: pointer;
+  font-size: .64rem;
+  letter-spacing: .03em;
   text-transform: lowercase;
 }
-.home-mailing button:hover { opacity: .56; }
+.home-mailing button:hover { opacity: .82; }
 </style>`;
 
 let html = fs.readFileSync(file, "utf8");
