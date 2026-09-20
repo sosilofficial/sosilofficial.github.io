@@ -164,6 +164,21 @@ function setupHomeGrid() {
   window.addEventListener("resize", sync, { passive: true });
 }
 
+// Randomize once per page load; blended waves keep every turn continuous.
+function createHomeMotionPath() {
+  const tau = Math.PI * 2;
+  const phaseX = Math.random() * tau;
+  const phaseY = Math.random() * tau;
+  const bendX = Math.random() * tau;
+  const bendY = Math.random() * tau;
+  const rateX = .85 + Math.random() * .3;
+  const rateY = .9 + Math.random() * .35;
+  return (time) => ({
+    x: .5 + .34 * Math.sin(time * rateX + phaseX) + .1 * Math.sin(time * .53 + bendX),
+    y: .5 + .34 * Math.sin(time * rateY + phaseY) + .1 * Math.sin(time * .67 + bendY)
+  });
+}
+
 function setupDesktopHomeMotion(field, cover, artwork) {
   if (matchMedia("(max-width: 820px)").matches) return;
 
@@ -187,10 +202,17 @@ function setupDesktopHomeMotion(field, cover, artwork) {
   cover.style.setProperty("left", "0", "important");
   cover.style.setProperty("top", "0", "important");
 
-  let x = field.clientWidth * .35;
-  let y = field.clientHeight * .32;
-  let vx = field.clientWidth / config.speedSeconds;
-  let vy = field.clientHeight / (config.speedSeconds * 1.18);
+  const motionPath = createHomeMotionPath();
+  let motionTime = 0;
+  let x = 0;
+  let y = 0;
+  function syncMotionPosition() {
+    const point = motionPath(motionTime);
+    x = point.x * Math.max(0, field.clientWidth - cover.offsetWidth);
+    y = point.y * Math.max(0, field.clientHeight - cover.offsetHeight);
+  }
+  syncMotionPosition();
+
   let lastTime = performance.now();
   let lastTrail = 0;
   let nextTrailDelay = config.trailIntervalMinMs;
@@ -280,12 +302,8 @@ function setupDesktopHomeMotion(field, cover, artwork) {
 
     const dt = Math.min((now - lastTime) / 1000, .1);
     lastTime = now;
-    const maxX = Math.max(0, field.clientWidth - cover.offsetWidth);
-    const maxY = Math.max(0, field.clientHeight - cover.offsetHeight);
-    x += vx * dt;
-    y += vy * dt;
-    if (x <= 0 || x >= maxX) { x = Math.max(0, Math.min(maxX, x)); vx *= -1; }
-    if (y <= 0 || y >= maxY) { y = Math.max(0, Math.min(maxY, y)); vy *= -1; }
+    motionTime += dt * 2.2 / config.speedSeconds;
+    syncMotionPosition();
 
     const jitterX = (Math.random() - .5) * config.jitterPx;
     const jitterY = (Math.random() - .5) * config.jitterPx;
@@ -301,12 +319,7 @@ function setupDesktopHomeMotion(field, cover, artwork) {
   if ("ResizeObserver" in window) {
     new ResizeObserver(() => {
       resizeHistory();
-      const maxX = Math.max(0, field.clientWidth - cover.offsetWidth);
-      const maxY = Math.max(0, field.clientHeight - cover.offsetHeight);
-      x = Math.max(0, Math.min(maxX, x));
-      y = Math.max(0, Math.min(maxY, y));
-      vx = (Math.sign(vx) || 1) * field.clientWidth / config.speedSeconds;
-      vy = (Math.sign(vy) || 1) * field.clientHeight / (config.speedSeconds * 1.18);
+      syncMotionPosition();
     }).observe(field);
   }
 
