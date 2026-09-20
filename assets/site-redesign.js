@@ -335,7 +335,6 @@ function setupDesktopHomeMotion(field, cover, artwork) {
 
 function setupMobileHomeMotion(field, cover, artwork) {
   if (!matchMedia("(max-width: 820px)").matches) return;
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const config = MOBILE_HOME_MOTION_CONFIG;
   cover.style.setProperty("top", "0", "important");
