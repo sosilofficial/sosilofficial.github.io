@@ -113,6 +113,27 @@ async function categoryRhythm(page) {
   return { verticalGap: subnav.y - (heading.y + heading.height), gap };
 }
 
+function assertGridMatch(reference, candidate, label, properties = ["x", "y"]) {
+  assert(reference && candidate, `${label}: 그리드 좌표를 읽지 못했습니다`);
+  for (const property of properties) {
+    const delta = Math.abs(reference[property] - candidate[property]);
+    assert(delta <= 2, `${label}: ${property} 좌표가 ${delta.toFixed(1)}px 어긋납니다`);
+  }
+}
+
+async function visibleBox(page, selector) {
+  return page.locator(selector).evaluateAll((nodes) => {
+    const node = nodes.find((candidate) => {
+      const style = getComputedStyle(candidate);
+      const rect = candidate.getBoundingClientRect();
+      return style.display !== "none" && style.visibility !== "hidden" && rect.width > 0 && rect.height > 0;
+    });
+    if (!node) return null;
+    const rect = node.getBoundingClientRect();
+    return { x: rect.x, y: rect.y, width: rect.width, height: rect.height };
+  });
+}
+
 try {
   for (const viewport of viewports) {
     const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height }, reducedMotion: "reduce" });
@@ -148,27 +169,42 @@ try {
     assert(worksTabs.every((tab) => tab.display !== "none" && tab.visibility !== "hidden"), `${viewport.name}: Works 하위 메뉴 중 숨겨진 항목이 있습니다`);
     const worksRhythm = await categoryRhythm(page);
     await visibleImages(page, ".release-index img", `${viewport.name} discography`);
+    const releaseIndexBox = await page.locator(".release-index").boundingBox();
     if (viewport.width <= 430) {
       const columns = await page.locator(".release-index").evaluate((node) => getComputedStyle(node).gridTemplateColumns.split(" ").length);
       assert(columns === 2, `${viewport.name}: Discography가 2열이 아닙니다`);
     }
 
+    const coverBox = await page.locator(".release-index img").first().boundingBox();
     if (viewport.width > 820) {
-      const coverBox = await page.locator(".release-index img").first().boundingBox();
       const detailBox = await page.locator(".release-split > .detail-panel").boundingBox();
       assert(coverBox && detailBox, `${viewport.name}: Discography 좌표를 읽지 못했습니다`);
       assert(coverBox.x + coverBox.width <= detailBox.x + 1, `${viewport.name}: Discography 앨범커버가 detail panel을 침범합니다`);
-
-      await open(page, "/works/videos");
-      const videoBox = await page.locator(".video-index img").first().boundingBox();
-      assert(videoBox, `${viewport.name}: Video 썸네일 좌표를 읽지 못했습니다`);
-      assert(Math.abs(coverBox.y - videoBox.y) <= 2, `${viewport.name}: Discography 첫 커버와 Video 첫 썸네일 시작 위치가 ${Math.abs(coverBox.y - videoBox.y)}px 다릅니다`);
     }
+
+    await open(page, "/works/videos");
+    const videoIndexBox = await page.locator(".video-index").boundingBox();
+    const videoBox = await page.locator(".video-index img").first().boundingBox();
+    assertGridMatch(releaseIndexBox, videoIndexBox, `${viewport.name}: Discography/Video 목록`, ["x", "y", "width"]);
+    assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, viewport.width > 820 ? ["x", "y", "width"] : ["x", "y"]);
+
+    await open(page, "/works/live");
+    const liveBox = await page.locator(".live-log").boundingBox();
+    assertGridMatch(releaseIndexBox, liveBox, `${viewport.name}: Works 목록 시작선`, ["x", "y"]);
 
     await open(page, "/archive/photo-video");
     const archiveRhythm = await categoryRhythm(page);
+    const archivePhotoBox = await page.locator(".photo-post-grid").boundingBox();
     assert(worksRhythm.gap === archiveRhythm.gap, `${viewport.name}: Works와 Archive 하위 메뉴 간격이 다릅니다 (${worksRhythm.gap} / ${archiveRhythm.gap})`);
     assert(Math.abs(worksRhythm.verticalGap - archiveRhythm.verticalGap) <= 1, `${viewport.name}: Works와 Archive 제목-하위메뉴 간격이 다릅니다 (${worksRhythm.verticalGap}px / ${archiveRhythm.verticalGap}px)`);
+
+    await open(page, "/archive/videos");
+    const archiveVideoBox = await page.locator(".archive-video-grid, .wide-empty").boundingBox();
+    assertGridMatch(archivePhotoBox, archiveVideoBox, `${viewport.name}: Archive Photo/Video 목록`, ["x", "y", "width"]);
+
+    await open(page, "/archive/links");
+    const archiveTextBox = await page.locator(".archive-text-groups").boundingBox();
+    assertGridMatch(archivePhotoBox, archiveTextBox, `${viewport.name}: Archive Photo/Text 목록`, ["x", "y", "width"]);
 
     await closeDetail(page, "/works/discography", ".release-index a", ".release-detail", `${viewport.name} discography`);
     await closeDetail(page, "/works/videos", ".video-index a", ".works-video-detail", `${viewport.name} video`);
@@ -181,11 +217,22 @@ try {
     await otherNote.click();
     await page.waitForURL((url) => url.pathname.replace(/\/$/, "") === otherHref.replace(/\/$/, ""));
 
-    await open(page, "/notes");
-    const categoryY = await page.locator(".category-top h1").evaluate((node) => node.getBoundingClientRect().top);
-    await open(page, "/contact");
-    const contactY = await page.locator(".contact-top h1").evaluate((node) => node.getBoundingClientRect().top);
-    assert(Math.abs(categoryY - contactY) <= 24, `${viewport.name}: Contact 제목 정렬이 ${Math.abs(categoryY - contactY)}px 어긋납니다`);
+    const categoryPages = [
+      ["/works/discography", ".category-top h1"],
+      ["/archive", ".category-top h1"],
+      ["/notes", ".category-top h1"],
+      ["/merch", ".category-top h1"],
+      ["/info", ".category-top h1"],
+      ["/contact", ".contact-top h1"],
+      ["/news", ".category-top h1"],
+    ];
+    let categoryHeadingBox = null;
+    for (const [route, selector] of categoryPages) {
+      await open(page, route);
+      const headingBox = await visibleBox(page, selector);
+      if (!categoryHeadingBox) categoryHeadingBox = headingBox;
+      else assertGridMatch(categoryHeadingBox, headingBox, `${viewport.name}: ${route} 제목`, ["x", "y"]);
+    }
 
     await context.close();
   }

@@ -188,6 +188,14 @@ const STYLE = `<style id="shared-ui-style">
     padding-top: var(--category-top-y);
     padding-left: var(--category-x);
   }
+  /* Keep the Works index column identical across Discography and Video. */
+  .release-split > .index-panel {
+    padding-right: var(--pad);
+  }
+  /* Use the shared category rhythm before every full-width Works list. */
+  .live-split .panel-headline {
+    margin-bottom: clamp(44px, 6vh, 72px) !important;
+  }
   .site-main > .wide-page,
   .site-main > .archive-text-flat-page {
     padding-top: var(--category-top-y);
@@ -248,6 +256,12 @@ const STYLE = `<style id="shared-ui-style">
   .info-split::after { content: none; display: none; }
 }
 
+/* Let Archive/Text inherit the same heading-to-content gap as Photo and Video. */
+.archive-text-page .archive-text-top {
+  display: flow-root;
+  margin-bottom: 0 !important;
+}
+
 @media (max-width: 820px) {
   .category-top { margin-bottom: 44px; }
   .category-top h1 {
@@ -256,6 +270,10 @@ const STYLE = `<style id="shared-ui-style">
   }
   .contact-page {
     padding: 24px 18px 80px;
+  }
+  .video-split .video-index a,
+  .merch-split .merch-index > a {
+    padding: 0;
   }
   .info-top-spacer { display: none; }
   .info-split .info-korean p,
