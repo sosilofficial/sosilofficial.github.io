@@ -42,15 +42,15 @@ const STYLE = `<style id="works-live-layout-style">
   .live-row {
     display: grid;
     grid-template-columns:
-      7.2rem
-      minmax(10rem, 1.15fr)
-      minmax(12rem, 1.55fr)
-      minmax(8rem, .9fr);
-    column-gap: clamp(14px, 1.6vw, 24px);
+      6.8rem
+      minmax(12rem, 1.2fr)
+      minmax(14rem, 1.55fr)
+      minmax(9rem, 1fr);
+    column-gap: clamp(18px, 1.8vw, 28px);
     align-items: baseline;
-    min-height: 38px;
+    min-height: 42px;
     margin: 0;
-    padding: 10px 0 11px;
+    padding: 13px 0 14px;
     border-bottom: 1px solid rgba(47, 55, 67, .06);
   }
   .live-row time,
@@ -64,9 +64,9 @@ const STYLE = `<style id="works-live-layout-style">
   .live-row time {
     grid-column: 1;
     color: var(--muted);
-    opacity: .66;
-    font-size: .61rem;
-    line-height: 1.45;
+    opacity: .58;
+    font-size: .62rem;
+    line-height: 1.5;
     letter-spacing: .02em;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
@@ -74,30 +74,31 @@ const STYLE = `<style id="works-live-layout-style">
   .live-row .live-title {
     grid-column: 2;
     color: var(--ink);
-    font-size: .78rem;
-    font-weight: 600 !important;
-    line-height: 1.42;
+    opacity: .9;
+    font-size: .75rem;
+    font-weight: 400 !important;
+    line-height: 1.5;
   }
   .live-row .live-artists {
     grid-column: 3;
     color: var(--ink);
-    opacity: .72;
-    font-size: .72rem;
-    line-height: 1.42;
+    opacity: .68;
+    font-size: .70rem;
+    line-height: 1.5;
   }
   .live-row .live-venue {
     grid-column: 4;
     color: var(--muted);
-    opacity: .52;
-    font-size: .60rem;
-    line-height: 1.42;
+    opacity: .58;
+    font-size: .62rem;
+    line-height: 1.5;
     letter-spacing: .015em;
   }
   .live-row-artists-only .live-artists {
     grid-column: 2 / 4;
-    opacity: .92;
-    font-size: .77rem;
-    font-weight: 600;
+    opacity: .9;
+    font-size: .75rem;
+    font-weight: 400;
   }
 }
 
@@ -110,20 +111,20 @@ const STYLE = `<style id="works-live-layout-style">
   }
   .live-row {
     display: grid;
-    grid-template-columns: 6.4rem minmax(0, 1fr);
-    column-gap: 12px;
-    row-gap: 2px;
+    grid-template-columns: 5.8rem minmax(0, 1fr);
+    column-gap: 16px;
+    row-gap: 4px;
     margin: 0;
-    padding: 11px 0 12px;
+    padding: 14px 0 15px;
     border-bottom: 1px solid rgba(47, 55, 67, .06);
   }
   .live-row time {
     grid-column: 1;
     grid-row: 1 / span 3;
     color: var(--muted);
-    opacity: .66;
-    font-size: .60rem;
-    line-height: 1.45;
+    opacity: .58;
+    font-size: .61rem;
+    line-height: 1.5;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
   }
@@ -136,25 +137,28 @@ const STYLE = `<style id="works-live-layout-style">
     margin: 0;
   }
   .live-row .live-title {
-    font-size: .78rem;
-    font-weight: 600 !important;
-    line-height: 1.4;
+    color: var(--ink);
+    opacity: .9;
+    font-size: .75rem;
+    font-weight: 400 !important;
+    line-height: 1.5;
   }
   .live-row .live-artists {
-    opacity: .74;
-    font-size: .72rem;
-    line-height: 1.4;
+    color: var(--ink);
+    opacity: .68;
+    font-size: .70rem;
+    line-height: 1.5;
   }
   .live-row .live-venue {
     color: var(--muted);
-    opacity: .52;
-    font-size: .60rem;
-    line-height: 1.4;
+    opacity: .58;
+    font-size: .62rem;
+    line-height: 1.5;
   }
   .live-row-artists-only .live-artists {
-    opacity: .92;
-    font-size: .77rem;
-    font-weight: 600;
+    opacity: .9;
+    font-size: .75rem;
+    font-weight: 400;
   }
 }
 </style>`;

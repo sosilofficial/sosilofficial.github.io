@@ -149,7 +149,21 @@ try {
     await mailing.waitFor({ state: "visible" });
     const mailingBox = await mailing.boundingBox();
     assert(mailingBox && mailingBox.width > 0, `${viewport.name}: Mailing List가 렌더링되지 않습니다`);
-    if (viewport.width <= 430) assert(mailingBox.y < viewport.height + 40, `${viewport.name}: Mailing List가 첫 화면에서 너무 멉니다`);
+    const homeLines = await page.locator(".home-news, .home-mailing, .home-mailing form").evaluateAll((nodes) => nodes.map((node) => {
+      const style = getComputedStyle(node);
+      return { top: style.borderTopWidth, bottom: style.borderBottomWidth };
+    }));
+    assert(homeLines.every(({ top, bottom }) => top === "0px" && bottom === "0px"), `${viewport.name}: 홈페이지에 가로선이 남아 있습니다`);
+    if (viewport.width <= 430) {
+      assert(mailingBox.y < viewport.height + 40, `${viewport.name}: Mailing List가 첫 화면에서 너무 멉니다`);
+      const motionFieldBox = await page.locator(".home-motion-field").boundingBox();
+      const homeNewsBox = await homeNews.boundingBox();
+      const mobileCoverBox = await page.locator(".moving-cover").boundingBox();
+      assert(motionFieldBox && homeNewsBox && mobileCoverBox, `${viewport.name}: 모바일 홈 그리드 좌표를 읽지 못했습니다`);
+      assert(mobileCoverBox.width <= viewport.width * .27, `${viewport.name}: 모바일 앨범커버가 충분히 작아지지 않았습니다`);
+      assert(homeNewsBox.y >= motionFieldBox.y + motionFieldBox.height + 20, `${viewport.name}: Latest News가 앨범 영역과 충분히 떨어져 있지 않습니다`);
+      assert(Math.abs(homeNewsBox.x - mailingBox.x) <= 2, `${viewport.name}: Latest News와 Mailing List의 시작선이 다릅니다`);
+    }
     const coverTransformA = await page.locator(".moving-cover").evaluate((node) => getComputedStyle(node).transform);
     await page.waitForTimeout(180);
     const coverTransformB = await page.locator(".moving-cover").evaluate((node) => getComputedStyle(node).transform);
@@ -187,6 +201,13 @@ try {
     await open(page, "/works/live");
     const liveBox = await page.locator(".live-log").boundingBox();
     assertGridMatch(releaseIndexBox, liveBox, `${viewport.name}: Works 목록 시작선`, ["x", "y"]);
+    const liveTypography = await page.locator(".live-row:has(.live-artists)").first().evaluate((row) => {
+      const title = getComputedStyle(row.querySelector(".live-title"));
+      const artists = getComputedStyle(row.querySelector(".live-artists"));
+      return { titleWeight: title.fontWeight, titleColor: title.color, artistsColor: artists.color };
+    });
+    assert(Number(liveTypography.titleWeight) <= 400, `${viewport.name}: Live 제목에 굵은 글꼴이 남아 있습니다`);
+    assert(liveTypography.titleColor === liveTypography.artistsColor, `${viewport.name}: Live 제목과 출연진의 기본 글자색이 다릅니다`);
 
     await open(page, "/archive/photo-video");
     const archiveRhythm = await categoryRhythm(page);

@@ -24,7 +24,7 @@ const STYLE = `<style id="home-mailing-join-style">
 @media (max-width: 820px) {
   .home-canvas {
     min-height: auto !important;
-    padding: 26px 18px 36px !important;
+    padding: 26px 18px 68px !important;
   }
   .home-intro {
     display: block !important;
@@ -34,27 +34,27 @@ const STYLE = `<style id="home-mailing-join-style">
     letter-spacing: .01em;
   }
   .home-motion-field {
-    height: clamp(200px, 31dvh, 280px) !important;
-    margin: 10px -2px 14px !important;
+    height: clamp(240px, 36dvh, 320px) !important;
+    margin: 18px -2px 28px !important;
   }
   .moving-cover {
-    width: min(34vw, 148px) !important;
+    width: min(24vw, 104px) !important;
   }
   .home-news {
-    width: min(70%, 260px) !important;
-    margin: 0 0 28px 2px !important;
-    padding-top: 10px;
-    border-top: 1px solid var(--line);
+    width: min(82%, 310px) !important;
+    margin: 0 0 52px 2px !important;
+    padding-top: 0;
+    border-top: 0;
   }
   .home-mailing {
     width: min(82%, 310px) !important;
-    margin: 0 2px 0 auto !important;
-    padding-top: 10px;
-    border-top: 1px solid var(--line);
+    margin: 0 0 0 2px !important;
+    padding-top: 0;
+    border-top: 0;
   }
   .home-news h2,
   .home-mailing h2 {
-    margin-bottom: 8px !important;
+    margin-bottom: 12px !important;
     font-size: .69rem;
     letter-spacing: .035em;
     color: var(--muted);
@@ -62,28 +62,27 @@ const STYLE = `<style id="home-mailing-join-style">
   .home-news p {
     line-height: 1.6;
   }
-  .home-mailing form {
-    border-bottom-color: var(--line) !important;
-  }
+  .home-mailing form { border-bottom: 0 !important; }
 }
 
 @media (max-width: 520px) {
   .home-canvas {
     padding-top: 24px !important;
+    padding-bottom: 64px !important;
   }
   .home-intro {
     width: 82% !important;
   }
   .home-motion-field {
-    height: clamp(190px, 29dvh, 250px) !important;
-    margin: 8px -2px 12px !important;
+    height: clamp(230px, 35dvh, 294px) !important;
+    margin: 16px -2px 26px !important;
   }
   .moving-cover {
-    width: min(35vw, 142px) !important;
+    width: min(24.5vw, 100px) !important;
   }
   .home-news {
-    width: 74% !important;
-    margin-bottom: 26px !important;
+    width: 86% !important;
+    margin-bottom: 48px !important;
   }
   .home-mailing {
     width: 86% !important;
@@ -98,7 +97,7 @@ const STYLE = `<style id="home-mailing-join-style">
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
   gap: 12px;
-  border-bottom: 1px solid var(--ink);
+  border-bottom: 0;
 }
 .home-mailing input {
   min-width: 0;
