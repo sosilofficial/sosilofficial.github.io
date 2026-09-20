@@ -21,6 +21,20 @@ const STYLE = `<style id="home-mailing-join-style">
   }
 }
 
+/* Keep the drifting cover, but make it feel more like a faint printed afterimage than digital FX. */
+.moving-cover {
+  filter: saturate(.80) contrast(.94) brightness(.99) !important;
+}
+.moving-cover img {
+  filter: blur(.2px) !important;
+}
+.motion-history {
+  opacity: .30 !important;
+}
+.mobile-motion-history {
+  opacity: .14 !important;
+}
+
 @media (max-width: 820px) {
   .home-canvas {
     min-height: auto !important;
@@ -177,4 +191,4 @@ html = html.replace(/<p class="mailing-status"[\s\S]*?<\/p>/, "");
 html = html.replace(/<script id="home-mobile-motion-script">[\s\S]*?<\/script>/, "");
 
 fs.writeFileSync(file, html);
-console.log("Refined the mobile homepage into a quieter asymmetric slowcore layout while preserving News and the Google Forms handoff.");
+console.log("Refined the homepage motion into a quieter printed-afterimage treatment while preserving News and the Google Forms handoff.");

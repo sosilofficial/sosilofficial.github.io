@@ -12,15 +12,29 @@ const STYLE = `<style id="archive-photo-post-style">
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 220px));
     justify-content: start;
+    align-items: start;
     gap: clamp(42px, 5vw, 76px) clamp(28px, 3.6vw, 58px);
   }
   .photo-post-grid a { display: block; }
+  .photo-post-grid a:nth-child(4n + 2) { margin-top: 22px; }
+  .photo-post-grid a:nth-child(4n + 4) { margin-top: 10px; }
   .photo-post-grid img {
     width: 100%;
     max-width: 220px;
     height: auto;
     object-fit: cover;
   }
+
+  /* Give Archive Video the same slightly accumulated, non-catalog rhythm without changing thumbnail size. */
+  .archive-index-page .archive-video-grid {
+    align-items: start;
+  }
+  .archive-index-page .archive-video-grid > a:nth-child(4n + 2) { margin-top: 22px; }
+  .archive-index-page .archive-video-grid > a:nth-child(4n + 4) { margin-top: 10px; }
+  .archive-index-page .archive-video-grid img {
+    filter: saturate(.78) contrast(.95);
+  }
+
   .archive-photo-detail-page { position: relative; }
   .archive-photo-detail-page > .subnav { margin-bottom: clamp(52px, 7vh, 86px); }
   .archive-photo-detail-head {
@@ -62,6 +76,8 @@ const STYLE = `<style id="archive-photo-post-style">
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 34px 16px;
   }
+  .photo-post-grid a,
+  .archive-index-page .archive-video-grid > a { margin-top: 0 !important; }
   .photo-post-grid img { width: 100%; height: auto; }
   .archive-photo-detail-head { margin-bottom: 34px; }
   .archive-photo-back { display: inline-block; margin-bottom: 28px; color: var(--muted); }
@@ -135,4 +151,4 @@ if (fs.existsSync(PHOTO_DIR)) {
 }
 
 for (const file of LANDINGS) convertLanding(file);
-console.log("Applied Archive Photo post-based landing and independent detail layout.");
+console.log("Applied a looser accumulated Archive rhythm while preserving thumbnail scale and detail structure.");

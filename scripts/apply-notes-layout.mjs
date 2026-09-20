@@ -5,33 +5,40 @@ const ROOT = process.cwd();
 const NOTES_DIR = path.join(ROOT, "notes");
 const STYLE = `<style id="slow-notes-style">
 @media (min-width: 821px) {
-  /*
-   * Notes should read like a compact archive rather than isolated cards.
-   * Use an 8px-based rhythm so the two rows feel deliberately related.
-   */
+  /* Notes should feel like an ongoing personal log rather than a set of UI cards. */
   .note-index {
     display: grid;
-    gap: 24px;
-    max-width: 32rem;
+    gap: 30px;
+    max-width: 34rem;
   }
   .note-index a {
     display: grid;
-    grid-template-columns: 7.2rem minmax(0, 1fr);
+    grid-template-columns: 6.6rem minmax(0, 1fr);
     align-items: baseline;
-    gap: 0 12px;
-    padding: 0;
+    gap: 0 14px;
+    padding: 2px 0;
     line-height: 1.6;
   }
   .note-index a.is-selected {
-    background: rgba(72, 80, 91, .022);
+    background: transparent;
+  }
+  .note-index span {
+    font-size: .66rem;
+    letter-spacing: .02em;
+    opacity: .72;
+  }
+  .note-index strong {
+    font-size: .84rem;
+    font-weight: 400;
+    line-height: 1.52;
+  }
+  .note-index a.is-selected strong {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
   }
 
-  /*
-   * Mirror the real Notes heading in the detail column instead of estimating
-   * its height with a calc(). This spacer intentionally does not use the
-   * category-top class, so the later category-grid pass can still normalize
-   * the visible Notes heading on the left.
-   */
+  /* Keep the detail page anchored like a journal page, not centered like a portfolio card. */
   .split-layout > .detail-panel {
     padding-top: var(--category-top-y, clamp(48px, 6.8vh, 70px)) !important;
   }
@@ -48,37 +55,41 @@ const STYLE = `<style id="slow-notes-style">
     letter-spacing: .02em !important;
   }
   .note-detail {
-    max-width: 48rem;
-    margin: 0 auto !important;
+    max-width: 44rem;
+    margin: 0 !important;
   }
   .note-detail > p:first-of-type {
     margin: 0 0 8px !important;
     line-height: 1.6;
   }
   .note-detail h1 {
-    margin: 0 0 clamp(42px, 6vh, 70px) !important;
+    margin: 0 0 clamp(38px, 5.5vh, 62px) !important;
   }
   .note-detail .prose p {
-    max-width: 50ch;
-    margin-bottom: 2.15em;
-    line-height: 1.82;
+    max-width: 54ch;
+    margin-bottom: 2.35em;
+    line-height: 1.88;
   }
   .note-detail .prose img,
   .note-detail .detail-gallery,
   .note-detail .video-embed {
-    margin-top: clamp(42px, 6vh, 72px);
-    margin-bottom: clamp(42px, 6vh, 72px);
+    margin-top: clamp(44px, 6vh, 74px);
+    margin-bottom: clamp(44px, 6vh, 74px);
   }
 }
 @media (max-width: 820px) {
-  .note-index { gap: 24px; }
+  .note-index { gap: 28px; }
   .note-index a {
-    grid-template-columns: 6.4rem minmax(0, 1fr);
+    grid-template-columns: 6.1rem minmax(0, 1fr);
     align-items: baseline;
     gap: 0 12px;
     padding: 0;
     line-height: 1.6;
   }
+  .note-index a.is-selected { background: transparent; }
+  .note-index span { font-size: .64rem; opacity: .72; }
+  .note-index strong { font-weight: 400; line-height: 1.55; }
+  .note-index a.is-selected strong { text-decoration: underline; text-underline-offset: 3px; }
   .notes-top-spacer { display: none; }
 }
 </style>`;
@@ -113,4 +124,4 @@ for (const entry of fs.readdirSync(NOTES_DIR, { withFileTypes: true })) {
 }
 const landing = path.join(NOTES_DIR, "index.html");
 if (fs.existsSync(landing)) apply(landing);
-console.log("Tightened Notes list rhythm and locked detail dates to the exact shared heading grid.");
+console.log("Refined Notes into a quieter ongoing journal with less card-like UI.");
