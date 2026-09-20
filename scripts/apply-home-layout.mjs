@@ -24,45 +24,69 @@ const STYLE = `<style id="home-mailing-join-style">
 @media (max-width: 820px) {
   .home-canvas {
     min-height: auto !important;
-    padding: 18px 18px 32px !important;
+    padding: 26px 18px 36px !important;
   }
   .home-intro {
-    gap: 14px !important;
+    display: block !important;
+    width: min(78%, 300px) !important;
+    margin: 2px 0 0 2px !important;
+    line-height: 1.72;
+    letter-spacing: .01em;
   }
   .home-motion-field {
-    height: clamp(150px, 26dvh, 220px) !important;
-    margin: 18px 0 20px !important;
+    height: clamp(200px, 31dvh, 280px) !important;
+    margin: 10px -2px 14px !important;
   }
   .moving-cover {
-    width: min(36vw, 160px) !important;
+    width: min(34vw, 148px) !important;
   }
   .home-news {
-    margin: 0 0 32px !important;
+    width: min(70%, 260px) !important;
+    margin: 0 0 28px 2px !important;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
   }
   .home-mailing {
-    margin-top: 0 !important;
+    width: min(82%, 310px) !important;
+    margin: 0 2px 0 auto !important;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
   }
-  .home-news h2 {
-    margin-bottom: 10px !important;
-  }
+  .home-news h2,
   .home-mailing h2 {
-    margin-bottom: 16px !important;
+    margin-bottom: 8px !important;
+    font-size: .69rem;
+    letter-spacing: .035em;
+    color: var(--muted);
+  }
+  .home-news p {
+    line-height: 1.6;
+  }
+  .home-mailing form {
+    border-bottom-color: var(--line) !important;
   }
 }
 
 @media (max-width: 520px) {
+  .home-canvas {
+    padding-top: 24px !important;
+  }
   .home-intro {
-    gap: 12px !important;
+    width: 82% !important;
   }
   .home-motion-field {
-    height: clamp(140px, 23dvh, 190px) !important;
-    margin: 16px 0 18px !important;
+    height: clamp(190px, 29dvh, 250px) !important;
+    margin: 8px -2px 12px !important;
   }
   .moving-cover {
-    width: min(38vw, 150px) !important;
+    width: min(35vw, 142px) !important;
   }
   .home-news {
-    margin-bottom: 32px !important;
+    width: 74% !important;
+    margin-bottom: 26px !important;
+  }
+  .home-mailing {
+    width: 86% !important;
   }
 }
 
@@ -144,4 +168,4 @@ html = html.replace(/<p class="mailing-status"[\s\S]*?<\/p>/, "");
 html = html.replace(/<script id="home-mobile-motion-script">[\s\S]*?<\/script>/, "");
 
 fs.writeFileSync(file, html);
-console.log("Restored the homepage News slot, simplified the intro, and preserved the Google Forms handoff.");
+console.log("Refined the mobile homepage into a quieter asymmetric slowcore layout while preserving News and the Google Forms handoff.");
