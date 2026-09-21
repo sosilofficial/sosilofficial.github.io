@@ -30,12 +30,8 @@ jobs:
       - name: Edit content file
         if: startsWith(github.event.issue.title, '[Edit]')
         run: node scripts/edit-content.mjs
-      - name: Build static pages
-        run: node scripts/build-content.mjs
-      - name: Apply homepage layout
-        run: node scripts/apply-home-layout.mjs
-      - name: Validate generated site
-        run: node scripts/validate-site.mjs
+      - name: Build and validate site
+        run: npm run build
       - name: Commit generated content
         run: |
           git config user.name "github-actions[bot]"

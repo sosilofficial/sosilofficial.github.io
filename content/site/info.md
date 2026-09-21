@@ -6,7 +6,7 @@ title: "info"
 date: ""
 slug: "info"
 url: "/info"
-description: "info — 소실 SOSIL sosil info works news archive merch notes contact 안녕하세요, 소실이라는 이름으로 음악하고 있는 김성빈이라고 합니다. 저는 특정 장르음악을 하겠다는 목표는 없는데 굳이 말하자면 슬로우코어/포크 음악에 가까운 것"
+description: "소실(SOSIL)은 서울을 기반으로 활동하는 김성빈의 slowcore / alternative folk 음악 프로젝트입니다. 소개와 공식 음악 채널을 확인하세요."
 thumbnail: ""
 images: []
 video: ""
