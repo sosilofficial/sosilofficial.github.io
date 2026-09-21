@@ -155,8 +155,8 @@ if (html.includes('id="home-mailing-join-style"')) {
 }
 
 html = html.replace(
-  "<p>slowcore / alternative folk musician<br>based in seoul, south korea</p>",
-  '<p><span class="home-grid-anchor">slowcore / alternative folk musician</span><br>based in seoul, south korea</p>'
+  "<p>a slowcore / alternative folk musician<br>based in seoul, south korea</p>",
+  '<p><span class="home-grid-anchor">a slowcore / alternative folk musician</span><br>based in seoul, south korea</p>'
 );
 
 /* Keep the intro to one quiet block. */
