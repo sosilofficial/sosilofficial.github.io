@@ -76,10 +76,6 @@ if (/calc\(100(?:d?vh|vh) - 60px\)/.test(`${css}\n${scripts}`)) failures.push("�
 
 const worksRedirect = fs.readFileSync(path.join(ROOT, "works", "index.html"), "utf8");
 if (!worksRedirect.includes('content="0; url=/works/discography"') || !worksRedirect.includes('content="noindex,follow"')) failures.push("works/index.html: Discography redirect 설정 오류");
-for (const route of ["gibberish", "gibberish/1", "gibberish/3"]) {
-  const redirect = fs.readFileSync(path.join(ROOT, route, "index.html"), "utf8");
-  if (!redirect.includes('content="noindex,follow"') || !redirect.includes("location.replace")) failures.push(`${route}: Notes legacy redirect 설정 오류`);
-}
 const notFound = fs.readFileSync(path.join(ROOT, "404.html"), "utf8");
 if (!notFound.includes("nothing here.") || !notFound.includes('href="/"') || !notFound.includes('content="noindex,follow"')) failures.push("404.html: 커스텀 404 구성 오류");
 

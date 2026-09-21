@@ -1,3 +1,4 @@
+import { localizeIssueImages } from "./localize-issue-images.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -6,9 +7,10 @@ const issue = event.issue;
 if (!issue || !issue.title.startsWith("[Content]")) throw new Error("CONTENT ERROR: 콘텐츠 등록 양식으로 만든 Issue가 아닙니다.");
 
 function fields(body) {
+  body = body.replace(/\r\n/g, "\n");
   const result = {};
   const labels = ["카테고리", "제목", "날짜", "본문", "설명", "썸네일 이미지", "본문 이미지", "외부 링크", "영상 링크", "재생 시간", "종류", "크레딧", "노트", "가격(KRW)", "판매 상태", "slug", "추가 설명"];
-  const alternatives = labels.join("|");
+  const alternatives = labels.map((label) => label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
   const pattern = new RegExp(`^### (${alternatives})\\n\\n`, "gm");
   const headings = [...body.matchAll(pattern)];
   headings.forEach((match, index) => {
@@ -50,7 +52,7 @@ if (category === "archive" && ["photo", "video"].includes(subcategory)) {
   if (fs.existsSync(peer)) throw new Error(`CONTENT ERROR: Archive Photo/Video에 같은 slug가 이미 존재합니다: ${slug}`);
 }
 
-const urls = (value = "") => [...new Set([...value.matchAll(/https?:\/\/[^\s<>"')\]]+|\/[\w./-]+\.(?:jpg|jpeg|png|webp|gif)/gi)].map((match) => match[0].replace(/[.,;:]+$/, "")))];
+const urls = (value = "") => [...new Set([...value.matchAll(/https?:\/\/[^\s<>"')\]]+|\/[\w./-]+\.(?:jpg|jpeg|png|webp|gif|avif)/gi)].map((match) => match[0].replace(/[.,;:]+$/, "")))];
 function youtubeThumbnail(url) {
   if (!url) return "";
   try {
@@ -87,7 +89,8 @@ const data = {
   price_krw: price ? Number(price) : "", status,
   subtitle: "", creator: "", tracklist: [], credits: "", published: true, body_format: "markdown",
 };
+const body = await localizeIssueImages(data, form["본문"]?.trim() || "");
 const frontmatter = Object.entries(data).map(([key, value]) => `${key}: ${JSON.stringify(value)}`).join("\n");
 fs.mkdirSync(path.dirname(output), { recursive: true });
-fs.writeFileSync(output, `---\n${frontmatter}\n---\n\n${form["본문"]?.trim() || ""}\n`);
+fs.writeFileSync(output, `---\n${frontmatter}\n---\n\n${body}\n`);
 console.log(`Created ${path.relative(process.cwd(), output)}`);

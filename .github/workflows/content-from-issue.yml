@@ -24,23 +24,28 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
+      - name: Install browser QA dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
       - name: Create content file
         if: startsWith(github.event.issue.title, '[Content]')
         run: node scripts/publish-issue.mjs
       - name: Edit content file
         if: startsWith(github.event.issue.title, '[Edit]')
         run: node scripts/edit-content.mjs
-      - name: Build static pages
-        run: node scripts/build-content.mjs
-      - name: Apply homepage layout
-        run: node scripts/apply-home-layout.mjs
-      - name: Validate generated site
-        run: node scripts/validate-site.mjs
+      - name: Build and verify site
+        run: npm run build:site
       - name: Commit generated content
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add content . ':!.github'
+          if git diff --cached --quiet; then
+            echo "No content changes."
+            exit 0
+          fi
           git commit -m "Apply content issue #${{ github.event.issue.number }}"
           git push origin main
       - name: Close successful issue
