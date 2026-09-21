@@ -1447,18 +1447,44 @@ h1, h2, strong { font-weight: 400; }
     line-height: 1.72;
     letter-spacing: .01em;
   }
+  .home-intro .home-location {
+    display: inline-block;
+    color: var(--muted);
+  }
   .home-motion-field {
-    height: clamp(240px, 36dvh, 320px) !important;
-    margin: 18px 0 28px !important;
+    height: clamp(236px, 35dvh, 310px) !important;
+    margin: 14px 0 22px !important;
   }
   .moving-cover {
     width: min(24vw, 104px) !important;
   }
   .home-news {
     width: 100% !important;
-    margin: 0 0 52px !important;
+    margin: 0 0 36px !important;
     padding-top: 0;
     border-top: 0;
+  }
+  .home-news h2 {
+    margin: 0 0 12px !important;
+    padding-bottom: 9px;
+    border-bottom: 1px solid rgba(47, 55, 67, .18);
+    font-size: .69rem;
+    letter-spacing: .035em;
+    color: var(--ink);
+  }
+  .home-news p {
+    margin: 0 0 2px;
+    color: var(--muted);
+    font-size: .64rem;
+    line-height: 1.55;
+  }
+  .home-news > a:not(.small-link) {
+    display: block;
+    margin-top: 1px;
+    line-height: 1.55;
+  }
+  .home-news .small-link {
+    display: none;
   }
   .home-mailing {
     width: 100% !important;
@@ -1466,15 +1492,11 @@ h1, h2, strong { font-weight: 400; }
     padding-top: 0;
     border-top: 0;
   }
-  .home-news h2,
   .home-mailing h2 {
-    margin-bottom: 12px !important;
+    margin-bottom: 10px !important;
     font-size: .69rem;
     letter-spacing: .035em;
-    color: var(--muted);
-  }
-  .home-news p {
-    line-height: 1.6;
+    color: var(--ink);
   }
   .home-canvas .home-mailing form { width: 100%; border-bottom: 0 !important; }
 }
@@ -1488,15 +1510,15 @@ h1, h2, strong { font-weight: 400; }
     width: 100% !important;
   }
   .home-motion-field {
-    height: clamp(230px, 35dvh, 294px) !important;
-    margin: 16px 0 26px !important;
+    height: clamp(224px, 34dvh, 286px) !important;
+    margin: 12px 0 22px !important;
   }
   .moving-cover {
     width: min(24.5vw, 100px) !important;
   }
   .home-news {
     width: 100% !important;
-    margin-bottom: 48px !important;
+    margin-bottom: 34px !important;
   }
   .home-mailing {
     width: 100% !important;
