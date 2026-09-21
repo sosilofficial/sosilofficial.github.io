@@ -44,8 +44,8 @@ const STYLE = `<style id="stable-merch-layout-style">
     overflow-x: hidden;
   }
   .merch-split .merch-detail {
-    width: min(100%, 620px);
-    max-width: 620px;
+    width: min(100%, 540px);
+    max-width: 540px;
     margin: calc(1.55em + clamp(44px, 8vh, 100px)) auto 0;
   }
   .merch-split .merch-detail h1 {
@@ -57,7 +57,7 @@ const STYLE = `<style id="stable-merch-layout-style">
   .merch-split .merch-gallery {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(10px, 1.4vw, 18px);
+    gap: clamp(10px, 1.2vw, 16px);
     margin: 0 0 clamp(24px, 3.5vh, 36px);
   }
   .merch-split .merch-gallery img {
@@ -107,4 +107,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, detailHtml);
 }
 
-console.log("Applied large Merch index images, aligned detail heading grid, and compact desktop detail gallery.");
+console.log("Reduced the desktop Merch detail scale while preserving the split layout and mobile behavior.");
