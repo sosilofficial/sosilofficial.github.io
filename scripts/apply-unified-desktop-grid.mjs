@@ -234,7 +234,7 @@ function photoLandingIndex(indexHtml) {
 }
 
 function buildDesktopLanding(landingFile, detailFile, splitClass, cleanIndex = cleanSelected) {
-  if (!landingFile || !detailFile || !fs.existsSync(landingFile) || !fs.existsSync(detailFile)) return;
+  if (!landingFile || !detailFile || !fs.existsSync(landingFile) || !fs.existsSync(detailFile)) return false;
 
   let landing = fs.readFileSync(landingFile, "utf8");
   const originalInner = mainInner(landing);
@@ -243,6 +243,21 @@ function buildDesktopLanding(landingFile, detailFile, splitClass, cleanIndex = c
   if (!originalInner || !index) throw new Error(`UNIFIED DESKTOP GRID ERROR: landing/index extraction failed for ${landingFile}`);
 
   const desktop = `<div class="archive-desktop-only"><div class="split-layout ${splitClass}"><section class="index-panel">${cleanIndex(index)}</section><section class="detail-panel"></section></div></div>`;
+  const mobile = `<div class="archive-mobile-only">${originalInner}</div>`;
+  landing = replaceMain(landing, `<main class="site-main">${desktop}${mobile}</main>`);
+  fs.writeFileSync(landingFile, ensureStyle(landing));
+  return true;
+}
+
+function buildEmptyArchiveVideoLanding(landingFile) {
+  if (!fs.existsSync(landingFile)) return;
+  let landing = fs.readFileSync(landingFile, "utf8");
+  const originalInner = mainInner(landing);
+  const categoryHeader = originalInner.match(/<header class="category-top[^"]*">[\s\S]*?<\/header>/)?.[0] || "";
+  if (!originalInner || !categoryHeader) throw new Error("UNIFIED DESKTOP GRID ERROR: empty Archive Video landing header not found.");
+
+  const desktopIndex = `<div class="panel-headline">${categoryHeader}</div><div class="video-index archive-video-index"><p class="empty-note">more soon.</p></div>`;
+  const desktop = `<div class="archive-desktop-only"><div class="split-layout archive-video-split"><section class="index-panel">${desktopIndex}</section><section class="detail-panel"></section></div></div>`;
   const mobile = `<div class="archive-mobile-only">${originalInner}</div>`;
   landing = replaceMain(landing, `<main class="site-main">${desktop}${mobile}</main>`);
   fs.writeFileSync(landingFile, ensureStyle(landing));
@@ -264,9 +279,10 @@ if (photoDetail) {
 }
 
 const videoDir = path.join(ROOT, "archive", "videos");
+const videoLanding = path.join(videoDir, "index.html");
 const videoDetail = firstDetailFile(videoDir);
 if (videoDetail) {
-  buildDesktopLanding(path.join(videoDir, "index.html"), videoDetail, "archive-video-split");
+  buildDesktopLanding(videoLanding, videoDetail, "archive-video-split");
   for (const entry of fs.readdirSync(videoDir, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     const file = path.join(videoDir, entry.name, "index.html");
@@ -274,6 +290,8 @@ if (videoDetail) {
     let html = markSplit(fs.readFileSync(file, "utf8"), "archive-video-split");
     fs.writeFileSync(file, ensureStyle(html));
   }
+} else {
+  buildEmptyArchiveVideoLanding(videoLanding);
 }
 
 console.log("Unified desktop list/detail dividers, thumbnail widths, detail widths, and Archive desktop landing behavior.");
