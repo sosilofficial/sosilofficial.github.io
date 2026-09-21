@@ -75,13 +75,14 @@ const STYLE = `<style id="stable-discography-layout-style">
   .release-split .release-index > a.is-selected { background: rgba(72, 80, 91, .018); }
   .release-split .release-index img {
     display: block;
-    width: 100%;
-    max-width: 100%;
+    width: 72%;
+    max-width: 300px;
     aspect-ratio: 1 / 1;
     object-fit: cover;
   }
   .release-split .release-index span {
-    width: 100%;
+    width: 72%;
+    max-width: 300px;
     margin-top: 9px;
   }
   .release-split .release-index strong {
@@ -299,4 +300,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Reduced the desktop Discography detail scale while preserving the split layout and mobile behavior.");
+console.log("Reduced the desktop Discography index cover size and detail scale while preserving mobile behavior.");
