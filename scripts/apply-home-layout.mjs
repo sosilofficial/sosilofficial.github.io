@@ -49,18 +49,47 @@ const STYLE = `<style id="home-mailing-join-style">
     line-height: 1.72;
     letter-spacing: .01em;
   }
+  .home-intro .home-location {
+    display: inline-block;
+    color: var(--muted);
+  }
   .home-motion-field {
-    height: clamp(240px, 36dvh, 320px) !important;
-    margin: 18px 0 28px !important;
+    height: clamp(236px, 35dvh, 310px) !important;
+    margin: 14px 0 22px !important;
   }
   .moving-cover {
     width: min(24vw, 104px) !important;
   }
   .home-news {
     width: 100% !important;
-    margin: 0 0 52px !important;
+    margin: 0 0 36px !important;
     padding-top: 0;
     border-top: 0;
+  }
+  .home-body.home-no-news .home-news {
+    display: none !important;
+  }
+  .home-news h2 {
+    margin: 0 0 12px !important;
+    padding-bottom: 9px;
+    border-bottom: 1px solid rgba(47, 55, 67, .18);
+    font-size: .69rem;
+    letter-spacing: .035em;
+    color: var(--ink);
+  }
+  .home-news p {
+    margin: 0 0 2px;
+    color: var(--muted);
+    font-size: .64rem;
+    line-height: 1.55;
+  }
+  .home-news > a:not(.small-link) {
+    display: block;
+    margin-top: 1px;
+    line-height: 1.55;
+  }
+  .home-news .small-link {
+    display: none;
   }
   .home-mailing {
     width: 100% !important;
@@ -68,15 +97,11 @@ const STYLE = `<style id="home-mailing-join-style">
     padding-top: 0;
     border-top: 0;
   }
-  .home-news h2,
   .home-mailing h2 {
-    margin-bottom: 12px !important;
+    margin-bottom: 10px !important;
     font-size: .69rem;
     letter-spacing: .035em;
     color: var(--muted);
-  }
-  .home-news p {
-    line-height: 1.6;
   }
   .home-canvas .home-mailing form { width: 100%; border-bottom: 0 !important; }
 }
@@ -90,15 +115,15 @@ const STYLE = `<style id="home-mailing-join-style">
     width: 100% !important;
   }
   .home-motion-field {
-    height: clamp(230px, 35dvh, 294px) !important;
-    margin: 16px 0 26px !important;
+    height: clamp(224px, 34dvh, 286px) !important;
+    margin: 12px 0 22px !important;
   }
   .moving-cover {
     width: min(24.5vw, 100px) !important;
   }
   .home-news {
     width: 100% !important;
-    margin-bottom: 48px !important;
+    margin-bottom: 34px !important;
   }
   .home-mailing {
     width: 100% !important;
@@ -158,13 +183,13 @@ if (html.includes('id="home-mailing-join-style"')) {
 
 html = html.replace(
   "<p>a slowcore / alternative folk musician<br>based in seoul, south korea</p>",
-  '<p><span class="home-grid-anchor">a slowcore / alternative folk musician</span><br>based in seoul, south korea</p>'
+  '<p><span class="home-grid-anchor">a slowcore / alternative folk musician</span><br><span class="home-location">based in seoul, south korea</span></p>'
 );
 
 /* Keep the intro to one quiet block. */
 html = html.replace(/<p>i make music,<br>and moving images\.<\/p>/, "");
 
-/* Keep the News slot visible even before the first authored News post exists. */
+/* Keep the News slot available on desktop; when there is no authored News post, mobile hides it. */
 if (!html.includes('class="home-news"')) {
   html = html.replace(
     '<section class="home-mailing">',
@@ -173,7 +198,6 @@ if (!html.includes('class="home-news"')) {
 } else {
   html = html.replace(/(<section class="home-news"><h2>)[^<]*(<\/h2>)/, "$1latest news$2");
 }
-html = html.replace(/ home-no-news/g, "");
 
 /* Keep the signup intentionally bare: heading, email line, join. */
 html = html.replace(/<p class="mailing-copy">[\s\S]*?<\/p>/, "");
@@ -193,4 +217,4 @@ html = html.replace(/<p class="mailing-status"[\s\S]*?<\/p>/, "");
 html = html.replace(/<script id="home-mobile-motion-script">[\s\S]*?<\/script>/, "");
 
 fs.writeFileSync(file, html);
-console.log("Refined the homepage motion into a quieter printed-afterimage treatment while preserving News and the Google Forms handoff.");
+console.log("Tightened the mobile homepage rhythm with a quieter intro, structured latest News, and closer lower-page spacing.");
