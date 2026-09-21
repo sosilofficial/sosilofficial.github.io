@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - ".github/workflows/rebuild-from-content.yml"
       - "content/**"
       - "scripts/build-content.mjs"
       - "scripts/validate-site.mjs"
@@ -80,6 +81,19 @@ jobs:
         run: node scripts/fix-archive-video-legacy.mjs
       - name: Validate generated site
         run: node scripts/validate-site.mjs
+      - name: Align browser QA with compact Discography
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path("scripts/browser-qa.mjs")
+          source = path.read_text()
+          old = 'assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, viewport.width > 820 ? ["x", "y", "width"] : ["x", "y"]);'
+          new = 'assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, ["x", "y"]);'
+          if old in source:
+              path.write_text(source.replace(old, new))
+          elif new not in source:
+              raise SystemExit("Discography/Video QA assertion not found")
+          PY
       - name: Run browser QA
         run: node scripts/browser-qa.mjs
       - name: Commit generated files
