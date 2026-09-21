@@ -16,6 +16,7 @@ const sources = [
   "apply-home-layout.mjs",
   "apply-shared-ui.mjs",
   "apply-mobile-detail-pages.mjs",
+  "apply-desktop-detail-scale.mjs",
 ];
 
 const sections = sources.map((name) => {
