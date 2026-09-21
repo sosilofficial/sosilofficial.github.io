@@ -13,9 +13,10 @@ const STYLE = `<style id="home-mailing-join-style">
   .home-mailing {
     width: var(--home-copy-width) !important;
   }
-  /* Place Latest News exactly halfway between the intro (14.5vh) and Mailing List (68.8vh). */
+  /* Visually center Latest News between the upper intro and lower Mailing List. */
   .home-news {
-    top: 41.65vh !important;
+    top: 50% !important;
+    transform: translateY(-50%);
   }
   .home-grid-anchor {
     display: inline-block;
@@ -69,6 +70,7 @@ const STYLE = `<style id="home-mailing-join-style">
     margin: 0 0 36px !important;
     padding-top: 0;
     border-top: 0;
+    transform: none;
   }
   .home-news h2 {
     margin: 0 0 12px !important;
@@ -218,4 +220,4 @@ html = html.replace(/<p class="mailing-status"[\s\S]*?<\/p>/, "");
 html = html.replace(/<script id="home-mobile-motion-script">[\s\S]*?<\/script>/, "");
 
 fs.writeFileSync(file, html);
-console.log("Centered desktop Latest News exactly between the intro and Mailing List while preserving mobile spacing.\n");
+console.log("Visually centered desktop Latest News while preserving the existing intro, Mailing List, and mobile layout.\n");
