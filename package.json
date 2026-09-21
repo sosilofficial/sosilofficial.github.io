@@ -2,7 +2,7 @@
   "name": "sosil-site",
   "private": true,
   "scripts": {
-    "build": "node scripts/build-content.mjs",
+    "build": "node scripts/build-site.mjs",
     "validate": "node scripts/validate-site.mjs",
     "qa:browser": "node scripts/browser-qa.mjs"
   },
