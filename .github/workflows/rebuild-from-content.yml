@@ -23,6 +23,7 @@ on:
       - "scripts/apply-shared-ui.mjs"
       - "scripts/apply-mobile-detail-pages.mjs"
       - "scripts/apply-desktop-detail-scale.mjs"
+      - "scripts/apply-unified-desktop-grid.mjs"
       - "scripts/fix-archive-video-legacy.mjs"
       - "assets/site-redesign.css"
       - "assets/site-redesign.js"
@@ -63,7 +64,7 @@ jobs:
         run: node scripts/apply-live-layout.mjs
       - name: Apply stable merch layout
         run: node scripts/apply-merch-layout.mjs
-      - name: Apply Archive Photo post layout
+      - name: Apply Archive Photo split layout
         run: node scripts/apply-archive-photo-layout.mjs
       - name: Apply Archive Text layout
         run: node scripts/apply-archive-text-layout.mjs
@@ -75,6 +76,8 @@ jobs:
         run: node scripts/apply-shared-ui.mjs
       - name: Apply dedicated mobile detail screens
         run: node scripts/apply-mobile-detail-pages.mjs
+      - name: Apply unified desktop grid
+        run: node scripts/apply-unified-desktop-grid.mjs
       - name: Remove generated inline style copies
         run: node scripts/consolidate-layout-styles.mjs --strip-html
       - name: Normalize Archive video legacy routes
