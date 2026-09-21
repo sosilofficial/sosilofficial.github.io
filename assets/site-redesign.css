@@ -1413,6 +1413,10 @@ h1, h2, strong { font-weight: 400; }
   .home-mailing {
     width: var(--home-copy-width) !important;
   }
+  /* Place Latest News exactly halfway between the intro (14.5vh) and Mailing List (68.8vh). */
+  .home-news {
+    top: 41.65vh !important;
+  }
   .home-grid-anchor {
     display: inline-block;
     width: max-content;
