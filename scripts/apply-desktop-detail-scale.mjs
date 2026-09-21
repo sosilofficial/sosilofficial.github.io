@@ -1,11 +1,6 @@
-import fs from "node:fs";
-import path from "node:path";
-
-const ROOT = process.cwd();
-const STYLE_ID = "desktop-detail-scale-override";
-const STYLE = `<style id="${STYLE_ID}">
+const STYLE = `<style id="desktop-detail-scale-override">
 @media (min-width: 821px) {
-  /* Keep landing/index image scale aligned with the existing Works grid. */
+  /* Preserve the existing Discography / Video / Merch landing scale. */
   .release-split .release-index img {
     width: 100%;
     max-width: 100%;
@@ -23,7 +18,7 @@ const STYLE = `<style id="${STYLE_ID}">
     max-width: none;
   }
 
-  /* Make only the second/detail pages visibly smaller on desktop. */
+  /* Reduce only the desktop second/detail pages. */
   .release-split .release-detail {
     --detail-grid-gap: clamp(22px, 2vw, 32px);
     grid-template-columns: clamp(90px, 8.5vw, 120px) minmax(0, 1fr);
@@ -41,34 +36,4 @@ const STYLE = `<style id="${STYLE_ID}">
 }
 </style>`;
 
-function walk(dir) {
-  if (!fs.existsSync(dir)) return [];
-  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
-    const full = path.join(dir, entry.name);
-    return entry.isDirectory()
-      ? walk(full)
-      : entry.name === "index.html"
-        ? [full]
-        : [];
-  });
-}
-
-function apply(file) {
-  let html = fs.readFileSync(file, "utf8");
-  if (!html.includes("</head>")) return;
-  html = html.replace(
-    new RegExp(`<style id="${STYLE_ID}">[\\s\\S]*?<\\/style>`, "g"),
-    ""
-  );
-  html = html.replace("</head>", `${STYLE}</head>`);
-  fs.writeFileSync(file, html);
-}
-
-const targets = [
-  ...walk(path.join(ROOT, "works", "discography")),
-  ...walk(path.join(ROOT, "merch")),
-];
-
-for (const file of targets) apply(file);
-
-console.log("Applied smaller desktop Discography and Merch detail scale while preserving index alignment and mobile layouts.");
+console.log("Desktop detail scale is consolidated into the shared stylesheet.");
