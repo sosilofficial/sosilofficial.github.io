@@ -26,13 +26,14 @@ const STYLE = `<style id="stable-merch-layout-style">
     background: rgba(72, 80, 91, .025);
   }
   .merch-split .merch-index img {
-    width: 100%;
-    max-width: none;
+    width: 68%;
+    max-width: 280px;
     aspect-ratio: 1 / 1;
     object-fit: cover;
   }
   .merch-split .merch-index span {
-    width: 100%;
+    width: 68%;
+    max-width: 280px;
     margin-top: 9px;
   }
   .merch-split .detail-panel {
@@ -107,4 +108,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, detailHtml);
 }
 
-console.log("Reduced the desktop Merch detail scale while preserving the split layout and mobile behavior.");
+console.log("Reduced the desktop Merch index image size and detail scale while preserving mobile behavior.");
