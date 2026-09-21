@@ -97,15 +97,15 @@ const STYLE = `<style id="stable-discography-layout-style">
   }
 
   .release-split .release-detail {
-    --detail-grid-gap: clamp(28px, 3vw, 44px);
+    --detail-grid-gap: clamp(26px, 2.6vw, 38px);
     position: relative;
     display: grid;
-    grid-template-columns: clamp(112px, 12vw, 150px) minmax(0, 1fr);
+    grid-template-columns: clamp(100px, 10.5vw, 135px) minmax(0, 1fr);
     column-gap: var(--detail-grid-gap);
     row-gap: var(--detail-grid-gap);
     align-items: start;
-    width: min(100%, 760px);
-    max-width: 760px;
+    width: min(100%, 680px);
+    max-width: 680px;
     margin: 0 auto;
     padding: clamp(28px, 4vh, 42px) clamp(4px, .5vw, 10px) 72px;
   }
@@ -299,4 +299,4 @@ for (const file of detailFiles) {
   fs.writeFileSync(file, html);
 }
 
-console.log("Aligned Discography navigation and cover start with Archive/Video while keeping covers inside the index panel.");
+console.log("Reduced the desktop Discography detail scale while preserving the split layout and mobile behavior.");
