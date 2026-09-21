@@ -66,9 +66,6 @@ const STYLE = `<style id="home-mailing-join-style">
     padding-top: 0;
     border-top: 0;
   }
-  .home-body.home-no-news .home-news {
-    display: none !important;
-  }
   .home-news h2 {
     margin: 0 0 12px !important;
     padding-bottom: 9px;
@@ -189,7 +186,7 @@ html = html.replace(
 /* Keep the intro to one quiet block. */
 html = html.replace(/<p>i make music,<br>and moving images\.<\/p>/, "");
 
-/* Keep the News slot available on desktop; when there is no authored News post, mobile hides it. */
+/* Keep the News slot visible even before the first authored News post exists. */
 if (!html.includes('class="home-news"')) {
   html = html.replace(
     '<section class="home-mailing">',
@@ -217,4 +214,4 @@ html = html.replace(/<p class="mailing-status"[\s\S]*?<\/p>/, "");
 html = html.replace(/<script id="home-mobile-motion-script">[\s\S]*?<\/script>/, "");
 
 fs.writeFileSync(file, html);
-console.log("Tightened the mobile homepage rhythm with a quieter intro, structured latest News, and closer lower-page spacing.");
+console.log("Kept mobile latest News visible with black section headings and the refined homepage spacing.\n");
