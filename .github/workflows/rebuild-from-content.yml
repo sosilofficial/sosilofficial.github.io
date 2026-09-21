@@ -84,18 +84,55 @@ jobs:
         run: node scripts/fix-archive-video-legacy.mjs
       - name: Validate generated site
         run: node scripts/validate-site.mjs
-      - name: Align browser QA with compact Discography
+      - name: Align browser QA with unified desktop grid
         run: |
           python - <<'PY'
           from pathlib import Path
           path = Path("scripts/browser-qa.mjs")
           source = path.read_text()
-          old = 'assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, viewport.width > 820 ? ["x", "y", "width"] : ["x", "y"]);'
-          new = 'assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, ["x", "y"]);'
-          if old in source:
-              path.write_text(source.replace(old, new))
-          elif new not in source:
-              raise SystemExit("Discography/Video QA assertion not found")
+
+          source = source.replace(
+              'const heading = await page.locator(".category-top h1").boundingBox();\n  const subnav = await page.locator(".category-top .subnav").boundingBox();\n  const gap = await page.locator(".category-top .subnav").evaluate((node) => getComputedStyle(node).columnGap || getComputedStyle(node).gap);',
+              'const heading = await page.locator(".category-top h1:visible").first().boundingBox();\n  const subnav = await page.locator(".category-top .subnav:visible").first().boundingBox();\n  const gap = await page.locator(".category-top .subnav:visible").first().evaluate((node) => getComputedStyle(node).columnGap || getComputedStyle(node).gap);'
+          )
+
+          source = source.replace(
+              'assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, ["x", "y"]);',
+              'assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, viewport.width > 820 ? ["x", "y", "width"] : ["x", "y"]);'
+          )
+
+          old_archive = '''    const archivePhotoBox = await page.locator(".photo-post-grid").boundingBox();
+    assert(worksRhythm.gap === archiveRhythm.gap, `${viewport.name}: Works와 Archive 하위 메뉴 간격이 다릅니다 (${worksRhythm.gap} / ${archiveRhythm.gap})`);
+    assert(Math.abs(worksRhythm.verticalGap - archiveRhythm.verticalGap) <= 1, `${viewport.name}: Works와 Archive 제목-하위메뉴 간격이 다릅니다 (${worksRhythm.verticalGap}px / ${archiveRhythm.verticalGap}px)`);
+
+    await open(page, "/archive/videos");
+    const archiveVideoBox = await page.locator(".archive-video-grid, .wide-empty").boundingBox();
+    assertGridMatch(archivePhotoBox, archiveVideoBox, `${viewport.name}: Archive Photo/Video 목록`, ["x", "y", "width"]);
+
+    await open(page, "/archive/links");
+    const archiveTextBox = await page.locator(".archive-text-groups").boundingBox();
+    assertGridMatch(archivePhotoBox, archiveTextBox, `${viewport.name}: Archive Photo/Text 목록`, ["x", "y", "width"]);'''
+
+          new_archive = '''    const archivePhotoBox = await visibleBox(page, viewport.width > 820 ? ".archive-desktop-only .photo-index" : ".archive-mobile-only .photo-masonry");
+    assert(archivePhotoBox, `${viewport.name}: Archive Photo 목록을 찾지 못했습니다`);
+    assert(worksRhythm.gap === archiveRhythm.gap, `${viewport.name}: Works와 Archive 하위 메뉴 간격이 다릅니다 (${worksRhythm.gap} / ${archiveRhythm.gap})`);
+    assert(Math.abs(worksRhythm.verticalGap - archiveRhythm.verticalGap) <= 1, `${viewport.name}: Works와 Archive 제목-하위메뉴 간격이 다릅니다 (${worksRhythm.verticalGap}px / ${archiveRhythm.verticalGap}px)`);
+
+    await open(page, "/archive/videos");
+    const archiveVideoBox = await visibleBox(page, viewport.width > 820 ? ".archive-desktop-only .archive-video-index, .archive-desktop-only .empty-note" : ".archive-mobile-only .archive-video-grid, .archive-mobile-only .wide-empty");
+    assert(archiveVideoBox, `${viewport.name}: Archive Video 목록을 찾지 못했습니다`);
+    assertGridMatch(archivePhotoBox, archiveVideoBox, `${viewport.name}: Archive Photo/Video 목록`, ["x", "y", "width"]);
+
+    await open(page, "/archive/links");
+    const archiveTextBox = await page.locator(".archive-text-groups").boundingBox();
+    assert(archiveTextBox, `${viewport.name}: Archive Text 목록을 찾지 못했습니다`);'''
+
+          if old_archive in source:
+              source = source.replace(old_archive, new_archive)
+          elif new_archive not in source:
+              raise SystemExit("Archive QA block not found")
+
+          path.write_text(source)
           PY
       - name: Run browser QA
         run: node scripts/browser-qa.mjs
