@@ -21,6 +21,7 @@ on:
       - "scripts/apply-notes-layout.mjs"
       - "scripts/apply-shared-ui.mjs"
       - "scripts/apply-mobile-detail-pages.mjs"
+      - "scripts/apply-desktop-detail-scale.mjs"
       - "scripts/fix-archive-video-legacy.mjs"
       - "assets/site-redesign.css"
       - "assets/site-redesign.js"
@@ -75,6 +76,8 @@ jobs:
         run: node scripts/apply-mobile-detail-pages.mjs
       - name: Remove generated inline style copies
         run: node scripts/consolidate-layout-styles.mjs --strip-html
+      - name: Apply desktop detail scale
+        run: node scripts/apply-desktop-detail-scale.mjs
       - name: Normalize Archive video legacy routes
         run: node scripts/fix-archive-video-legacy.mjs
       - name: Validate generated site
