@@ -101,7 +101,7 @@ const STYLE = `<style id="home-mailing-join-style">
     margin-bottom: 10px !important;
     font-size: .69rem;
     letter-spacing: .035em;
-    color: var(--muted);
+    color: var(--ink);
   }
   .home-canvas .home-mailing form { width: 100%; border-bottom: 0 !important; }
 }
