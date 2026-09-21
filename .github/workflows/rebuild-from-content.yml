@@ -5,23 +5,10 @@ on:
     branches: [main]
     paths:
       - "content/**"
-      - "scripts/build-content.mjs"
-      - "scripts/validate-site.mjs"
-      - "scripts/browser-qa.mjs"
-      - "scripts/consolidate-layout-styles.mjs"
+      - "scripts/**"
+      - ".github/workflows/**"
       - "package.json"
       - "package-lock.json"
-      - "scripts/apply-home-layout.mjs"
-      - "scripts/apply-video-layout.mjs"
-      - "scripts/apply-discography-layout.mjs"
-      - "scripts/apply-live-layout.mjs"
-      - "scripts/apply-merch-layout.mjs"
-      - "scripts/apply-archive-photo-layout.mjs"
-      - "scripts/apply-archive-text-layout.mjs"
-      - "scripts/apply-notes-layout.mjs"
-      - "scripts/apply-shared-ui.mjs"
-      - "scripts/apply-mobile-detail-pages.mjs"
-      - "scripts/fix-archive-video-legacy.mjs"
       - "assets/site-redesign.css"
       - "assets/site-redesign.js"
 
@@ -49,38 +36,8 @@ jobs:
         run: npm ci
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
-      - name: Consolidate shared layout styles
-        run: node scripts/consolidate-layout-styles.mjs
-      - name: Build static pages
-        run: node scripts/build-content.mjs
-      - name: Apply stable video layout
-        run: node scripts/apply-video-layout.mjs
-      - name: Apply Discography layout
-        run: node scripts/apply-discography-layout.mjs
-      - name: Apply Works Live layout
-        run: node scripts/apply-live-layout.mjs
-      - name: Apply stable merch layout
-        run: node scripts/apply-merch-layout.mjs
-      - name: Apply Archive Photo post layout
-        run: node scripts/apply-archive-photo-layout.mjs
-      - name: Apply Archive Text layout
-        run: node scripts/apply-archive-text-layout.mjs
-      - name: Apply slower Notes layout
-        run: node scripts/apply-notes-layout.mjs
-      - name: Apply homepage layout
-        run: node scripts/apply-home-layout.mjs
-      - name: Apply shared UI system
-        run: node scripts/apply-shared-ui.mjs
-      - name: Apply dedicated mobile detail screens
-        run: node scripts/apply-mobile-detail-pages.mjs
-      - name: Remove generated inline style copies
-        run: node scripts/consolidate-layout-styles.mjs --strip-html
-      - name: Normalize Archive video legacy routes
-        run: node scripts/fix-archive-video-legacy.mjs
-      - name: Validate generated site
-        run: node scripts/validate-site.mjs
-      - name: Run browser QA
-        run: node scripts/browser-qa.mjs
+      - name: Build and verify site
+        run: npm run build:site
       - name: Commit generated files
         run: |
           if [ -z "$(git status --porcelain)" ]; then

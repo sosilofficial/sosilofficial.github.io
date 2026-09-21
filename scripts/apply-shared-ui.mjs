@@ -363,7 +363,7 @@ for (const file of walk(ROOT)) {
     if (relative.startsWith("works/")) html = addWorksHeaderClass(html);
     if (relative.startsWith("archive/") || relative === "archive/index.html") html = addArchiveHeader(html);
     if (relative.startsWith("news/")) html = addSingleHeader(html, "news");
-    if (relative.startsWith("notes/") || relative.startsWith("gibberish/")) html = addSingleHeader(html, "notes");
+    if (relative.startsWith("notes/")) html = addSingleHeader(html, "notes");
     if (relative.startsWith("merch/")) html = addSingleHeader(html, "merch");
     if (relative === "info/index.html") html = normalizeInfo(html);
     if (relative === "contact/index.html") html = normalizeContact(html);

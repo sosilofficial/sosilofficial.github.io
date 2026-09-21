@@ -1,3 +1,4 @@
+import { localizeIssueImages } from "./localize-issue-images.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -6,9 +7,10 @@ const issue = event.issue;
 if (!issue || !issue.title.startsWith("[Edit]")) throw new Error("CONTENT ERROR: 콘텐츠 수정 양식으로 만든 Issue가 아닙니다.");
 
 function fields(body) {
+  body = body.replace(/\r\n/g, "\n");
   const result = {};
   const labels = ["카테고리", "기존 콘텐츠 slug 또는 현재 URL", "새 제목", "새 날짜", "새 본문", "새 설명", "새 썸네일 이미지", "새 본문 이미지", "새 외부 링크", "새 영상 링크", "새 재생 시간", "새 종류", "새 크레딧", "새 노트", "새 가격(KRW)", "새 판매 상태", "추가 설명"];
-  const pattern = new RegExp(`^### (${labels.join("|")})\\n\\n`, "gm");
+  const pattern = new RegExp(`^### (${labels.map((label) => label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})\\n\\n`, "gm");
   const headings = [...body.matchAll(pattern)];
   headings.forEach((match, index) => {
     const value = body.slice(match.index + match[0].length, headings[index + 1]?.index ?? body.length).trim();
@@ -37,7 +39,7 @@ function parseContent(file) {
   return { data, body: match[2].replace(/^\n/, "").replace(/\n$/, "") };
 }
 
-const mediaUrls = (value = "") => [...new Set([...value.matchAll(/https?:\/\/[^\s<>"')\]]+|\/[\w./-]+\.(?:jpg|jpeg|png|webp|gif)/gi)].map((match) => match[0].replace(/[.,;:]+$/, "")))];
+const mediaUrls = (value = "") => [...new Set([...value.matchAll(/https?:\/\/[^\s<>"')\]]+|\/[\w./-]+\.(?:jpg|jpeg|png|webp|gif|avif)/gi)].map((match) => match[0].replace(/[.,;:]+$/, "")))];
 function youtubeThumbnail(url) {
   if (!url) return "";
   try {
@@ -71,7 +73,7 @@ const directory = path.join(process.cwd(), folder);
 const candidates = fs.existsSync(directory) ? fs.readdirSync(directory).filter((name) => name.endsWith(".md")).map((name) => path.join(directory, name)) : [];
 const matches = candidates.filter((file) => {
   const { data } = parseContent(file);
-  const aliases = [data.slug, data.url, data.category === "notes" ? `/notes/${data.slug}` : "", data.category === "notes" ? `/gibberish/${data.slug}` : ""];
+  const aliases = [data.slug, data.url, data.category === "notes" ? `/notes/${data.slug}` : ""];
   return aliases.includes(identifier.replace(/\/$/, "")) || aliases.includes(pathname) || data.slug === requestedSlug;
 });
 if (matches.length !== 1) throw new Error(matches.length ? "CONTENT ERROR: 대상 콘텐츠가 여러 개입니다. 카테고리와 URL을 확인해 주세요." : "CONTENT ERROR: 대상 콘텐츠를 찾을 수 없습니다. 카테고리와 slug 또는 URL을 확인해 주세요.");
@@ -79,7 +81,9 @@ if (matches.length !== 1) throw new Error(matches.length ? "CONTENT ERROR: 대�
 const target = matches[0];
 const { data, body } = parseContent(target);
 const next = { ...data };
-const value = (label) => form[label]?.trim() || "";
+const removed = (label) => form[label]?.trim() === "__REMOVE__";
+const value = (label) => removed(label) ? "" : form[label]?.trim() || "";
+if (removed("새 제목") || removed("새 날짜")) throw new Error("CONTENT ERROR: 제목과 날짜는 삭제할 수 없습니다.");
 if (value("새 제목")) next.title = value("새 제목");
 if (value("새 날짜")) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value("새 날짜"))) throw new Error("CONTENT ERROR: 새 날짜를 YYYY-MM-DD 형식으로 입력해 주세요.");
@@ -104,7 +108,7 @@ if (value("새 영상 링크")) {
   if (!video) throw new Error("CONTENT ERROR: 새 영상 링크가 올바르지 않습니다.");
   const oldAutomaticThumbnail = youtubeThumbnail(next.video);
   next.video = video;
-  if (!next.thumbnail || next.thumbnail === oldAutomaticThumbnail) next.thumbnail = youtubeThumbnail(video);
+  if (!value("새 썸네일 이미지") && !removed("새 썸네일 이미지") && (!next.thumbnail || next.thumbnail === oldAutomaticThumbnail)) next.thumbnail = youtubeThumbnail(video);
   if (next.category === "works" && next.subcategory === "video") next.url = video;
 }
 if (value("추가 설명")) next.meta = value("추가 설명");
@@ -122,6 +126,35 @@ if (value("새 판매 상태")) {
   next.status = status;
 }
 if (next.category === "archive" && next.subcategory === "links" && value("새 외부 링크")) next.url = next.links[0]?.url || next.url;
+
+// Apply explicit deletion after normal updates so derived values cannot restore it.
+const removable = {
+  "새 설명": ["description", "seo_description"], "새 썸네일 이미지": ["thumbnail"],
+  "새 영상 링크": ["video"], "새 재생 시간": ["runtime"], "새 종류": ["media_type"],
+  "새 크레딧": ["credit"], "새 노트": ["note"], "새 가격(KRW)": ["price_krw"],
+  "새 판매 상태": ["status"], "추가 설명": ["meta"],
+};
+for (const [label, keys] of Object.entries(removable)) {
+  if (removed(label)) for (const key of keys) next[key] = "";
+}
+if (removed("새 본문")) nextBody = "";
+if (removed("새 본문 이미지")) next.images = [];
+if (removed("새 외부 링크")) {
+  next.links = [];
+  if (next.category === "archive" && next.subcategory === "links") next.url = "";
+}
+if (removed("새 영상 링크")) {
+  if (!value("새 썸네일 이미지") && next.thumbnail === youtubeThumbnail(data.video)) next.thumbnail = "";
+  if (next.category === "works" && next.subcategory === "video") next.url = "";
+}
+const changedImages = {
+  thumbnail: value("새 썸네일 이미지") ? next.thumbnail : "",
+  images: value("새 본문 이미지") ? next.images : [],
+};
+const localized = await localizeIssueImages(changedImages, value("새 본문") ? nextBody : "");
+if (value("새 썸네일 이미지")) next.thumbnail = changedImages.thumbnail;
+if (value("새 본문 이미지")) next.images = changedImages.images;
+if (value("새 본문")) nextBody = localized;
 
 const frontmatter = Object.entries(next).map(([key, entry]) => `${key}: ${JSON.stringify(entry)}`).join("\n");
 fs.writeFileSync(target, `---\n${frontmatter}\n---\n\n${nextBody}\n`);

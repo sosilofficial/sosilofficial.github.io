@@ -159,7 +159,7 @@ function releaseDetail(item) {
 const worksDescription = "소실(Sosil)의 음반, 영상과 공연 기록.";
 const archiveDescription = "소실(Sosil)의 사진, 영상, 인터뷰와 리뷰 아카이브.";
 const routes = [];
-function publish(route, html) { writeRoute(route, html); if (!route.startsWith("/gibberish")) routes.push(route); }
+function publish(route, html) { writeRoute(route, html); routes.push(route); }
 
 clearDetails("/works/discography");
 clearDetails("/works/videos");
@@ -229,17 +229,14 @@ for (const item of news) {
 }
 
 clearDetails("/notes");
-clearDetails("/gibberish");
 const notes = by("notes");
 const notesIndex = (selected = "") => `<div class="note-index">${notes.map((item) => `<a href="/notes/${esc(item.slug)}"${selected === item.slug ? ' class="is-selected" aria-current="page"' : ""}><span>${esc(displayDate(item.date))}</span><strong>${esc(item.title)}</strong></a>`).join("")}</div>`;
 const notesList = page("notes", "소실(Sosil)의 작업 노트와 기록.", "/notes", "notes", split(`<div class="panel-title">notes</div>${notesIndex()}`, ""), firstImage(notes[0]));
 publish("/notes", notesList);
-writeRoute("/gibberish", redirectPage("/notes", "notes"));
 for (const item of notes) {
   const detail = `<article class="text-detail note-detail">${closeLink("/notes", "notes")}<p>${esc(displayDate(item.date))}</p><h1>${esc(item.title)}</h1>${videoEmbed(item)}${imageGallery(item)}${bodyHtml(item)}${externalLinks(item)}</article>`;
   const detailPage = page(item.title, item.description || item.body.slice(0, 150) || item.title, `/notes/${item.slug}`, "notes", split(`<div class="panel-title">notes</div>${notesIndex(item.slug)}`, detail), firstImage(item), true);
   publish(`/notes/${item.slug}`, detailPage);
-  writeRoute(`/gibberish/${item.slug}`, redirectPage(`/notes/${item.slug}`, item.title));
 }
 
 clearDetails("/archive/photo-video");

@@ -2,9 +2,11 @@
   "name": "sosil-site",
   "private": true,
   "scripts": {
-    "build": "node scripts/build-content.mjs",
+    "build": "npm run build:site",
     "validate": "node scripts/validate-site.mjs",
-    "qa:browser": "node scripts/browser-qa.mjs"
+    "qa:browser": "node scripts/browser-qa.mjs",
+    "build:site": "node scripts/build-site.mjs",
+    "test": "node --test scripts/tests/*.test.mjs"
   },
   "devDependencies": {
     "playwright": "1.62.1"

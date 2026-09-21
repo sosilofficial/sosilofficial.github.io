@@ -40,64 +40,64 @@ body:
     id: body
     attributes:
       label: 새 본문
-      description: 비워두면 기존 본문을 유지합니다.
+      description: 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
   - type: textarea
     id: description
     attributes:
       label: 새 설명
-      description: 비워두면 기존 설명을 유지합니다.
+      description: 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
   - type: textarea
     id: thumbnail
     attributes:
       label: 새 썸네일 이미지
-      description: 이미지를 드래그해 업로드하거나 URL을 입력하세요. 비워두면 기존 값을 유지합니다.
+      description: 이미지를 드래그해 업로드하거나 URL을 입력하세요. 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
   - type: textarea
     id: images
     attributes:
       label: 새 본문 이미지
-      description: 여러 이미지를 드래그해 업로드할 수 있습니다. 비워두면 기존 값을 유지합니다.
+      description: 여러 이미지를 드래그해 업로드할 수 있습니다. 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
   - type: textarea
     id: links
     attributes:
       label: 새 외부 링크
-      description: URL 또는 `표시 이름 | URL` 형식. 비워두면 기존 값을 유지합니다.
+      description: URL 또는 `표시 이름 | URL` 형식. 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
   - type: input
     id: video
     attributes:
       label: 새 영상 링크
-      description: 비워두면 기존 영상 링크를 유지합니다.
+      description: 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
   - type: input
     id: runtime
     attributes:
       label: 새 재생 시간
-      description: 비워두면 기존 값을 유지합니다.
+      description: 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
   - type: input
     id: media_type
     attributes:
       label: 새 종류
-      description: 비워두면 기존 값을 유지합니다.
+      description: 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
   - type: textarea
     id: credit
     attributes:
       label: 새 크레딧
-      description: 비워두면 기존 값을 유지합니다.
+      description: 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
   - type: textarea
     id: note
     attributes:
       label: 새 노트
-      description: 비워두면 기존 값을 유지합니다.
+      description: 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
   - type: input
     id: price_krw
     attributes:
       label: 새 가격(KRW)
-      description: 숫자만 입력하세요. 비워두면 기존 값을 유지합니다.
+      description: 숫자만 입력하세요. 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
   - type: input
     id: status
     attributes:
       label: 새 판매 상태
-      description: available, sold out, preorder 중 하나. 비워두면 기존 값을 유지합니다.
+      description: available, sold out, preorder 중 하나. 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
   - type: textarea
     id: extra
     attributes:
       label: 추가 설명
-      description: 비워두면 기존 메타 정보를 유지합니다.
+      description: 비워두면 기존 값을 유지합니다. 완전히 삭제하려면 __REMOVE__ 를 입력하세요.
