@@ -8,7 +8,7 @@ const SAMPLE_CONTENT = path.join(ROOT, "samples");
 const USE_SAMPLES = process.env.SOSIL_PREVIEW_SAMPLES === "1";
 const ORIGIN = "https://sosilofficial.github.io";
 const ALBUM_YOUTUBE = "https://www.youtube.com/watch?v=zZtQdgaWjBI";
-const INFO_IMAGE = "/media/catalog/2026-09-03/bea73aac-1cd3-40a4-b56a-889b5a3b5ded.webp";
+const INFO_OG_IMAGE = "/media/catalog/2026-09-03/bea73aac-1cd3-40a4-b56a-889b5a3b5ded.webp";
 
 const esc = (value = "") => String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 const uniq = (values = []) => [...new Set(values.filter(Boolean))];
@@ -309,10 +309,10 @@ const enParts = sentenceParts(infoEn);
 const paragraph = (parts) => parts.length ? `<p>${esc(parts.join(" "))}</p>` : "";
 const infoKorean = `${paragraph(koParts.slice(0, 1))}${paragraph(koParts.slice(1, 2))}${paragraph(koParts.slice(2))}`;
 const infoEnglish = `${paragraph(enParts.slice(0, 1))}${paragraph(enParts.slice(1, 3))}${paragraph(enParts.slice(3))}`;
-const infoMedia = `<aside class="info-aside"><figure><img src="${INFO_IMAGE}" alt="소실 공연 장면" loading="lazy" decoding="async"><figcaption>a slowcore / alternative folk musician<br>based in seoul, south korea</figcaption></figure><span class="section-mark" aria-hidden="true">—</span><nav aria-label="소실 외부 링크">${infoLinks}</nav></aside>`;
+const infoMedia = `<aside class="info-aside"><figure style="width:min(100%,210px)"><img src="/media/profile/sosil-info-profile-20260921.jpg" alt="소실 프로필 사진" loading="lazy" decoding="async" style="width:100%;max-width:210px;aspect-ratio:4/3;object-fit:cover;object-position:center;margin:0;filter:none"><figcaption>a slowcore / alternative folk musician<br>based in seoul, south korea</figcaption></figure><span class="section-mark" aria-hidden="true">—</span><nav aria-label="소실 외부 링크">${infoLinks}</nav></aside>`;
 const infoBio = `<article class="info-copy"><h1>info</h1><div class="info-korean">${infoKorean}</div><span class="section-mark" aria-hidden="true">—</span><div class="info-english">${infoEnglish}</div></article>`;
 const infoMain = split(infoMedia, infoBio, "info-split");
-publish("/info", page("info", info.description, "/info", "info", infoMain, INFO_IMAGE, false, "info-body"));
+publish("/info", page("info", info.description, "/info", "info", infoMain, INFO_OG_IMAGE, false, "info-body"));
 
 const contact = site("contact");
 const instagram = contact.links[0] || { label: "@headlesssosil", url: "https://www.instagram.com/headlesssosil/" };

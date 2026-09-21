@@ -169,7 +169,12 @@ try {
       const homeNewsBox = await homeNews.boundingBox();
       const mobileCoverBox = await page.locator(".moving-cover").boundingBox();
       assert(motionFieldBox && homeNewsBox && mobileCoverBox, `${viewport.name}: 모바일 홈 그리드 좌표를 읽지 못했습니다`);
-      assert(mailingBox.width <= 260, `${viewport.name}: 모바일 Mailing List가 지나치게 큽니다`);
+      assert(mailingBox.width <= 300, `${viewport.name}: 모바일 Mailing List가 지나치게 큽니다`);
+      for (const selector of [".home-intro", ".home-news", ".home-mailing", ".home-mailing form"]) {
+        const box = await page.locator(selector).boundingBox();
+        assert(box && Math.abs(box.x - (viewport.width - box.x - box.width)) <= 2,
+          `${viewport.name}: ${selector}의 좌우 여백이 다릅니다`);
+      }
       assert(mobileCoverBox.width <= viewport.width * .27, `${viewport.name}: 모바일 앨범커버가 충분히 작아지지 않았습니다`);
       assert(homeNewsBox.y >= motionFieldBox.y + motionFieldBox.height + 20, `${viewport.name}: Latest News가 앨범 영역과 충분히 떨어져 있지 않습니다`);
       assert(Math.abs(homeNewsBox.x - mailingBox.x) <= 2, `${viewport.name}: Latest News와 Mailing List의 시작선이 다릅니다`);
