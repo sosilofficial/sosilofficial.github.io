@@ -29,7 +29,7 @@ const oldArchive = `    const archivePhotoBox = await page.locator(".photo-post-
     const archiveTextBox = await page.locator(".archive-text-groups").boundingBox();
     assertGridMatch(archivePhotoBox, archiveTextBox, \`${'${viewport.name}'}: Archive Photo/Text 목록\`, ["x", "y", "width"]);`;
 
-const newArchive = `    const archivePhotoBox = await visibleBox(page, viewport.width > 820 ? ".archive-desktop-only .photo-index" : ".archive-mobile-only .photo-masonry");
+const strictArchive = `    const archivePhotoBox = await visibleBox(page, viewport.width > 820 ? ".archive-desktop-only .photo-index" : ".archive-mobile-only .photo-masonry");
     assert(archivePhotoBox, \`${'${viewport.name}'}: Archive Photo 목록을 찾지 못했습니다\`);
     assert(worksRhythm.gap === archiveRhythm.gap, \`${'${viewport.name}'}: Works와 Archive 하위 메뉴 간격이 다릅니다 (${'${worksRhythm.gap}'} / ${'${archiveRhythm.gap}'})\`);
     assert(Math.abs(worksRhythm.verticalGap - archiveRhythm.verticalGap) <= 1, \`${'${viewport.name}'}: Works와 Archive 제목-하위메뉴 간격이 다릅니다 (${'${worksRhythm.verticalGap}'}px / ${'${archiveRhythm.verticalGap}'}px)\`);
@@ -43,9 +43,25 @@ const newArchive = `    const archivePhotoBox = await visibleBox(page, viewport.
     const archiveTextBox = await page.locator(".archive-text-groups").boundingBox();
     assert(archiveTextBox, \`${'${viewport.name}'}: Archive Text 목록을 찾지 못했습니다\`);`;
 
+const broadArchive = `    const archivePhotoBox = await visibleBox(page, ".photo-index, .photo-masonry, .photo-post-grid");
+    assert(archivePhotoBox, \`${'${viewport.name}'}: Archive Photo 목록을 찾지 못했습니다\`);
+    assert(worksRhythm.gap === archiveRhythm.gap, \`${'${viewport.name}'}: Works와 Archive 하위 메뉴 간격이 다릅니다 (${'${worksRhythm.gap}'} / ${'${archiveRhythm.gap}'})\`);
+    assert(Math.abs(worksRhythm.verticalGap - archiveRhythm.verticalGap) <= 1, \`${'${viewport.name}'}: Works와 Archive 제목-하위메뉴 간격이 다릅니다 (${'${worksRhythm.verticalGap}'}px / ${'${archiveRhythm.verticalGap}'}px)\`);
+
+    await open(page, "/archive/videos");
+    const archiveVideoBox = await visibleBox(page, ".archive-video-index, .archive-video-grid, .video-index, .wide-empty, .empty-note");
+    assert(archiveVideoBox, \`${'${viewport.name}'}: Archive Video 목록을 찾지 못했습니다\`);
+    assertGridMatch(archivePhotoBox, archiveVideoBox, \`${'${viewport.name}'}: Archive Photo/Video 목록\`, ["x", "y", "width"]);
+
+    await open(page, "/archive/links");
+    const archiveTextBox = await page.locator(".archive-text-groups").boundingBox();
+    assert(archiveTextBox, \`${'${viewport.name}'}: Archive Text 목록을 찾지 못했습니다\`);`;
+
 if (source.includes(oldArchive)) {
-  source = source.replace(oldArchive, newArchive);
-} else if (!source.includes('Archive Photo 목록을 찾지 못했습니다')) {
+  source = source.replace(oldArchive, broadArchive);
+} else if (source.includes(strictArchive)) {
+  source = source.replace(strictArchive, broadArchive);
+} else if (!source.includes('const archivePhotoBox = await visibleBox(page, ".photo-index, .photo-masonry, .photo-post-grid")')) {
   throw new Error("Archive QA block not found.");
 }
 
