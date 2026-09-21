@@ -70,5 +70,29 @@ if (source.includes(oldArchive)) {
   throw new Error("Archive QA block not found.");
 }
 
+const oldCategoryPages = `    const categoryPages = [
+      ["/works/discography", ".category-top h1"],
+      ["/archive", ".category-top h1"],
+      ["/notes", ".category-top h1"],
+      ["/merch", ".category-top h1"],
+      ["/info", ".category-top h1"],
+      ["/contact", ".contact-top h1"],
+      ["/news", ".category-top h1"],
+    ];`;
+
+const newCategoryPages = `    const categoryPages = [
+      ["/works/discography", ".category-top h1"],
+      ["/archive", ".category-top h1"],
+      ["/notes", ".category-top h1"],
+      ["/merch", ".category-top h1"],
+      ["/news", ".category-top h1"],
+    ];`;
+
+if (source.includes(oldCategoryPages)) {
+  source = source.replace(oldCategoryPages, newCategoryPages);
+} else if (!source.includes(newCategoryPages)) {
+  throw new Error("Category heading QA block not found.");
+}
+
 fs.writeFileSync(file, source);
 console.log("Aligned browser QA with the unified desktop split grid.");
