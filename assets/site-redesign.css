@@ -762,15 +762,15 @@ h1, h2, strong { font-weight: 400; }
   }
 
   .release-split .release-detail {
-    --detail-grid-gap: clamp(28px, 3vw, 44px);
+    --detail-grid-gap: clamp(26px, 2.6vw, 38px);
     position: relative;
     display: grid;
-    grid-template-columns: clamp(112px, 12vw, 150px) minmax(0, 1fr);
+    grid-template-columns: clamp(100px, 10.5vw, 135px) minmax(0, 1fr);
     column-gap: var(--detail-grid-gap);
     row-gap: var(--detail-grid-gap);
     align-items: start;
-    width: min(100%, 760px);
-    max-width: 760px;
+    width: min(100%, 680px);
+    max-width: 680px;
     margin: 0 auto;
     padding: clamp(28px, 4vh, 42px) clamp(4px, .5vw, 10px) 72px;
   }
@@ -1108,8 +1108,8 @@ h1, h2, strong { font-weight: 400; }
     overflow-x: hidden;
   }
   .merch-split .merch-detail {
-    width: min(100%, 620px);
-    max-width: 620px;
+    width: min(100%, 540px);
+    max-width: 540px;
     margin: calc(1.55em + clamp(44px, 8vh, 100px)) auto 0;
   }
   .merch-split .merch-detail h1 {
@@ -1121,7 +1121,7 @@ h1, h2, strong { font-weight: 400; }
   .merch-split .merch-gallery {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(10px, 1.4vw, 18px);
+    gap: clamp(10px, 1.2vw, 16px);
     margin: 0 0 clamp(24px, 3.5vh, 36px);
   }
   .merch-split .merch-gallery img {
