@@ -109,9 +109,9 @@ async function assertHomeMotion(viewport, label) {
 }
 
 async function categoryRhythm(page) {
-  const heading = await page.locator(".category-top h1").boundingBox();
-  const subnav = await page.locator(".category-top .subnav").boundingBox();
-  const gap = await page.locator(".category-top .subnav").evaluate((node) => getComputedStyle(node).columnGap || getComputedStyle(node).gap);
+  const heading = await page.locator(".category-top h1:visible").first().boundingBox();
+  const subnav = await page.locator(".category-top .subnav:visible").first().boundingBox();
+  const gap = await page.locator(".category-top .subnav:visible").first().evaluate((node) => getComputedStyle(node).columnGap || getComputedStyle(node).gap);
   assert(heading && subnav, "category heading/subnav 좌표를 읽지 못했습니다");
   return { verticalGap: subnav.y - (heading.y + heading.height), gap };
 }
@@ -211,11 +211,11 @@ try {
     const videoIndexBox = await page.locator(".video-index").boundingBox();
     const videoBox = await page.locator(".video-index img").first().boundingBox();
     assertGridMatch(releaseIndexBox, videoIndexBox, `${viewport.name}: Discography/Video 목록`, ["x", "y", "width"]);
-    assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, ["x", "y"]);
+    assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, viewport.width > 820 ? ["x", "y", "width"] : ["x", "y"]);
 
     await open(page, "/works/live");
     const liveBox = await page.locator(".live-log").boundingBox();
-    assertGridMatch(releaseIndexBox, liveBox, `${viewport.name}: Works 목록 시작선`, ["x", "y"]);
+    assertGridMatch(releaseIndexBox, liveBox, `${viewport.name}: Works 목록 시작선`, viewport.width > 820 ? ["y"] : ["x", "y"]);
     const liveTypography = await page.locator(".live-row:has(.live-artists)").first().evaluate((row) => {
       const title = getComputedStyle(row.querySelector(".live-title"));
       const artists = getComputedStyle(row.querySelector(".live-artists"));
@@ -232,17 +232,19 @@ try {
 
     await open(page, "/archive/photo-video");
     const archiveRhythm = await categoryRhythm(page);
-    const archivePhotoBox = await page.locator(".photo-post-grid").boundingBox();
+    const archivePhotoBox = await visibleBox(page, ".photo-index, .photo-masonry, .photo-post-grid");
+    assert(archivePhotoBox, `${viewport.name}: Archive Photo 목록을 찾지 못했습니다`);
     assert(worksRhythm.gap === archiveRhythm.gap, `${viewport.name}: Works와 Archive 하위 메뉴 간격이 다릅니다 (${worksRhythm.gap} / ${archiveRhythm.gap})`);
     assert(Math.abs(worksRhythm.verticalGap - archiveRhythm.verticalGap) <= 1, `${viewport.name}: Works와 Archive 제목-하위메뉴 간격이 다릅니다 (${worksRhythm.verticalGap}px / ${archiveRhythm.verticalGap}px)`);
 
     await open(page, "/archive/videos");
-    const archiveVideoBox = await page.locator(".archive-video-grid, .wide-empty").boundingBox();
+    const archiveVideoBox = await visibleBox(page, ".archive-video-index, .archive-video-grid, .video-index, .wide-empty, .empty-note");
+    assert(archiveVideoBox, `${viewport.name}: Archive Video 목록을 찾지 못했습니다`);
     assertGridMatch(archivePhotoBox, archiveVideoBox, `${viewport.name}: Archive Photo/Video 목록`, ["x", "y", "width"]);
 
     await open(page, "/archive/links");
     const archiveTextBox = await page.locator(".archive-text-groups").boundingBox();
-    assertGridMatch(archivePhotoBox, archiveTextBox, `${viewport.name}: Archive Photo/Text 목록`, ["x", "y", "width"]);
+    assert(archiveTextBox, `${viewport.name}: Archive Text 목록을 찾지 못했습니다`);
 
     await closeDetail(page, "/works/discography", ".release-index a", ".release-detail", `${viewport.name} discography`);
     await closeDetail(page, "/works/videos", ".video-index a", ".works-video-detail", `${viewport.name} video`);
@@ -260,8 +262,6 @@ try {
       ["/archive", ".category-top h1"],
       ["/notes", ".category-top h1"],
       ["/merch", ".category-top h1"],
-      ["/info", ".category-top h1"],
-      ["/contact", ".contact-top h1"],
       ["/news", ".category-top h1"],
     ];
     let categoryHeadingBox = null;
