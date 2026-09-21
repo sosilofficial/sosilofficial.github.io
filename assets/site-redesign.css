@@ -740,13 +740,14 @@ h1, h2, strong { font-weight: 400; }
   .release-split .release-index > a.is-selected { background: rgba(72, 80, 91, .018); }
   .release-split .release-index img {
     display: block;
-    width: 100%;
-    max-width: 100%;
+    width: 72%;
+    max-width: 300px;
     aspect-ratio: 1 / 1;
     object-fit: cover;
   }
   .release-split .release-index span {
-    width: 100%;
+    width: 72%;
+    max-width: 300px;
     margin-top: 9px;
   }
   .release-split .release-index strong {
@@ -1090,13 +1091,14 @@ h1, h2, strong { font-weight: 400; }
     background: rgba(72, 80, 91, .025);
   }
   .merch-split .merch-index img {
-    width: 100%;
-    max-width: none;
+    width: 68%;
+    max-width: 280px;
     aspect-ratio: 1 / 1;
     object-fit: cover;
   }
   .merch-split .merch-index span {
-    width: 100%;
+    width: 68%;
+    max-width: 280px;
     margin-top: 9px;
   }
   .merch-split .detail-panel {
@@ -2000,6 +2002,43 @@ h1, h2, strong { font-weight: 400; }
   .mobile-detail-screen.has-detail .purchase-links {
     margin-top: 0 !important;
     padding-bottom: 0 !important;
+  }
+}
+
+/* desktop-detail-scale-override */
+@media (min-width: 821px) {
+  /* Preserve the existing Discography / Video / Merch landing scale. */
+  .release-split .release-index img {
+    width: 100%;
+    max-width: 100%;
+  }
+  .release-split .release-index span {
+    width: 100%;
+    max-width: none;
+  }
+  .merch-split .merch-index img {
+    width: 100%;
+    max-width: none;
+  }
+  .merch-split .merch-index span {
+    width: 100%;
+    max-width: none;
+  }
+
+  /* Reduce only the desktop second/detail pages. */
+  .release-split .release-detail {
+    --detail-grid-gap: clamp(22px, 2vw, 32px);
+    grid-template-columns: clamp(90px, 8.5vw, 120px) minmax(0, 1fr);
+    width: min(100%, 600px);
+    max-width: 600px;
+  }
+
+  .merch-split .merch-detail {
+    width: min(100%, 460px);
+    max-width: 460px;
+  }
+  .merch-split .merch-gallery {
+    gap: clamp(8px, 1vw, 12px);
   }
 }
 /* generated postprocessor styles:end */
