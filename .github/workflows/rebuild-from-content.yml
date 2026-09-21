@@ -76,8 +76,6 @@ jobs:
         run: node scripts/apply-mobile-detail-pages.mjs
       - name: Remove generated inline style copies
         run: node scripts/consolidate-layout-styles.mjs --strip-html
-      - name: Apply desktop detail scale
-        run: node scripts/apply-desktop-detail-scale.mjs
       - name: Normalize Archive video legacy routes
         run: node scripts/fix-archive-video-legacy.mjs
       - name: Validate generated site
