@@ -17,6 +17,11 @@ source = source.replace(
   'assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, viewport.width > 820 ? ["x", "y", "width"] : ["x", "y"]);'
 );
 
+source = source.replace(
+  'assertGridMatch(releaseIndexBox, liveBox, `${viewport.name}: Works 목록 시작선`, ["x", "y"]);',
+  'assertGridMatch(releaseIndexBox, liveBox, `${viewport.name}: Works 목록 시작선`, viewport.width > 820 ? ["y"] : ["x", "y"]);'
+);
+
 const oldArchive = `    const archivePhotoBox = await page.locator(".photo-post-grid").boundingBox();
     assert(worksRhythm.gap === archiveRhythm.gap, \`${'${viewport.name}'}: Works와 Archive 하위 메뉴 간격이 다릅니다 (${'${worksRhythm.gap}'} / ${'${archiveRhythm.gap}'})\`);
     assert(Math.abs(worksRhythm.verticalGap - archiveRhythm.verticalGap) <= 1, \`${'${viewport.name}'}: Works와 Archive 제목-하위메뉴 간격이 다릅니다 (${'${worksRhythm.verticalGap}'}px / ${'${archiveRhythm.verticalGap}'}px)\`);
