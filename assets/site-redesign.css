@@ -1413,9 +1413,10 @@ h1, h2, strong { font-weight: 400; }
   .home-mailing {
     width: var(--home-copy-width) !important;
   }
-  /* Place Latest News exactly halfway between the intro (14.5vh) and Mailing List (68.8vh). */
+  /* Visually center Latest News between the upper intro and lower Mailing List. */
   .home-news {
-    top: 41.65vh !important;
+    top: 50% !important;
+    transform: translateY(-50%);
   }
   .home-grid-anchor {
     display: inline-block;
@@ -1469,6 +1470,7 @@ h1, h2, strong { font-weight: 400; }
     margin: 0 0 36px !important;
     padding-top: 0;
     border-top: 0;
+    transform: none;
   }
   .home-news h2 {
     margin: 0 0 12px !important;
