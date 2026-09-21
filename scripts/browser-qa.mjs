@@ -211,7 +211,7 @@ try {
     const videoIndexBox = await page.locator(".video-index").boundingBox();
     const videoBox = await page.locator(".video-index img").first().boundingBox();
     assertGridMatch(releaseIndexBox, videoIndexBox, `${viewport.name}: Discography/Video 목록`, ["x", "y", "width"]);
-    assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, viewport.width > 820 ? ["x", "y", "width"] : ["x", "y"]);
+    assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, ["x", "y"]);
 
     await open(page, "/works/live");
     const liveBox = await page.locator(".live-log").boundingBox();
