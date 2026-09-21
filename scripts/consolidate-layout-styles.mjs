@@ -17,6 +17,7 @@ const sources = [
   "apply-shared-ui.mjs",
   "apply-mobile-detail-pages.mjs",
   "apply-desktop-detail-scale.mjs",
+  "apply-unified-desktop-grid.mjs",
 ];
 
 const sections = sources.map((name) => {
