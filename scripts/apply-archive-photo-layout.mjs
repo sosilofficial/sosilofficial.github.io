@@ -17,6 +17,19 @@ const STYLE = `<style id="archive-photo-post-style">
     background: var(--bg);
   }
 }
+.photo-post-header {
+  margin: 0 0 clamp(28px, 4vw, 48px);
+}
+.photo-post-header h1 {
+  margin: 0 0 8px !important;
+}
+.photo-post-header > p {
+  margin: 0 0 8px;
+  color: var(--muted);
+}
+.photo-post-header .prose {
+  margin-top: 10px;
+}
 .photo-post-gallery {
   display: grid;
   gap: clamp(18px, 3vw, 36px);
@@ -32,11 +45,24 @@ const STYLE = `<style id="archive-photo-post-style">
 }
 </style>`;
 
+const STABLE_OPEN_SCRIPT = '<script src="/assets/archive-photo-stable-open.js" defer></script>';
+
 function ensureStyle(html) {
   if (html.includes('id="archive-photo-post-style"')) {
     return html.replace(/<style id="archive-photo-post-style">[\s\S]*?<\/style>/, STYLE);
   }
   return html.replace("</head>", `${STYLE}</head>`);
+}
+
+function ensureStableOpenScript(html) {
+  if (html.includes('/assets/archive-photo-stable-open.js')) return html;
+  const siteScript = /<script src="\/assets\/site-redesign\.js[^"]*" defer><\/script>/;
+  if (siteScript.test(html)) return html.replace(siteScript, (match) => `${STABLE_OPEN_SCRIPT}${match}`);
+  return html.replace("</head>", `${STABLE_OPEN_SCRIPT}</head>`);
+}
+
+function finish(html) {
+  return ensureStableOpenScript(ensureStyle(html));
 }
 
 function combinePostImages(html, slug) {
@@ -61,11 +87,10 @@ function combinePostImages(html, slug) {
     if (!image) return "";
     return image
       .replace(/ loading="(?:eager|lazy)"/, ` loading="${index === 0 ? "eager" : "lazy"}"`)
-      .replace(/ id="[^"]*"/, "")
-      .replace("<img ", `<img id="photo-${slug}-${index}" `);
+      .replace(/ id="[^"]*"/, "");
   }).filter(Boolean).join("");
 
-  const combined = `<article class="photo-detail photo-post-detail">${close}<div class="photo-post-gallery">${images}</div>${title}${date}${prose}</article>`;
+  const combined = `<article class="photo-detail photo-post-detail">${close}<header class="photo-post-header">${title}${date}${prose}</header><div class="photo-post-gallery">${images}</div></article>`;
   const firstIndex = articles[0].index;
   const last = articles[articles.length - 1];
   const lastIndex = last.index + last[0].length;
@@ -74,7 +99,7 @@ function combinePostImages(html, slug) {
 
 for (const file of LANDINGS) {
   if (!fs.existsSync(file)) continue;
-  fs.writeFileSync(file, ensureStyle(fs.readFileSync(file, "utf8")));
+  fs.writeFileSync(file, finish(fs.readFileSync(file, "utf8")));
 }
 
 if (fs.existsSync(PHOTO_DIR)) {
@@ -84,8 +109,8 @@ if (fs.existsSync(PHOTO_DIR)) {
     if (!fs.existsSync(file)) continue;
     let html = fs.readFileSync(file, "utf8");
     html = combinePostImages(html, entry.name);
-    fs.writeFileSync(file, ensureStyle(html));
+    fs.writeFileSync(file, finish(html));
   }
 }
 
-console.log("Kept one Archive Photo cover per post while showing every post image in the detail gallery.");
+console.log("Placed Archive Photo metadata above its gallery and stabilized detail-page opening.");
