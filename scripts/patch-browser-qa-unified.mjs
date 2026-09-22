@@ -22,6 +22,14 @@ source = source.replace(
   'assertGridMatch(releaseIndexBox, liveBox, `${viewport.name}: Works 목록 시작선`, viewport.width > 820 ? ["y"] : ["x", "y"]);'
 );
 
+source = source.replace(
+  'assert(mailingBox.width <= 300, `${viewport.name}: 모바일 Mailing List가 지나치게 큽니다`);',
+  `const brandBox = await page.locator(".site-brand").boundingBox();
+      assert(brandBox, \`${'${viewport.name}'}: 모바일 sosil 기준선을 읽지 못했습니다\`);
+      assert(Math.abs(mailingBox.x - brandBox.x) <= 2, \`${'${viewport.name}'}: 모바일 Mailing List가 sosil 시작선과 맞지 않습니다\`);
+      assert(Math.abs((viewport.width - mailingBox.x - mailingBox.width) - brandBox.x) <= 2, \`${'${viewport.name}'}: 모바일 Mailing List 오른쪽 여백이 sosil 기준 그리드와 맞지 않습니다\`);`
+);
+
 const oldArchive = `    const archivePhotoBox = await page.locator(".photo-post-grid").boundingBox();
     assert(worksRhythm.gap === archiveRhythm.gap, \`${'${viewport.name}'}: Works와 Archive 하위 메뉴 간격이 다릅니다 (${'${worksRhythm.gap}'} / ${'${archiveRhythm.gap}'})\`);
     assert(Math.abs(worksRhythm.verticalGap - archiveRhythm.verticalGap) <= 1, \`${'${viewport.name}'}: Works와 Archive 제목-하위메뉴 간격이 다릅니다 (${'${worksRhythm.verticalGap}'}px / ${'${archiveRhythm.verticalGap}'}px)\`);
@@ -95,4 +103,4 @@ if (source.includes(oldCategoryPages)) {
 }
 
 fs.writeFileSync(file, source);
-console.log("Aligned browser QA with the unified desktop split grid.");
+console.log("Aligned browser QA with the unified desktop split grid and mobile homepage gutter.");
