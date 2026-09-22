@@ -46,9 +46,9 @@ const STYLE = `<style id="home-mailing-join-style">
 @media (max-width: 820px) {
   .home-canvas {
     min-height: auto !important;
-    padding: 26px 24px 68px !important;
-    width: min(100%, 348px);
-    margin-inline: auto;
+    padding: 26px 18px 68px !important;
+    width: 100%;
+    margin-inline: 0;
   }
   .home-intro {
     display: block !important;
@@ -223,4 +223,4 @@ html = html.replace(/<p class="mailing-status"[\s\S]*?<\/p>/, "");
 html = html.replace(/<script id="home-mobile-motion-script">[\s\S]*?<\/script>/, "");
 
 fs.writeFileSync(file, html);
-console.log("Visually centered desktop Latest News while preserving the existing intro, Mailing List, and mobile layout.\n");
+console.log("Aligned the mobile homepage copy to the same 18px gutter as the sosil brand while preserving all other layout behavior.\n");
