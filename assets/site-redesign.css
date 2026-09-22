@@ -1144,6 +1144,19 @@ h1, h2, strong { font-weight: 400; }
     background: var(--bg);
   }
 }
+.photo-post-gallery {
+  display: grid;
+  gap: clamp(18px, 3vw, 36px);
+  width: 100%;
+  margin: 0 0 var(--space-lg);
+}
+.photo-post-gallery .photo-selected {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  margin: 0;
+}
 
 /* archive-text-layout-style */
 /* Keep Photo, Video and Text on one shared Archive index coordinate. */
