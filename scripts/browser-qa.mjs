@@ -179,6 +179,17 @@ try {
       assert(homeNewsBox.y >= motionFieldBox.y + motionFieldBox.height + 20, `${viewport.name}: Latest News가 앨범 영역과 충분히 떨어져 있지 않습니다`);
       assert(Math.abs(homeNewsBox.x - mailingBox.x) <= 2, `${viewport.name}: Latest News와 Mailing List의 시작선이 다릅니다`);
     }
+    if (viewport.width > 820) {
+      await page.evaluate(() => document.fonts.ready);
+      const intro = await page.locator(".home-intro").boundingBox();
+      const news = await homeNews.boundingBox();
+      const signup = await page.locator(".home-mailing").boundingBox();
+      assert(intro && news && signup, "Desktop home sections must be visible");
+      const gapAbove = news.y - (intro.y + intro.height);
+      const gapBelow = signup.y - (news.y + news.height);
+      assert(gapAbove >= 0 && gapBelow >= 0, "Latest News overlaps intro or Mailing List");
+      assert(Math.abs(gapAbove - gapBelow) <= 2, "Latest News must bisect the gap between intro and Mailing List");
+    }
     const coverTransformA = await page.locator(".moving-cover").evaluate((node) => getComputedStyle(node).transform);
     await page.waitForTimeout(180);
     const coverTransformB = await page.locator(".moving-cover").evaluate((node) => getComputedStyle(node).transform);

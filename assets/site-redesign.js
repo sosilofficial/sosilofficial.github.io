@@ -151,16 +151,28 @@ function setupNoteNavigation() {
 function setupHomeGrid() {
   const canvas = document.querySelector(".home-canvas");
   const anchor = document.querySelector(".home-grid-anchor");
-  if (!canvas || !anchor || matchMedia("(max-width: 820px)").matches) return;
+  const intro = document.querySelector(".home-intro");
+  const mailing = document.querySelector(".home-mailing");
+  if (!canvas || !anchor || !intro || !mailing) return;
 
   const sync = () => {
+    if (matchMedia("(max-width: 820px)").matches) {
+      canvas.style.removeProperty("--home-news-midpoint");
+      return;
+    }
     const width = Math.ceil(anchor.getBoundingClientRect().width);
     if (width > 0) canvas.style.setProperty("--home-copy-width", `${width}px`);
+    // Equal empty space above and below the whole news block, including its text.
+    const midpoint = (intro.getBoundingClientRect().bottom + mailing.getBoundingClientRect().top) / 2;
+    canvas.style.setProperty("--home-news-midpoint", `${midpoint - canvas.getBoundingClientRect().top}px`);
   };
 
   sync();
   if (document.fonts?.ready) document.fonts.ready.then(sync);
-  if ("ResizeObserver" in window) new ResizeObserver(sync).observe(anchor);
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(sync);
+    for (const element of [anchor, intro, mailing, canvas]) observer.observe(element);
+  }
   window.addEventListener("resize", sync, { passive: true });
 }
 

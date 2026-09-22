@@ -13,10 +13,13 @@ const STYLE = `<style id="home-mailing-join-style">
   .home-mailing {
     width: var(--home-copy-width) !important;
   }
-  /* Visually center Latest News between the upper intro and lower Mailing List. */
+  /* Center the news block in the actual gap between intro and mailing. */
   .home-news {
-    top: 50% !important;
+    top: var(--home-news-midpoint, 41.65vh) !important;
     transform: translateY(-50%);
+  }
+  .home-no-news .home-news {
+    top: var(--home-news-midpoint, 31.75vh) !important;
   }
   .home-grid-anchor {
     display: inline-block;
