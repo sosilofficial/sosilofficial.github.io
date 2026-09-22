@@ -8,8 +8,11 @@ const STYLE = `<style id="unified-desktop-grid-style">
 
 @media (min-width: 821px) {
   :root {
-    --desktop-index-column: max(var(--sidebar), 118px);
-    --desktop-index-pad-x: clamp(18px, 1.7vw, 28px);
+    --desktop-index-pad-x: var(--category-x);
+    --desktop-subnav-gap: clamp(16px, 2vw, 32px);
+    /* 26 monospace characters across the four Works labels, plus tracking,
+       three gaps and equal gutters. */
+    --desktop-index-column: calc(26ch + .312em + 3 * var(--desktop-subnav-gap) + 2 * var(--desktop-index-pad-x));
     --desktop-detail-pad-x: clamp(28px, 3vw, 52px);
   }
 
@@ -17,8 +20,8 @@ const STYLE = `<style id="unified-desktop-grid-style">
   .archive-mobile-only { display: none !important; }
 
   /*
-   * Use the sidebar width once more for the index column. This puts the two
-   * vertical dividers on one repeating grid: viewport -> sidebar -> index -> detail.
+   * Fit the complete Works subnav and use the sidebar's content inset as
+   * equal gutters on both sides. Every index and divider shares this width.
    */
   .split-layout:not(.info-split):not(.live-split) {
     display: grid !important;
@@ -65,6 +68,13 @@ const STYLE = `<style id="unified-desktop-grid-style">
     opacity: .30;
     pointer-events: none;
   }
+
+  .category-top .subnav {
+    gap: var(--desktop-subnav-gap);
+    width: max-content;
+    flex-wrap: nowrap;
+  }
+  .category-top .subnav a { flex: none; white-space: nowrap; }
 
   /* One index-thumb width across Discography, Video, Merch and Archive. */
   .release-split .release-index,
@@ -138,6 +148,10 @@ const STYLE = `<style id="unified-desktop-grid-style">
     max-width: 760px !important;
   }
 
+  /* Longer track names must wrap as the index gains width. */
+  .release-split .track-list li { grid-template-columns: 1.25rem minmax(0, 1fr); }
+  .release-split .track-list li span:last-child { white-space: normal; overflow-wrap: anywhere; }
+
   /* Archive Photo/Video use the wider detail field more fully. */
   .archive-photo-split .photo-detail {
     width: min(100%, 780px) !important;
@@ -170,6 +184,17 @@ const STYLE = `<style id="unified-desktop-grid-style">
     overflow-x: hidden;
     background: var(--bg);
   }
+}
+
+@media (min-width: 821px) and (max-width: 1200px) {
+  .release-split .release-tracklist-section { grid-column: 1 / -1; grid-row: 3; }
+  .release-split .release-detail .liner-notes { grid-column: 1 / -1; grid-row: 4; }
+  .release-split .release-detail .release-credits-section { grid-column: 1 / -1; grid-row: 5; }
+  .release-split .release-detail .external-links { grid-column: 1 / -1; grid-row: 6; }
+}
+@media (min-width: 821px) and (max-width: 1024px) {
+  .live-row { grid-template-columns: 6.8rem minmax(0, 1.2fr) minmax(0, 1.55fr) minmax(0, 1fr); }
+  .live-row .live-title, .live-row .live-artists, .live-row .live-venue { overflow-wrap: anywhere; }
 }
 
 @media (max-width: 820px) {

@@ -196,6 +196,25 @@ try {
     assert(coverTransformA !== coverTransformB, `${viewport.name}: reduced-motion에서도 홈 커버 이동이 유지되지 않습니다`);
 
     await open(page, "/works/discography");
+    if (viewport.width > 820) {
+      const menu = await page.locator('.release-split .subnav').evaluate((nav) => {
+        const panel = nav.closest('.index-panel').getBoundingClientRect();
+        const links = [...nav.querySelectorAll('a')];
+        return links.map((link) => {
+          const rect = link.getBoundingClientRect();
+          return { text: link.textContent, visible: rect.left >= panel.left && rect.right <= panel.right && rect.width > 0 };
+        });
+      });
+      assert(menu.length === 4 && menu.every((item) => item.visible), "All four Works categories must fit inside the index column");
+      const gutters = await page.locator('.release-split').evaluate((split) => {
+        const panel = split.querySelector('.index-panel').getBoundingClientRect();
+        const image = split.querySelector('.release-index img').getBoundingClientRect();
+        const nav = split.querySelector('.subnav').getBoundingClientRect();
+        return { left: image.left - panel.left, right: panel.right - image.right, imageWidth: image.width, navWidth: nav.width };
+      });
+      assert(Math.abs(gutters.left - gutters.right) <= 1, "Index thumbnails need equal divider gutters");
+      assert(Math.abs(gutters.imageWidth - gutters.navWidth) <= 3, "Thumbnails must span the full Works menu width");
+    }
     const worksTabs = await page.locator(".release-split .subnav a").evaluateAll((links) => links.map((link) => ({
       text: link.textContent?.trim(),
       display: getComputedStyle(link).display,
