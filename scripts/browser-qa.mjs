@@ -169,7 +169,10 @@ try {
       const homeNewsBox = await homeNews.boundingBox();
       const mobileCoverBox = await page.locator(".moving-cover").boundingBox();
       assert(motionFieldBox && homeNewsBox && mobileCoverBox, `${viewport.name}: 모바일 홈 그리드 좌표를 읽지 못했습니다`);
-      assert(mailingBox.width <= 300, `${viewport.name}: 모바일 Mailing List가 지나치게 큽니다`);
+      const brandBox = await page.locator(".site-brand").boundingBox();
+      assert(brandBox, `${viewport.name}: 모바일 sosil 기준선을 읽지 못했습니다`);
+      assert(Math.abs(mailingBox.x - brandBox.x) <= 2, `${viewport.name}: 모바일 Mailing List가 sosil 시작선과 맞지 않습니다`);
+      assert(Math.abs((viewport.width - mailingBox.x - mailingBox.width) - brandBox.x) <= 2, `${viewport.name}: 모바일 Mailing List 오른쪽 여백이 sosil 기준 그리드와 맞지 않습니다`);
       for (const selector of [".home-intro", ".home-news", ".home-mailing", ".home-mailing form"]) {
         const box = await page.locator(selector).boundingBox();
         assert(box && Math.abs(box.x - (viewport.width - box.x - box.width)) <= 2,
