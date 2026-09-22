@@ -43,4 +43,44 @@ for (const slug of videoSlugs) {
   normalized += 1;
 }
 
-console.log(`Normalized ${normalized} Archive video legacy route(s).`);
+/*
+ * Archive Photo used to carry per-image hash targets. That made browsers jump
+ * directly to an image and interacted badly with desktop scroll restoration.
+ * Keep one canonical post URL per Photo post instead.
+ */
+const photoRoot = path.join(ROOT, "archive", "photo-video");
+let normalizedPhotoLinks = 0;
+
+function normalizePhotoLinks(file) {
+  let html = fs.readFileSync(file, "utf8");
+  const before = html;
+
+  html = html.replace(
+    /href="\/archive\/photo-video\/([^"#/]+)#photo-\1-\d+"/g,
+    (_match, slug) => `href="/archive/photo-video/${slug}/"`
+  );
+  html = html.replace(
+    /href="#photo-([^"#]+)-\d+"(?:\s+data-panel-target="photo-\1-\d+")?/g,
+    (_match, slug) => `href="/archive/photo-video/${slug}/"`
+  );
+  html = html.replace(/\sdata-panel-target="photo-[^"]+"/g, "");
+
+  if (html !== before) {
+    fs.writeFileSync(file, html);
+    normalizedPhotoLinks += 1;
+  }
+}
+
+if (fs.existsSync(photoRoot)) {
+  const stack = [photoRoot];
+  while (stack.length) {
+    const dir = stack.pop();
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) stack.push(full);
+      else if (entry.isFile() && entry.name === "index.html") normalizePhotoLinks(full);
+    }
+  }
+}
+
+console.log(`Normalized ${normalized} Archive video legacy route(s) and ${normalizedPhotoLinks} Archive Photo page link set(s).`);
