@@ -7,6 +7,7 @@ on:
       - ".github/workflows/rebuild-from-content.yml"
       - "content/**"
       - "scripts/build-content.mjs"
+      - "scripts/analytics.mjs"
       - "scripts/validate-site.mjs"
       - "scripts/browser-qa.mjs"
       - "scripts/patch-browser-qa-unified.mjs"

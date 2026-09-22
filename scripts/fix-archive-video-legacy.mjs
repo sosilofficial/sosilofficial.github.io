@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { ANALYTICS_SCRIPT } from "./analytics.mjs";
 import path from "node:path";
 
 const ROOT = process.cwd();
@@ -39,7 +40,7 @@ for (const slug of videoSlugs) {
   const title = canonicalHtml.match(/<title>([^<]+)<\/title>/)?.[1] || "archive / video | 소실 SOSIL";
 
   fs.mkdirSync(legacyDir, { recursive: true });
-  fs.writeFileSync(path.join(legacyDir, "index.html"), `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><link rel="stylesheet" href="${cssHref}"><meta name="robots" content="noindex,follow"><link rel="canonical" href="${canonical}"><meta http-equiv="refresh" content="0; url=${target}"><script>location.replace(${JSON.stringify(target)});</script></head><body class="redirect-page"><main><a class="site-brand" href="/">sosil</a><p><a href="${target}">archive / video</a></p></main></body></html>`);
+  fs.writeFileSync(path.join(legacyDir, "index.html"), `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title><link rel="stylesheet" href="${cssHref}"><meta name="robots" content="noindex,follow"><link rel="canonical" href="${canonical}"><meta http-equiv="refresh" content="0; url=${target}"><script>location.replace(${JSON.stringify(target)});</script>${ANALYTICS_SCRIPT}</head><body class="redirect-page"><main><a class="site-brand" href="/">sosil</a><p><a href="${target}">archive / video</a></p></main></body></html>`);
   normalized += 1;
 }
 

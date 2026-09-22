@@ -44,6 +44,16 @@ for (const file of ["index.html", "404.html", "robots.txt", "sitemap.xml", "favi
   if (!fs.existsSync(path.join(ROOT, file))) failures.push(`${file}: 필수 파일 없음`);
 }
 
+// Include redirects and 404; the Google ownership-verification file is not a page.
+for (const file of [...walk(ROOT), path.join(ROOT, "404.html")]) {
+  const html = fs.readFileSync(file, "utf8");
+  const head = html.match(/<head>([\s\S]*?)<\/head>/)?.[1] || "";
+  const trackers = html.match(/<script\b[^>]*\bdata-goatcounter=[^>]*>/g) || [];
+  if (trackers.length !== 1 || !head.includes('<script data-goatcounter="https://sosil.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>')) {
+    failures.push(`${path.relative(ROOT, file)}: GoatCounter script missing, duplicated, or misconfigured`);
+  }
+}
+
 const sitemap = fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8");
 if (!sitemap.includes("https://sosilofficial.github.io/notes/") || sitemap.includes("/gibberish")) failures.push("sitemap.xml: Notes 공개 URL 설정 오류");
 if (!sitemap.includes("https://sosilofficial.github.io/works/discography/") || sitemap.includes("https://sosilofficial.github.io/works/</loc>")) failures.push("sitemap.xml: Works 공개 URL 설정 오류");
