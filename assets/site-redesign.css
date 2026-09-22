@@ -1144,6 +1144,19 @@ h1, h2, strong { font-weight: 400; }
     background: var(--bg);
   }
 }
+.photo-post-header {
+  margin: 0 0 clamp(28px, 4vw, 48px);
+}
+.photo-post-header h1 {
+  margin: 0 0 8px !important;
+}
+.photo-post-header > p {
+  margin: 0 0 8px;
+  color: var(--muted);
+}
+.photo-post-header .prose {
+  margin-top: 10px;
+}
 .photo-post-gallery {
   display: grid;
   gap: clamp(18px, 3vw, 36px);
