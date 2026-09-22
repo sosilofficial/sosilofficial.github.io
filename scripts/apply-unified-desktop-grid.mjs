@@ -76,6 +76,36 @@ const STYLE = `<style id="unified-desktop-grid-style">
   }
   .category-top .subnav a { flex: none; white-space: nowrap; }
 
+  /*
+   * Works / Merch / News details follow the Notes detail rhythm: the right
+   * panel starts on the same top baseline, reserves the same quiet header
+   * space, then anchors content to the divider instead of centering it.
+   */
+  .split-layout.notes-aligned-detail > .detail-panel {
+    padding-top: var(--category-top-y, clamp(48px, 6.8vh, 70px)) !important;
+  }
+  .notes-style-detail-spacer {
+    visibility: hidden;
+    pointer-events: none;
+    margin: 0 0 clamp(44px, 6vh, 72px);
+  }
+  .notes-style-detail-spacer h1 {
+    margin: 0 0 24px !important;
+    font-size: 1.08rem !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+    letter-spacing: .02em !important;
+  }
+  .notes-aligned-detail .release-detail,
+  .notes-aligned-detail .works-video-detail,
+  .notes-aligned-detail .merch-detail,
+  .notes-aligned-detail .text-detail {
+    margin: 0 !important;
+  }
+  .notes-aligned-detail .release-detail > header {
+    margin-top: 0 !important;
+  }
+
   /* One index-thumb width across Discography, Video, Merch and Archive. */
   .release-split .release-index,
   .video-split .video-index,
@@ -200,6 +230,7 @@ const STYLE = `<style id="unified-desktop-grid-style">
 @media (max-width: 820px) {
   .archive-desktop-only { display: none !important; }
   .archive-mobile-only { display: block !important; }
+  .notes-style-detail-spacer { display: none !important; }
 }
 </style>`;
 
@@ -237,18 +268,31 @@ function replaceMain(html, replacement) {
   return html.replace(/<main class="site-main">[\s\S]*?<\/main>/, replacement);
 }
 
-function markSplit(html, className) {
+function addSplitClasses(html, ...classNames) {
   return html.replace(/class="split-layout(?:\s+[^"]*)?"/, (value) => {
-    if (value.includes(className)) return value;
     const classes = value.slice(7, -1).trim().split(/\s+/).filter(Boolean);
     if (!classes.includes("split-layout")) classes.unshift("split-layout");
-    classes.push(className, "has-detail");
+    for (const className of classNames) if (className && !classes.includes(className)) classes.push(className);
     return `class="${[...new Set(classes)].join(" ")}"`;
   });
 }
 
+function markSplit(html, className) {
+  return addSplitClasses(html, className, "has-detail");
+}
+
+function keepFirstPhotoAnchorPerPost(blockHtml, className) {
+  const pattern = new RegExp(`<div class="${className}">([\\s\\S]*?)<\\/div>`);
+  return blockHtml.replace(pattern, (whole, inner) => {
+    const anchors = [...inner.matchAll(/<a\b[\s\S]*?<\/a>/g)].map((match) => match[0]);
+    if (!anchors.length) return whole;
+    const firstOnly = anchors.filter((anchor) => /#photo-[^"]+-0"/.test(anchor));
+    return `<div class="${className}">${firstOnly.join("")}</div>`;
+  });
+}
+
 function photoLandingIndex(indexHtml) {
-  return cleanSelected(indexHtml)
+  const linked = cleanSelected(indexHtml)
     .replace(/<a href="#([^"]+)" data-panel-target="([^"]+)"/g, (match, hrefId, panelId) => {
       const id = panelId || hrefId;
       const parsed = id.match(/^photo-(.+)-(\d+)$/);
@@ -256,9 +300,37 @@ function photoLandingIndex(indexHtml) {
       const slug = parsed[1];
       return `<a href="/archive/photo-video/${slug}#${id}"`;
     });
+  return keepFirstPhotoAnchorPerPost(linked, "photo-index");
 }
 
-function buildDesktopLanding(landingFile, detailFile, splitClass, cleanIndex = cleanSelected) {
+function photoLandingMobile(html) {
+  return keepFirstPhotoAnchorPerPost(html, "photo-masonry");
+}
+
+function alignDetailFile(file, label) {
+  if (!fs.existsSync(file)) return;
+  let html = fs.readFileSync(file, "utf8");
+  if (!html.includes('<section class="detail-panel">')) return;
+
+  html = addSplitClasses(html, "notes-aligned-detail", "has-detail");
+  if (!html.includes('notes-style-detail-spacer')) {
+    html = html.replace(
+      '<section class="detail-panel"><article',
+      `<section class="detail-panel"><div class="notes-style-detail-spacer" aria-hidden="true"><h1>${label}</h1></div><article`
+    );
+  }
+  fs.writeFileSync(file, ensureStyle(html));
+}
+
+function alignDetailDirectory(dir, label) {
+  if (!fs.existsSync(dir)) return;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    alignDetailFile(path.join(dir, entry.name, "index.html"), label);
+  }
+}
+
+function buildDesktopLanding(landingFile, detailFile, splitClass, cleanIndex = cleanSelected, cleanMobile = (html) => html) {
   if (!landingFile || !detailFile || !fs.existsSync(landingFile) || !fs.existsSync(detailFile)) return false;
 
   let landing = fs.readFileSync(landingFile, "utf8");
@@ -268,7 +340,7 @@ function buildDesktopLanding(landingFile, detailFile, splitClass, cleanIndex = c
   if (!originalInner || !index) throw new Error(`UNIFIED DESKTOP GRID ERROR: landing/index extraction failed for ${landingFile}`);
 
   const desktop = `<div class="archive-desktop-only"><div class="split-layout ${splitClass}"><section class="index-panel">${cleanIndex(index)}</section><section class="detail-panel"></section></div></div>`;
-  const mobile = `<div class="archive-mobile-only">${originalInner}</div>`;
+  const mobile = `<div class="archive-mobile-only">${cleanMobile(originalInner)}</div>`;
   landing = replaceMain(landing, `<main class="site-main">${desktop}${mobile}</main>`);
   fs.writeFileSync(landingFile, ensureStyle(landing));
   return true;
@@ -288,17 +360,25 @@ function buildEmptyArchiveVideoLanding(landingFile) {
   fs.writeFileSync(landingFile, ensureStyle(landing));
 }
 
+/* Match Works, Merch and News detail placement to Notes. */
+alignDetailDirectory(path.join(ROOT, "works", "discography"), "works");
+alignDetailDirectory(path.join(ROOT, "works", "videos"), "works");
+alignDetailDirectory(path.join(ROOT, "works", "others"), "works");
+alignDetailDirectory(path.join(ROOT, "merch"), "merch");
+alignDetailDirectory(path.join(ROOT, "news"), "news");
+
 const photoDir = path.join(ROOT, "archive", "photo-video");
 const photoDetail = firstDetailFile(photoDir);
 if (photoDetail) {
   for (const file of [path.join(ROOT, "archive", "index.html"), path.join(photoDir, "index.html")]) {
-    buildDesktopLanding(file, photoDetail, "archive-photo-split", photoLandingIndex);
+    buildDesktopLanding(file, photoDetail, "archive-photo-split", photoLandingIndex, photoLandingMobile);
   }
   for (const entry of fs.readdirSync(photoDir, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     const file = path.join(photoDir, entry.name, "index.html");
     if (!fs.existsSync(file)) continue;
     let html = markSplit(fs.readFileSync(file, "utf8"), "archive-photo-split");
+    html = keepFirstPhotoAnchorPerPost(html, "photo-index");
     fs.writeFileSync(file, ensureStyle(html));
   }
 }
@@ -319,4 +399,4 @@ if (videoDetail) {
   buildEmptyArchiveVideoLanding(videoLanding);
 }
 
-console.log("Unified desktop list/detail dividers, thumbnail widths, detail widths, and Archive desktop landing behavior.");
+console.log("Unified desktop grid, Notes-style detail spacing, and one-cover-per-post Archive Photo indexes.");
