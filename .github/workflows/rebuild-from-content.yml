@@ -12,6 +12,7 @@ on:
       - "scripts/browser-qa.mjs"
       - "scripts/patch-browser-qa-unified.mjs"
       - "scripts/consolidate-layout-styles.mjs"
+      - "scripts/apply-seo.mjs"
       - "package.json"
       - "package-lock.json"
       - "scripts/apply-home-layout.mjs"
@@ -84,6 +85,8 @@ jobs:
         run: node scripts/consolidate-layout-styles.mjs --strip-html
       - name: Normalize Archive video legacy routes
         run: node scripts/fix-archive-video-legacy.mjs
+      - name: Apply persistent SEO metadata
+        run: node scripts/apply-seo.mjs
       - name: Validate generated site
         run: node scripts/validate-site.mjs
       - name: Align browser QA with unified desktop grid
