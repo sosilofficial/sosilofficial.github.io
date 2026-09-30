@@ -9,28 +9,12 @@ on:
       - "scripts/build-content.mjs"
       - "scripts/analytics.mjs"
       - "scripts/validate-site.mjs"
-      - "scripts/browser-qa.mjs"
-      - "scripts/patch-browser-qa-unified.mjs"
-      - "scripts/consolidate-layout-styles.mjs"
       - "scripts/apply-seo.mjs"
-      - "package.json"
-      - "package-lock.json"
       - "scripts/apply-home-layout.mjs"
       - "scripts/apply-news-layout.mjs"
-      - "scripts/apply-video-layout.mjs"
-      - "scripts/apply-discography-layout.mjs"
-      - "scripts/apply-live-layout.mjs"
-      - "scripts/apply-merch-layout.mjs"
-      - "scripts/apply-archive-photo-layout.mjs"
-      - "scripts/apply-archive-text-layout.mjs"
-      - "scripts/apply-notes-layout.mjs"
-      - "scripts/apply-shared-ui.mjs"
-      - "scripts/apply-mobile-detail-pages.mjs"
-      - "scripts/apply-desktop-detail-scale.mjs"
-      - "scripts/apply-unified-desktop-grid.mjs"
-      - "scripts/fix-archive-video-legacy.mjs"
       - "assets/site-redesign.css"
       - "assets/site-redesign.js"
+      - "assets/home-layout.css"
 
 concurrency:
   group: sosil-content-publish
@@ -51,51 +35,31 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - name: Install browser QA dependencies
-        run: npm ci
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
-      - name: Consolidate shared layout styles
-        run: node scripts/consolidate-layout-styles.mjs
+
+      # The approved 2026-09-27 design is the direct build-content output.
+      # Legacy apply-video/discography/live/merch/archive/notes/shared/mobile/
+      # unified-grid postprocessors are intentionally excluded because rerunning
+      # them rewrites the approved pages into an older experimental layout.
       - name: Build static pages
         run: node scripts/build-content.mjs
-      - name: Apply News thumbnail layout
-        run: node scripts/apply-news-layout.mjs
-      - name: Apply stable video layout
-        run: node scripts/apply-video-layout.mjs
-      - name: Apply Discography layout
-        run: node scripts/apply-discography-layout.mjs
-      - name: Apply Works Live layout
-        run: node scripts/apply-live-layout.mjs
-      - name: Apply stable merch layout
-        run: node scripts/apply-merch-layout.mjs
-      - name: Apply Archive Photo split layout
-        run: node scripts/apply-archive-photo-layout.mjs
-      - name: Apply Archive Text layout
-        run: node scripts/apply-archive-text-layout.mjs
-      - name: Apply slower Notes layout
-        run: node scripts/apply-notes-layout.mjs
       - name: Apply homepage layout
         run: node scripts/apply-home-layout.mjs
-      - name: Apply shared UI system
-        run: node scripts/apply-shared-ui.mjs
-      - name: Apply dedicated mobile detail screens
-        run: node scripts/apply-mobile-detail-pages.mjs
-      - name: Apply unified desktop grid
-        run: node scripts/apply-unified-desktop-grid.mjs
-      - name: Remove generated inline style copies
-        run: node scripts/consolidate-layout-styles.mjs --strip-html
-      - name: Normalize Archive video legacy routes
-        run: node scripts/fix-archive-video-legacy.mjs
+      - name: Apply News thumbnail hero
+        run: node scripts/apply-news-layout.mjs
       - name: Apply persistent SEO metadata
         run: node scripts/apply-seo.mjs
+      - name: Guard approved layout structure
+        run: |
+          grep -Fq 'wide-page works-section-page' works/discography/index.html
+          grep -Fq 'wide-page works-section-page' works/videos/index.html
+          grep -Fq 'photo-masonry' archive/photo-video/index.html
+          grep -Fq 'text-index archive-text-index' archive/links/index.html
+          grep -Fq '<div class="panel-title">notes</div>' notes/index.html
+          grep -Fq '<div class="panel-title">merch</div>' merch/index.html
+          ! grep -Fq 'archive-desktop-only' archive/index.html
+          ! grep -Fq 'notes-aligned-detail' notes/1/index.html
       - name: Validate generated site
         run: node scripts/validate-site.mjs
-      - name: Align browser QA with unified desktop grid
-        run: node scripts/patch-browser-qa-unified.mjs
-      - name: Run browser QA
-        run: node scripts/browser-qa.mjs
       - name: Commit generated files
         run: |
           if [ -z "$(git status --porcelain)" ]; then
