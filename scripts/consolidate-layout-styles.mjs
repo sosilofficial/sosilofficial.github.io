@@ -13,7 +13,7 @@ const sources = [
   "apply-archive-photo-layout.mjs",
   "apply-archive-text-layout.mjs",
   "apply-notes-layout.mjs",
-  "apply-home-layout.mjs",
+  // apply-home-layout.mjs now links assets/home-layout.css instead of embedding a STYLE block.
   "apply-shared-ui.mjs",
   "apply-mobile-detail-pages.mjs",
   "apply-desktop-detail-scale.mjs",
