@@ -54,6 +54,31 @@ for (const file of [...walk(ROOT), path.join(ROOT, "404.html")]) {
   }
 }
 
+// These structures belong to the deployed September 27 design (97fcbdf),
+// not the intermediate output of build-content.mjs.
+for (const [file, marker] of [
+  ["works/discography/index.html", 'class="release-index"'],
+  ["works/videos/index.html", 'class="video-index"'],
+  ["archive/photo-video/index.html", '/assets/archive-photo-stable-open.js'],
+  ["archive/links/index.html", 'archive-text'],
+  ["notes/index.html", 'class="category-top"'],
+]) {
+  if (!fs.readFileSync(path.join(ROOT, file), "utf8").includes(marker)) failures.push(`${file}: September 27 layout missing`);
+}
+const sharedCss = fs.readFileSync(path.join(ROOT, "assets/site-redesign.css"), "utf8");
+const homeStyleIndex = sharedCss.indexOf("/* home-mailing-join-style */");
+const sharedStyleIndex = sharedCss.indexOf("/* shared-ui-style */");
+if (homeStyleIndex < 0 || sharedStyleIndex <= homeStyleIndex) failures.push("Homepage CSS cascade order changed");
+if (fs.readFileSync(path.join(ROOT, "index.html"), "utf8").includes('href="/assets/home-layout.css')) failures.push("Homepage CSS must be consolidated before shared UI rules");
+for (const file of walk(path.join(ROOT, "news"))) {
+  const html = fs.readFileSync(file, "utf8");
+  if (!html.includes('<article class="text-detail">')) continue;
+  const thumbnail = html.match(/<meta property="og:image" content="([^"]+)">/)?.[1];
+  if (!thumbnail) continue;
+  const posters = [...html.matchAll(/<img\b[^>]*src="([^"]+)"[^>]*>/g)].filter((match) => match[1] === thumbnail);
+  if (posters.length !== 1 || !posters[0][0].includes('class="news-hero-image"')) failures.push(`${path.relative(ROOT, file)}: News poster missing or duplicated`);
+}
+
 const sitemap = fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8");
 if (!sitemap.includes("https://sosilofficial.github.io/notes/") || sitemap.includes("/gibberish")) failures.push("sitemap.xml: Notes 공개 URL 설정 오류");
 if (!sitemap.includes("https://sosilofficial.github.io/works/discography/") || sitemap.includes("https://sosilofficial.github.io/works/</loc>")) failures.push("sitemap.xml: Works 공개 URL 설정 오류");

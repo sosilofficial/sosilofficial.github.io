@@ -3,13 +3,11 @@ import fs from "node:fs";
 const file = new URL("../index.html", import.meta.url);
 if (!fs.existsSync(file)) throw new Error("Homepage must be generated before layout validation.");
 
-const HOME_STYLE_HREF = "/assets/home-layout.css";
 let html = fs.readFileSync(file, "utf8");
 
-/* Keep homepage-only presentation rules in a real stylesheet so generated HTML stays free of inline <style> blocks. */
-if (!html.includes(`href="${HOME_STYLE_HREF}"`)) {
-  html = html.replace("</head>", `<link rel="stylesheet" href="${HOME_STYLE_HREF}"></head>`);
-}
+// Home styles are consolidated before shared UI styles, as on September 27.
+// A second stylesheet here would change the cascade.
+html = html.replace(/<link rel="stylesheet" href="\/assets\/home-layout\.css(?:\?[^"]*)?">/g, "");
 
 html = html.replace(
   "<p>a slowcore / alternative folk musician<br>based in seoul, south korea</p>",

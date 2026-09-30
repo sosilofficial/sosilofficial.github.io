@@ -194,9 +194,8 @@ try {
       assert(Math.abs(gapAbove - gapBelow) <= 2, "Latest News must bisect the gap between intro and Mailing List");
     }
     const coverTransformA = await page.locator(".moving-cover").evaluate((node) => getComputedStyle(node).transform);
-    await page.waitForTimeout(180);
-    const coverTransformB = await page.locator(".moving-cover").evaluate((node) => getComputedStyle(node).transform);
-    assert(coverTransformA !== coverTransformB, `${viewport.name}: reduced-motion에서도 홈 커버 이동이 유지되지 않습니다`);
+    // Wait for an actual animation frame instead of assuming one ran within 180ms.
+    await page.waitForFunction((before) => getComputedStyle(document.querySelector(".moving-cover")).transform !== before, coverTransformA, { timeout: 5000 });
 
     await open(page, "/works/discography");
     if (viewport.width > 820) {

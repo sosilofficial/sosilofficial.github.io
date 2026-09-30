@@ -6,15 +6,10 @@ on:
     paths:
       - ".github/workflows/rebuild-from-content.yml"
       - "content/**"
-      - "scripts/build-content.mjs"
-      - "scripts/analytics.mjs"
-      - "scripts/validate-site.mjs"
-      - "scripts/apply-seo.mjs"
-      - "scripts/apply-home-layout.mjs"
-      - "scripts/apply-news-layout.mjs"
-      - "assets/site-redesign.css"
-      - "assets/site-redesign.js"
-      - "assets/home-layout.css"
+      - "scripts/**"
+      - "assets/**"
+      - "package.json"
+      - "package-lock.json"
 
 concurrency:
   group: sosil-content-publish
@@ -36,30 +31,14 @@ jobs:
         with:
           node-version: 22
 
-      # The approved 2026-09-27 design is the direct build-content output.
-      # Legacy apply-video/discography/live/merch/archive/notes/shared/mobile/
-      # unified-grid postprocessors are intentionally excluded because rerunning
-      # them rewrites the approved pages into an older experimental layout.
-      - name: Build static pages
-        run: node scripts/build-content.mjs
-      - name: Apply homepage layout
-        run: node scripts/apply-home-layout.mjs
-      - name: Apply News thumbnail hero
-        run: node scripts/apply-news-layout.mjs
-      - name: Apply persistent SEO metadata
-        run: node scripts/apply-seo.mjs
-      - name: Guard approved layout structure
-        run: |
-          grep -Fq 'wide-page works-section-page' works/discography/index.html
-          grep -Fq 'wide-page works-section-page' works/videos/index.html
-          grep -Fq 'photo-masonry' archive/photo-video/index.html
-          grep -Fq 'text-index archive-text-index' archive/links/index.html
-          grep -Fq '<div class="panel-title">notes</div>' notes/index.html
-          grep -Fq '<div class="panel-title">merch</div>' merch/index.html
-          ! grep -Fq 'archive-desktop-only' archive/index.html
-          ! grep -Fq 'notes-aligned-detail' notes/1/index.html
-      - name: Validate generated site
-        run: node scripts/validate-site.mjs
+      - name: Rebuild and validate September 27 layout
+        run: node scripts/rebuild-site.mjs
+      - name: Install browser QA dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run browser QA
+        run: node scripts/browser-qa.mjs
       - name: Commit generated files
         run: |
           if [ -z "$(git status --porcelain)" ]; then

@@ -13,7 +13,7 @@ const sources = [
   "apply-archive-photo-layout.mjs",
   "apply-archive-text-layout.mjs",
   "apply-notes-layout.mjs",
-  // apply-home-layout.mjs now links assets/home-layout.css instead of embedding a STYLE block.
+  "../assets/home-layout.css",
   "apply-shared-ui.mjs",
   "apply-mobile-detail-pages.mjs",
   "apply-desktop-detail-scale.mjs",
@@ -22,6 +22,8 @@ const sources = [
 
 const sections = sources.map((name) => {
   const source = fs.readFileSync(path.join(ROOT, "scripts", name), "utf8");
+  // Preserve the September 27 cascade: homepage rules precede shared UI rules.
+  if (name.endsWith(".css")) return `/* home-mailing-join-style */\n${source.trim()}`;
   const match = source.match(/const STYLE = `<style id="([^"]+)">\n([\s\S]*?)\n<\/style>`;/);
   if (!match) throw new Error(`STYLE CONSOLIDATION ERROR: ${name}의 STYLE 블록을 찾지 못했습니다.`);
   return `/* ${match[1]} */\n${match[2]}`;
