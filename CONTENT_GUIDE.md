@@ -5,7 +5,7 @@
 3. 카테고리와 내용을 입력하고 이미지는 입력 칸에 드래그해 업로드합니다.
 4. **Submit new issue**를 누릅니다.
 
-입력이 유효하면 콘텐츠 파일과 사이트 페이지가 자동으로 생성되고 Issue가 닫힙니다. 실패한 경우 Issue는 열린 상태로 남으며 저장소의 **Actions → Publish content from issue**에서 오류 이유를 확인할 수 있습니다.
+입력이 유효하면 콘텐츠 파일과 사이트 페이지가 자동으로 생성되고 Issue가 닫힙니다. 실패한 경우 Issue는 열린 상태로 남으며 저장소의 **Actions → Publish content from issue**에서 오류 이유를 확인할 수 있습니다. 오류를 수정한 뒤에는 해당 Issue를 닫았다가 다시 열면 게시 작업을 재시도할 수 있습니다.
 
 기존 콘텐츠를 수정할 때는 **New issue → Edit existing content**를 선택하고 카테고리와 기존 slug 또는 URL을 입력합니다. 새 값을 입력한 항목만 변경되며 비운 항목은 기존 값을 유지합니다.
 
