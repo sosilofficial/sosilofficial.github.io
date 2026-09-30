@@ -30,12 +30,28 @@ jobs:
       - name: Edit content file
         if: startsWith(github.event.issue.title, '[Edit]')
         run: node scripts/edit-content.mjs
+
+      # Keep publishing deterministic. The approved 2026-09-27 site is the
+      # direct build-content layout; legacy apply-* layout postprocessors are
+      # intentionally not run here because they rewrite that approved design.
       - name: Build static pages
         run: node scripts/build-content.mjs
-      - name: Apply News thumbnail layout
-        run: node scripts/apply-news-layout.mjs
       - name: Apply homepage layout
         run: node scripts/apply-home-layout.mjs
+      - name: Apply News thumbnail hero
+        run: node scripts/apply-news-layout.mjs
+      - name: Apply persistent SEO metadata
+        run: node scripts/apply-seo.mjs
+      - name: Guard approved layout structure
+        run: |
+          grep -Fq 'wide-page works-section-page' works/discography/index.html
+          grep -Fq 'wide-page works-section-page' works/videos/index.html
+          grep -Fq 'photo-masonry' archive/photo-video/index.html
+          grep -Fq 'text-index archive-text-index' archive/links/index.html
+          grep -Fq '<div class="panel-title">notes</div>' notes/index.html
+          grep -Fq '<div class="panel-title">merch</div>' merch/index.html
+          ! grep -Fq 'archive-desktop-only' archive/index.html
+          ! grep -Fq 'notes-aligned-detail' notes/1/index.html
       - name: Validate generated site
         run: node scripts/validate-site.mjs
       - name: Commit generated content
