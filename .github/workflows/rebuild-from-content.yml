@@ -16,6 +16,7 @@ on:
       - "package.json"
       - "package-lock.json"
       - "scripts/apply-home-layout.mjs"
+      - "scripts/apply-news-layout.mjs"
       - "scripts/apply-video-layout.mjs"
       - "scripts/apply-discography-layout.mjs"
       - "scripts/apply-live-layout.mjs"
@@ -59,6 +60,8 @@ jobs:
         run: node scripts/consolidate-layout-styles.mjs
       - name: Build static pages
         run: node scripts/build-content.mjs
+      - name: Apply News thumbnail layout
+        run: node scripts/apply-news-layout.mjs
       - name: Apply stable video layout
         run: node scripts/apply-video-layout.mjs
       - name: Apply Discography layout
