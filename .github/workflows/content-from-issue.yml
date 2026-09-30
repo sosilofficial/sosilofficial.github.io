@@ -32,6 +32,8 @@ jobs:
         run: node scripts/edit-content.mjs
       - name: Build static pages
         run: node scripts/build-content.mjs
+      - name: Apply News thumbnail layout
+        run: node scripts/apply-news-layout.mjs
       - name: Apply homepage layout
         run: node scripts/apply-home-layout.mjs
       - name: Validate generated site
