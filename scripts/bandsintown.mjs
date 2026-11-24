@@ -107,8 +107,16 @@ export function upcomingHtml(options = {}) {
 }
 
 
+function homeVenue(event) {
+  const [name, ...location] = event.venue.split(' · ');
+  // Some source records put the show title and lineup in the venue-name field.
+  // Keep the supplied city/country without inventing a venue.
+  return name === event.title || name.startsWith(`${event.title} | `)
+    ? location.join(' · ') : event.venue;
+}
+
 export function homeUpcomingHtml(options = {}) {
   const { events, initialized } = readUpcoming(options);
-  const shows = events.slice(0, 2).map((event) => `<article class="home-show"><p><time datetime="${esc(event.datetime)}">${esc(event.datetime.slice(0, 10).replaceAll('-', '.'))} · ${esc(event.datetime.slice(11, 16))} local</time></p><a class="home-show-title" href="/live">${esc(event.title)}</a><p class="home-show-venue">${esc(event.venue.startsWith(`${event.title} · `) ? event.venue.slice(event.title.length + 3) : event.venue)}</p><a class="home-show-ticket" href="${esc(publicUrl(event.url) || ARTIST_URL)}" target="_blank" rel="noopener noreferrer">${esc(event.label)}</a></article>`).join('');
+  const shows = events.slice(0, 2).map((event) => `<article class="home-show"><p><time datetime="${esc(event.datetime)}">${esc(event.datetime.slice(0, 10).replaceAll('-', '.'))} · ${esc(event.datetime.slice(11, 16))} local</time></p><span class="home-show-title">${esc(event.title)}</span><p class="home-show-venue">${esc(homeVenue(event))}</p><a class="home-show-ticket" href="${esc(publicUrl(event.url) || ARTIST_URL)}" target="_blank" rel="noopener noreferrer">${esc(event.label)}</a></article>`).join('');
   return `<section class="home-live" aria-labelledby="home-live-heading"><h2 id="home-live-heading">upcoming live</h2>${shows || `<p class="empty-note">${initialized ? 'No upcoming shows announced.' : 'Check Bandsintown for upcoming shows.'}</p>`}<a class="small-link" href="/live">all live dates</a></section>`;
 }
