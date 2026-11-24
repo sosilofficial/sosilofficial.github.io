@@ -12,7 +12,7 @@ const STYLE = `<style id="unified-desktop-grid-style">
     --desktop-subnav-gap: clamp(16px, 2vw, 32px);
     /* 26 monospace characters across the four Works labels, plus tracking,
        three gaps and equal gutters. */
-    --desktop-index-column: calc(26ch + .312em + 3 * var(--desktop-subnav-gap) + 2 * var(--desktop-index-pad-x));
+    --desktop-index-column: calc(22ch + .264em + 2 * var(--desktop-subnav-gap) + 2 * var(--desktop-index-pad-x));
     --desktop-detail-pad-x: clamp(28px, 3vw, 52px);
   }
 

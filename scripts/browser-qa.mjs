@@ -8,6 +8,8 @@ const viewports = [
   { name: "small-mobile", width: 360, height: 740 },
   { name: "mobile", width: 390, height: 844 },
   { name: "large-mobile", width: 430, height: 932 },
+  { name: "short-desktop", width: 1280, height: 720 },
+  { name: "narrow-desktop", width: 1024, height: 768 },
   { name: "desktop", width: 1440, height: 900 },
 ];
 
@@ -42,6 +44,7 @@ const browser = await chromium.launch({ headless: true, executablePath });
 async function open(page, route) {
   const response = await page.goto(`${base}${route}`, { waitUntil: "domcontentloaded" });
   assert(response && response.status() < 400, `${route}: HTTP ${response?.status()}`);
+  await page.evaluate(async () => { await document.fonts.ready; await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))); });
 }
 
 async function visibleImages(page, selector, label) {
@@ -141,12 +144,17 @@ try {
   for (const viewport of viewports) {
     const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height }, reducedMotion: "reduce" });
     const page = await context.newPage();
+    const pageErrors = [];
+    page.on("pageerror", error => pageErrors.push(error.message));
 
     await open(page, "/");
     assert(await page.locator(".rail-nav a").count() === 7, `${viewport.name}: 주요 nav가 완전하지 않습니다`);
-    const homeNews = page.locator(".home-news");
+    assert(await page.locator('.rail-nav a[href="/live"]').count() === 1, 'Live sidebar link missing');
+    assert(await page.locator('.rail-nav a[href="/news"]').count() === 0, 'News sidebar link remains');
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Home horizontal overflow');
+    const homeNews = page.locator(".home-live");
     await homeNews.waitFor({ state: "visible" });
-    assert((await homeNews.locator("h2").textContent())?.trim() === "latest news", `${viewport.name}: 홈 latest news 제목이 없습니다`);
+    assert((await homeNews.locator("h2").textContent())?.trim() === "upcoming live", `${viewport.name}: 홈 upcoming live 제목이 없습니다`);
     assert(!(await page.locator(".home-intro").innerText()).includes("i make music"), `${viewport.name}: 삭제한 홈 소개 문구가 다시 나타났습니다`);
     const mailing = page.locator(".home-mailing form");
     await mailing.waitFor({ state: "visible" });
@@ -158,7 +166,7 @@ try {
     });
     assert(mailingUi.formBackground !== "rgba(0, 0, 0, 0)", `${viewport.name}: Mailing List 입력 영역이 구분되지 않습니다`);
     assert(mailingUi.buttonBackground !== "rgba(0, 0, 0, 0)", `${viewport.name}: Mailing List join 버튼이 구분되지 않습니다`);
-    const homeLines = await page.locator(".home-news, .home-mailing, .home-mailing form").evaluateAll((nodes) => nodes.map((node) => {
+    const homeLines = await page.locator(".home-live, .home-mailing, .home-mailing form").evaluateAll((nodes) => nodes.map((node) => {
       const style = getComputedStyle(node);
       return { top: style.borderTopWidth, bottom: style.borderBottomWidth };
     }));
@@ -173,7 +181,7 @@ try {
       assert(brandBox, `${viewport.name}: 모바일 sosil 기준선을 읽지 못했습니다`);
       assert(Math.abs(mailingBox.x - brandBox.x) <= 2, `${viewport.name}: 모바일 Mailing List가 sosil 시작선과 맞지 않습니다`);
       assert(Math.abs((viewport.width - mailingBox.x - mailingBox.width) - brandBox.x) <= 2, `${viewport.name}: 모바일 Mailing List 오른쪽 여백이 sosil 기준 그리드와 맞지 않습니다`);
-      for (const selector of [".home-intro", ".home-news", ".home-mailing", ".home-mailing form"]) {
+      for (const selector of [".home-intro", ".home-live", ".home-mailing", ".home-mailing form"]) {
         const box = await page.locator(selector).boundingBox();
         assert(box && Math.abs(box.x - (viewport.width - box.x - box.width)) <= 2,
           `${viewport.name}: ${selector}의 좌우 여백이 다릅니다`);
@@ -191,7 +199,11 @@ try {
       const gapAbove = news.y - (intro.y + intro.height);
       const gapBelow = signup.y - (news.y + news.height);
       assert(gapAbove >= 0 && gapBelow >= 0, "Latest News overlaps intro or Mailing List");
-      assert(Math.abs(gapAbove - gapBelow) <= 2, "Latest News must bisect the gap between intro and Mailing List");
+      assert(Math.abs(gapAbove - gapBelow) <= 2, `Upcoming Live spacing at ${viewport.name}: ${JSON.stringify({intro,news,signup,gapAbove,gapBelow})}`);
+    }
+    if (process.env.QA_SCREENSHOTS) {
+      fs.mkdirSync(process.env.QA_SCREENSHOTS, { recursive: true });
+      await page.screenshot({ path: path.join(process.env.QA_SCREENSHOTS, `home-${viewport.name}.png`), fullPage: true });
     }
     const coverTransformA = await page.locator(".moving-cover").evaluate((node) => getComputedStyle(node).transform);
     // Wait for an actual animation frame instead of assuming one ran within 180ms.
@@ -207,7 +219,7 @@ try {
           return { text: link.textContent, visible: rect.left >= panel.left && rect.right <= panel.right && rect.width > 0 };
         });
       });
-      assert(menu.length === 4 && menu.every((item) => item.visible), "All four Works categories must fit inside the index column");
+      assert(menu.length === 3 && menu.every((item) => item.visible), "All three Works categories must fit inside the index column");
       const gutters = await page.locator('.release-split').evaluate((split) => {
         const panel = split.querySelector('.index-panel').getBoundingClientRect();
         const image = split.querySelector('.release-index img').getBoundingClientRect();
@@ -222,7 +234,7 @@ try {
       display: getComputedStyle(link).display,
       visibility: getComputedStyle(link).visibility,
     })));
-    assert(worksTabs.length === 4, `${viewport.name}: Works 하위 메뉴가 4개가 아닙니다`);
+    assert(worksTabs.length === 3, `${viewport.name}: Works 하위 메뉴가 3개가 아닙니다`);
     assert(worksTabs.every((tab) => tab.display !== "none" && tab.visibility !== "hidden"), `${viewport.name}: Works 하위 메뉴 중 숨겨진 항목이 있습니다`);
     const worksRhythm = await categoryRhythm(page);
     await visibleImages(page, ".release-index img", `${viewport.name} discography`);
@@ -245,14 +257,16 @@ try {
     assertGridMatch(releaseIndexBox, videoIndexBox, `${viewport.name}: Discography/Video 목록`, ["x", "y", "width"]);
     assertGridMatch(coverBox, videoBox, `${viewport.name}: Discography/Video 첫 이미지`, viewport.width > 820 ? ["x", "y", "width"] : ["x", "y"]);
 
-    await open(page, "/works/live");
+    await open(page, "/live");
     const liveBox = await page.locator(".live-log").boundingBox();
     for (const id of ["live-upcoming", "live-past"]) {
       assert(await page.locator(`#${id}`).isVisible(), `${viewport.name}: ${id} heading hidden`);
     }
     assert(await page.locator("#live-past + .live-row").count() === 1, "Past history is missing");
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${viewport.name}: Live page overflows`);
-    assertGridMatch(releaseIndexBox, liveBox, `${viewport.name}: Works 목록 시작선`, viewport.width > 820 ? ["y"] : ["x", "y"]);
+    assert(liveBox && liveBox.width > 0, "Live list is visible");
+    assert(await page.locator('.rail-nav a[aria-current="page"]').textContent() === 'live', 'Live nav must be active');
+    assert(await page.locator('.subnav').count() === 0, 'Live must not have Works subnav');
     const liveTypography = await page.locator(".live-row:has(.live-artists)").first().evaluate((row) => {
       const title = getComputedStyle(row.querySelector(".live-title"));
       const artists = getComputedStyle(row.querySelector(".live-artists"));
@@ -299,7 +313,7 @@ try {
       ["/archive", ".category-top h1"],
       ["/notes", ".category-top h1"],
       ["/merch", ".category-top h1"],
-      ["/news", ".category-top h1"],
+      ["/live", ".category-top h1"],
     ];
     let categoryHeadingBox = null;
     for (const [route, selector] of categoryPages) {
@@ -309,6 +323,7 @@ try {
       else assertGridMatch(categoryHeadingBox, headingBox, `${viewport.name}: ${route} 제목`, ["x", "y"]);
     }
 
+    assert(pageErrors.length === 0, `Browser errors: ${pageErrors.join("; ")}`);
     await context.close();
   }
 

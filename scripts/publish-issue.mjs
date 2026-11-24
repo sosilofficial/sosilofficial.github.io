@@ -20,7 +20,6 @@ function fields(body) {
 
 const form = fields(issue.body || "");
 const categoryMap = {
-  "News": ["news", "", "content/news"],
   "Notes": ["notes", "", "content/notes"],
   "Archive Photo": ["archive", "photo", "content/archive/photo"],
   "Archive Video": ["archive", "video", "content/archive/video"],

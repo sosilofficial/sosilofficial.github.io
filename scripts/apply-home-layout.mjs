@@ -17,16 +17,6 @@ html = html.replace(
 /* Keep the intro to one quiet block. */
 html = html.replace(/<p>i make music,<br>and moving images\.<\/p>/, "");
 
-/* Keep the News slot visible even before the first authored News post exists. */
-if (!html.includes('class="home-news"')) {
-  html = html.replace(
-    '<section class="home-mailing">',
-    '<section class="home-news"><h2>latest news</h2><p class="empty-note">no news yet.</p></section><section class="home-mailing">'
-  );
-} else {
-  html = html.replace(/(<section class="home-news"><h2>)[^<]*(<\/h2>)/, "$1latest news$2");
-}
-
 /* Keep the signup intentionally bare: heading, email line, join. */
 html = html.replace(/<p class="mailing-copy">[\s\S]*?<\/p>/, "");
 

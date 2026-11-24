@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 const ROOT = process.cwd();
-const FILE = path.join(ROOT, "works", "live", "index.html");
+const FILE = path.join(ROOT, "live", "index.html");
 if (!fs.existsSync(FILE)) {
   console.log("Works live page not found; skipping live layout.");
   process.exit(0);
