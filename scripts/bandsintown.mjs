@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 export const ARTIST_ID = '15665087';
 export const CACHE_FILE = 'content/works/live/upcoming.json';
+export const OVERRIDES_FILE = 'content/works/live/event-overrides.json';
 export const ARTIST_URL = `https://www.bandsintown.com/a/${ARTIST_ID}`;
 const esc = (value = '') => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 
@@ -75,13 +76,21 @@ export async function syncEvents({ key, file = CACHE_FILE, fetchImpl = fetch, wa
   }
 }
 
-export function readUpcoming({ file = CACHE_FILE, now = new Date() } = {}) {
+export function readUpcoming({ file = CACHE_FILE, overridesFile = OVERRIDES_FILE, now = new Date() } = {}) {
+  const overrides = fs.existsSync(overridesFile) ? JSON.parse(fs.readFileSync(overridesFile, 'utf8')) : {};
+  if (!overrides || Array.isArray(overrides) || typeof overrides !== 'object' ||
+      Object.entries(overrides).some(([id, item]) => !/^\d+$/.test(id) || !item || typeof item !== 'object' || Array.isArray(item) || (item.title !== undefined && (typeof item.title !== 'string' || !item.title.trim())) || (item.lineup !== undefined && (!Array.isArray(item.lineup) || item.lineup.some(name => typeof name !== 'string' || !name.trim()))))) {
+    throw new Error('Event overrides must map event IDs to a title and/or an array of artist names.');
+  }
   const snapshot = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : { events: null };
   // A local show date has no timezone. Keep that date through the end of day
   // everywhere on earth, avoiding early removal for international shows.
   const today = new Date(now.getTime() - 12 * 3600000).toISOString().slice(0, 10);
   const events = snapshot.events?.filter((event) => event.datetime.slice(0, 10) >= today) || [];
-  return { events, initialized: snapshot.events !== null };
+  return { events: events.map(event => ({ ...event,
+    title: overrides[event.id]?.title?.trim() || event.title,
+    lineup: overrides[event.id]?.lineup ? [...new Set(overrides[event.id].lineup.map(name => name.trim()))] : event.lineup,
+  })), initialized: snapshot.events !== null };
 }
 
 export function upcomingHtml(options = {}) {

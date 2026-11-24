@@ -1080,6 +1080,20 @@ h1, h2, strong { font-weight: 400; }
 .live-source { font-size: .62rem; color: var(--muted); margin: 16px 0; }
 .live-upcoming-row .live-title, .live-upcoming-row .live-artists,
 .live-upcoming-row .live-venue { overflow-wrap: anywhere; }
+/* Parent opacity must not fade the ticket link along with the venue. */
+.live-row.live-upcoming-row .live-venue { opacity: 1; }
+.live-row .live-cta {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: .70rem;
+  text-decoration: underline;
+  text-underline-offset: .22em;
+  text-decoration-thickness: 1px;
+  width: fit-content;
+  padding-block: 5px;
+}
+.live-row .live-cta:hover { text-decoration-thickness: 2px; }
+.live-row .live-cta:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 
 /* stable-merch-layout-style */
 @media (min-width: 821px) {
@@ -1552,6 +1566,18 @@ h1, h2, strong { font-weight: 400; }
   .home-live .home-show-title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .home-live .home-show-venue { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
+
+.home-live .home-show-ticket {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: .70rem;
+  text-decoration: underline;
+  text-underline-offset: .22em;
+  text-decoration-thickness: 1px;
+  padding-block: 5px;
+}
+.home-live .home-show-ticket:hover { text-decoration-thickness: 2px; }
+.home-live .home-show-ticket:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 
 /* shared-ui-style */
 :root {

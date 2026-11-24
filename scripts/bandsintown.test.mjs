@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { ARTIST_ID, normalizeEvents, publicUrl, syncEvents, upcomingHtml, homeUpcomingHtml } from './bandsintown.mjs';
+import { ARTIST_ID, normalizeEvents, publicUrl, syncEvents, upcomingHtml, homeUpcomingHtml, readUpcoming } from './bandsintown.mjs';
 const event = (overrides = {}) => ({ id: '42', artist_id: ARTIST_ID, datetime: '2030-12-10T19:30:00', title: 'Winter <show>', venue: { name: 'Club', city: 'Seoul', country: 'South Korea' }, lineup: ['Sosil', 'Guest & friend'], offers: [], ...overrides });
 const temporary = (t) => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sosil-live-'));
@@ -98,4 +98,23 @@ test('home uses the same upcoming snapshot, limits previews and handles empty da
   assert(homeUpcomingHtml({ ...options, now: new Date('2031-01-01') }).includes('No upcoming shows announced.'));
   fs.writeFileSync(file, JSON.stringify({ events: [] }));
   assert(homeUpcomingHtml(options).includes('No upcoming shows announced.'));
+});
+
+
+test('manual lineup survives API refresh without changing event data or resurrecting events', async t => {
+  const file = temporary(t);
+  const overridesFile = `${file}.lineup.json`;
+  fs.writeFileSync(overridesFile, JSON.stringify({ '42': { title: 'Authored show', lineup: ['Guest <name>', 'Other musician'] }, '999': { lineup: ['Cancelled guest'] } }));
+  const options = { file, overridesFile, now: new Date('2030-12-01') };
+  fs.writeFileSync(file, JSON.stringify({ events: normalizeEvents([event()]) }));
+  assert.deepEqual(readUpcoming(options).events[0].lineup, ['Guest <name>', 'Other musician']);
+  assert(upcomingHtml(options).includes('Guest &lt;name&gt;'));
+  assert(!upcomingHtml(options).includes('Cancelled guest'));
+  await syncEvents({ key: 'test-key', file, fetchImpl: async () => ({ ok: true, json: async () => [event({ title: 'Updated show' })] }) });
+  assert.equal(readUpcoming(options).events[0].title, 'Authored show');
+  assert(homeUpcomingHtml(options).includes('Authored show'));
+  assert.deepEqual(readUpcoming(options).events[0].lineup, ['Guest <name>', 'Other musician']);
+  assert.equal(JSON.parse(fs.readFileSync(overridesFile))['42'].lineup[0], 'Guest <name>');
+  fs.writeFileSync(overridesFile, '{"42":"invalid"}');
+  assert.throws(() => readUpcoming(options), /Event overrides/);
 });

@@ -172,6 +172,20 @@ const STYLE = `<style id="works-live-layout-style">
 .live-source { font-size: .62rem; color: var(--muted); margin: 16px 0; }
 .live-upcoming-row .live-title, .live-upcoming-row .live-artists,
 .live-upcoming-row .live-venue { overflow-wrap: anywhere; }
+/* Parent opacity must not fade the ticket link along with the venue. */
+.live-row.live-upcoming-row .live-venue { opacity: 1; }
+.live-row .live-cta {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: .70rem;
+  text-decoration: underline;
+  text-underline-offset: .22em;
+  text-decoration-thickness: 1px;
+  width: fit-content;
+  padding-block: 5px;
+}
+.live-row .live-cta:hover { text-decoration-thickness: 2px; }
+.live-row .live-cta:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 </style>`;
 
 function splitPerformance(raw) {
