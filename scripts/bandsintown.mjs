@@ -75,12 +75,24 @@ export async function syncEvents({ key, file = CACHE_FILE, fetchImpl = fetch, wa
   }
 }
 
-export function upcomingHtml({ file = CACHE_FILE, now = new Date() } = {}) {
+export function readUpcoming({ file = CACHE_FILE, now = new Date() } = {}) {
   const snapshot = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : { events: null };
   // A local show date has no timezone. Keep that date through the end of day
   // everywhere on earth, avoiding early removal for international shows.
   const today = new Date(now.getTime() - 12 * 3600000).toISOString().slice(0, 10);
   const events = snapshot.events?.filter((event) => event.datetime.slice(0, 10) >= today) || [];
+  return { events, initialized: snapshot.events !== null };
+}
+
+export function upcomingHtml(options = {}) {
+  const { events, initialized } = readUpcoming(options);
   const rows = events.map((event) => `<div class="live-row live-upcoming-row"><time datetime="${esc(event.datetime)}">${esc(event.datetime.slice(0, 10).replaceAll('-', '.'))}<small class="live-time">${esc(event.datetime.slice(11, 16))} local</small></time><span class="live-title">${esc(event.title)}</span><span class="live-artists">${esc(event.lineup.join(', '))}</span><small class="live-venue">${esc(event.venue)}<a class="live-cta" href="${esc(publicUrl(event.url) || ARTIST_URL)}" target="_blank" rel="noopener noreferrer">${esc(event.label)}</a></small></div>`).join('');
-  return `<section aria-labelledby="live-upcoming"><h2 class="live-section-heading" id="live-upcoming">upcoming</h2>${rows || `<p class="empty-note">${snapshot.events === null ? 'Check Bandsintown for upcoming shows.' : 'No upcoming shows announced.'}</p>`}<p class="live-source"><a href="${ARTIST_URL}" target="_blank" rel="noopener noreferrer">shows on Bandsintown</a></p></section>`;
+  return `<section aria-labelledby="live-upcoming"><h2 class="live-section-heading" id="live-upcoming">upcoming</h2>${rows || `<p class="empty-note">${!initialized ? 'Check Bandsintown for upcoming shows.' : 'No upcoming shows announced.'}</p>`}<p class="live-source"><a href="${ARTIST_URL}" target="_blank" rel="noopener noreferrer">shows on Bandsintown</a></p></section>`;
+}
+
+
+export function homeUpcomingHtml(options = {}) {
+  const { events, initialized } = readUpcoming(options);
+  const shows = events.slice(0, 2).map((event) => `<article class="home-show"><p><time datetime="${esc(event.datetime)}">${esc(event.datetime.slice(0, 10).replaceAll('-', '.'))} · ${esc(event.datetime.slice(11, 16))} local</time></p><a class="home-show-title" href="/live">${esc(event.title)}</a><p class="home-show-venue">${esc(event.venue.startsWith(`${event.title} · `) ? event.venue.slice(event.title.length + 3) : event.venue)}</p><a class="home-show-ticket" href="${esc(publicUrl(event.url) || ARTIST_URL)}" target="_blank" rel="noopener noreferrer">${esc(event.label)}</a></article>`).join('');
+  return `<section class="home-live" aria-labelledby="home-live-heading"><h2 id="home-live-heading">upcoming live</h2>${shows || `<p class="empty-note">${initialized ? 'No upcoming shows announced.' : 'Check Bandsintown for upcoming shows.'}</p>`}<a class="small-link" href="/live">all live dates</a></section>`;
 }

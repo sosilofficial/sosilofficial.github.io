@@ -1,4 +1,4 @@
-import { upcomingHtml } from "./bandsintown.mjs";
+import { upcomingHtml, homeUpcomingHtml } from "./bandsintown.mjs";
 import fs from "node:fs";
 import { ANALYTICS_SCRIPT } from "./analytics.mjs";
 import path from "node:path";
@@ -102,7 +102,7 @@ function head(name, description, route, image = "", detail = false) {
   return `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><link rel="icon" href="/favicon-sosil.svg"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap"><link rel="stylesheet" href="/assets/site-redesign.css?v=${assetVersion}"><script src="/assets/site-redesign.js?v=${assetVersion}" defer></script><meta name="description" content="${esc(description)}"><meta name="robots" content="index,follow,max-image-preview:large"><link rel="canonical" href="${canonical}"><meta property="og:locale" content="ko_KR"><meta property="og:type" content="${detail ? "article" : "website"}"><meta property="og:site_name" content="소실 SOSIL"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${canonical}">${image ? `<meta property="og:image" content="${esc(absolute(normalizedImage(image)))}">` : ""}<meta name="twitter:card" content="summary_large_image">${route === "/" ? '<script type="application/ld+json">{"@context":"https://schema.org","@type":"MusicGroup","name":"소실","alternateName":"Sosil","member":{"@type":"Person","name":"김성빈"},"genre":["slowcore","folk"],"url":"https://sosilofficial.github.io/"}</script>' : ""}${ANALYTICS_SCRIPT}</head>`;
 }
 function shell(active, main, bodyClass = "") {
-  const nav = [["works", "/works/discography"], ["news", "/news"], ["notes", "/notes"], ["archive", "/archive"], ["merch", "/merch"], ["info", "/info"], ["contact", "/contact"]].map(([label, href]) => `<a href="${href}"${active === label ? ' class="is-active" aria-current="page"' : ""}>${label}</a>`).join("");
+  const nav = [["works", "/works/discography"], ["live", "/live"], ["notes", "/notes"], ["archive", "/archive"], ["merch", "/merch"], ["info", "/info"], ["contact", "/contact"]].map(([label, href]) => `<a href="${href}"${active === label ? ' class="is-active" aria-current="page"' : ""}>${label}</a>`).join("");
   return `<body class="${bodyClass}"><div class="site-frame"><aside class="side-rail"><a href="/" class="site-brand" aria-label="소실 홈">sosil</a><nav class="rail-nav" aria-label="주요 메뉴">${nav}</nav></aside><main class="site-main">${main}</main></div></body></html>`;
 }
 function page(name, description, route, active, main, image = "", detail = false, bodyClass = "") { return `${head(name, description, route, image, detail)}${shell(active, main, bodyClass)}`; }
@@ -122,7 +122,7 @@ function clearDetails(route) {
 }
 
 function subnav(type, active) {
-  const links = type === "works" ? [["discography", "/works/discography"], ["video", "/works/videos"], ["live", "/works/live"], ["others", "/works/others"]] : [["photo", "/archive/photo-video"], ["video", "/archive/videos"], ["text", "/archive/links"]];
+  const links = type === "works" ? [["discography", "/works/discography"], ["video", "/works/videos"], ["others", "/works/others"]] : [["photo", "/archive/photo-video"], ["video", "/archive/videos"], ["text", "/archive/links"]];
   return `<nav class="subnav" aria-label="${type} 하위 메뉴">${links.map(([label, href]) => `<a href="${href}"${active === label ? ' class="is-active" aria-current="page"' : ""}>${label}</a>`).join("")}</nav>`;
 }
 const worksTop = (active) => `<header class="works-top"><h1>works</h1>${subnav("works", active)}</header>`;
@@ -207,7 +207,7 @@ function liveRows(item) {
     return `${heading}<div class="live-row"><time>${date}</time><span>${event}</span><small>${venue}</small></div>`;
   }).join("");
 }
-publish("/works/live", page("works / live", worksDescription, "/works/live", "works", split(`<div class="panel-headline">${worksTop("live")}</div><div class="live-log">${upcomingHtml()}<section aria-labelledby="live-past"><h2 class="live-section-heading" id="live-past">past</h2>${live.map(liveRows).join("")}</section></div>`, "", "live-split"), "", true));
+publish("/live", page("live", "소실(Sosil)의 다가오는 공연과 지난 공연 기록.", "/live", "live", split(`<div class="panel-headline"><header class="category-top"><h1>live</h1></header></div><div class="live-log">${upcomingHtml()}<section aria-labelledby="live-past"><h2 class="live-section-heading" id="live-past">past</h2>${live.map(liveRows).join("")}</section></div>`, "", "live-split"), "", true));
 const othersHasDetail = (item) => Boolean(firstImage(item) || item.video || item.body || item.credit || item.credits);
 const othersIndex = (selected = "") => others.length ? `<div class="text-index others-index">${others.map((item) => {
   const inside = `<span>${esc(displayDate(item.date))}</span><strong>${esc(item.title)}</strong><small>${esc(item.type_label || item.meta || "")}</small>${sampleMark(item)}${item.note ? `<em>${esc(item.note)}</em>` : ""}`;
@@ -221,14 +221,10 @@ for (const item of others) {
   publish(`/works/others/${item.slug}`, page(item.title, item.description || item.title, `/works/others/${item.slug}`, "works", split(`<div class="panel-headline">${worksTop("others")}</div>${othersIndex(item.slug)}`, detail), firstImage(item), true));
 }
 
-clearDetails("/news");
-const news = by("news");
-const newsIndex = (selected = "") => news.length ? `<div class="text-index news-index">${news.map((item) => `<a href="/news/${esc(item.slug)}"${selected === item.slug ? ' class="is-selected" aria-current="page"' : ""}><span>${esc(displayDate(item.date))}</span><strong>${esc(item.title)}</strong>${sampleMark(item)}${item.description ? `<small>${esc(item.description)}</small>` : ""}</a>`).join("")}</div>` : '<p class="empty-note">no news yet.</p>';
-publish("/news", page("news", "소실(Sosil)의 발매, 공연과 새로운 소식.", "/news", "news", split(`<div class="panel-title">news</div>${newsIndex()}`, ""), "", false));
-for (const item of news) {
-  const detail = `<article class="text-detail">${closeLink("/news", "news")}<p>${esc(displayDate(item.date))}</p><h1>${esc(item.title)}</h1>${item.description ? `<p class="summary">${esc(item.description)}</p>` : ""}${imageGallery(item)}${bodyHtml(item)}${externalLinks(item)}</article>`;
-  publish(`/news/${item.slug}`, page(item.title, item.description || item.title, `/news/${item.slug}`, "news", split(`<div class="panel-title">news</div>${newsIndex(item.slug)}`, detail), firstImage(item), true));
-}
+// Retire the old News content; keep its landing URL useful for existing links.
+fs.rmSync(path.join(ROOT, "news"), { recursive: true, force: true });
+writeRoute("/news", redirectPage("/live", "live"));
+writeRoute("/works/live", redirectPage("/live", "live"));
 
 clearDetails("/notes");
 clearDetails("/gibberish");
@@ -323,11 +319,10 @@ publish("/contact", page("contact", contact.description, "/contact", "contact", 
 
 const home = site("home");
 const featured = discography.find((item) => firstImage(item)) || discography[0];
-const latestNews = news[0];
 const mailingUrl = linkUrl(home, "newsletter").split("?")[0];
-const homeNews = latestNews ? `<section class="home-news"><h2>news</h2><p>${esc(displayDate(latestNews.date))}</p><a href="/news/${esc(latestNews.slug)}">${esc(latestNews.title)}</a><a class="small-link" href="/news">more</a></section>` : "";
-const homeMain = `<div class="home-canvas"><section class="home-intro"><p>a slowcore / alternative folk musician<br>based in seoul, south korea</p><p>i make music,<br>and moving images.</p></section><div class="home-motion-field" data-home-motion><a class="moving-cover" href="${ALBUM_YOUTUBE}" target="_blank" rel="noreferrer" aria-label="${esc(featured?.title || "몽상은나의조랑말")} YouTube에서 듣기">${featured ? `<img src="${esc(imageFor(featured))}" alt="${esc(featured.title)} 앨범 커버" decoding="async">` : ""}</a></div>${homeNews}<section class="home-mailing"><h2>mailing list</h2><p class="mailing-copy">소실의 소식을 보내드립니다.<br>sending news of sosil</p><form action="${esc(mailingUrl)}" method="get" target="_blank"><label for="mailing-email">your email</label><input id="mailing-email" name="emailAddress" type="email" autocomplete="email" placeholder="your email" required><button type="submit">join</button></form></section></div>`;
-publish("/", page("소실 SOSIL", home.description, "/", "", homeMain, imageFor(featured), false, `home-body${latestNews ? "" : " home-no-news"}`));
+const homeLive = homeUpcomingHtml();
+const homeMain = `<div class="home-canvas"><section class="home-intro"><p>a slowcore / alternative folk musician<br>based in seoul, south korea</p><p>i make music,<br>and moving images.</p></section><div class="home-motion-field" data-home-motion><a class="moving-cover" href="${ALBUM_YOUTUBE}" target="_blank" rel="noreferrer" aria-label="${esc(featured?.title || "몽상은나의조랑말")} YouTube에서 듣기">${featured ? `<img src="${esc(imageFor(featured))}" alt="${esc(featured.title)} 앨범 커버" decoding="async">` : ""}</a></div>${homeLive}<section class="home-mailing"><h2>mailing list</h2><p class="mailing-copy">소실의 소식을 보내드립니다.<br>sending news of sosil</p><form action="${esc(mailingUrl)}" method="get" target="_blank"><label for="mailing-email">your email</label><input id="mailing-email" name="emailAddress" type="email" autocomplete="email" placeholder="your email" required><button type="submit">join</button></form></section></div>`;
+publish("/", page("소실 SOSIL", home.description, "/", "", homeMain, imageFor(featured), false, "home-body"));
 
 fs.writeFileSync(path.join(ROOT, "404.html"), `<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>nothing here. | 소실 SOSIL</title><link rel="icon" href="/favicon-sosil.svg"><link rel="stylesheet" href="/assets/site-redesign.css?v=${assetVersion}"><meta name="robots" content="noindex,follow">${ANALYTICS_SCRIPT}</head><body class="not-found-page"><main><a class="site-brand" href="/">sosil</a><p>nothing here.</p><a href="/">home</a></main></body></html>`);
 

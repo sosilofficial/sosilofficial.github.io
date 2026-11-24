@@ -24,3 +24,11 @@
 - 검증: `node --test scripts/bandsintown.test.mjs`, `npm run build`, `npm run qa:browser`. 실 API 검증은 새 secret 등록 후 workflow의 경고 유무와 live 페이지의 실제 공연 정보를 확인하세요.
 
 공식 문서: [Bandsintown API](https://help.artists.bandsintown.com/en/articles/9186477-api-documentation), [키 발급 및 지원](https://help.artists.bandsintown.com/en/articles/7053475-what-is-the-bandsintown-api), [GitHub Pages 배포 설정](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
+
+
+## Live 독립 메뉴와 홈 공연 안내
+
+- Live 공개 주소는 `/live/`입니다. 기존 `/works/live/`와 `/news/`는 Live로 연결됩니다.
+- News 메뉴와 기존 뉴스 게시물은 제거했습니다. 공연 예고는 Bandsintown에서 관리하세요.
+- 홈 Upcoming Live는 Live와 같은 정상 수집 파일에서 가까운 공연 두 건의 날짜, 현지 시각, 이름, 장소, 예매 링크를 표시합니다. 전체 목록은 `all live dates`로 이동합니다.
+- 일정이 없으면 빈 상태 안내를 표시하며, 지난 공연은 기존 history.md에서 관리합니다.

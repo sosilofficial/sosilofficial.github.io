@@ -3,17 +3,17 @@
     --home-copy-width: min(29vw, 443px);
   }
   .home-intro,
-  .home-news,
+  .home-live,
   .home-mailing {
     width: var(--home-copy-width) !important;
   }
   /* Center the news block in the actual gap between intro and mailing. */
-  .home-news {
-    top: var(--home-news-midpoint, 41.65vh) !important;
+  .home-live {
+    top: var(--home-live-midpoint, 41.65vh) !important;
     transform: translateY(-50%);
   }
-  .home-no-news .home-news {
-    top: var(--home-news-midpoint, 31.75vh) !important;
+  .home-no-live .home-live {
+    top: var(--home-live-midpoint, 31.75vh) !important;
   }
   .home-grid-anchor {
     display: inline-block;
@@ -62,14 +62,14 @@
   .moving-cover {
     width: min(24vw, 104px) !important;
   }
-  .home-news {
+  .home-live {
     width: 100% !important;
     margin: 0 0 36px !important;
     padding-top: 0;
     border-top: 0;
     transform: none;
   }
-  .home-news h2 {
+  .home-live h2 {
     margin: 0 0 12px !important;
     padding-bottom: 9px;
     border-bottom: 1px solid rgba(47, 55, 67, .18);
@@ -77,18 +77,18 @@
     letter-spacing: .035em;
     color: var(--ink);
   }
-  .home-news p {
+  .home-live p {
     margin: 0 0 2px;
     color: var(--muted);
     font-size: .64rem;
     line-height: 1.55;
   }
-  .home-news > a:not(.small-link) {
+  .home-live > a:not(.small-link) {
     display: block;
     margin-top: 1px;
     line-height: 1.55;
   }
-  .home-news .small-link {
+  .home-live .small-link {
     display: none;
   }
   .home-mailing {
@@ -121,7 +121,7 @@
   .moving-cover {
     width: min(24.5vw, 100px) !important;
   }
-  .home-news {
+  .home-live {
     width: 100% !important;
     margin-bottom: 34px !important;
   }
@@ -171,3 +171,13 @@
   text-transform: lowercase;
 }
 .home-mailing button:hover { opacity: .82; }
+
+.home-live .home-show { margin: 0 0 18px; }
+.home-live .home-show-title { display: block; font-size: .75rem; line-height: 1.55; overflow-wrap: anywhere; }
+.home-live .home-show-venue { margin-top: 4px; overflow-wrap: anywhere; }
+.home-live .home-show-ticket { display: inline-block; margin-top: 5px; font-size: .64rem; color: var(--muted); }
+.home-live .small-link { display: inline-block; }
+@media (min-width: 821px) {
+  .home-live .home-show-title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  .home-live .home-show-venue { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}

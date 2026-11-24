@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { ARTIST_ID, normalizeEvents, publicUrl, syncEvents, upcomingHtml } from './bandsintown.mjs';
+import { ARTIST_ID, normalizeEvents, publicUrl, syncEvents, upcomingHtml, homeUpcomingHtml } from './bandsintown.mjs';
 const event = (overrides = {}) => ({ id: '42', artist_id: ARTIST_ID, datetime: '2030-12-10T19:30:00', title: 'Winter <show>', venue: { name: 'Club', city: 'Seoul', country: 'South Korea' }, lineup: ['Sosil', 'Guest & friend'], offers: [], ...overrides });
 const temporary = (t) => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sosil-live-'));
@@ -81,4 +81,21 @@ test('distinguishes unsynchronized snapshot from a confirmed empty result', t =>
   assert(upcomingHtml({ file }).includes('Check Bandsintown'));
   fs.writeFileSync(file, JSON.stringify({ events: [] }));
   assert(upcomingHtml({ file }).includes('No upcoming shows announced.'));
+});
+
+
+test('home uses the same upcoming snapshot, limits previews and handles empty data', t => {
+  const file = temporary(t);
+  const options = { file, now: new Date('2030-12-01T00:00:00Z') };
+  assert(homeUpcomingHtml(options).includes('Check Bandsintown'));
+  fs.writeFileSync(file, JSON.stringify({ events: normalizeEvents([event(), event({ id: '43' }), event({ id: '44' })]) }));
+  const html = homeUpcomingHtml(options);
+  assert.equal((html.match(/class="home-show"/g) || []).length, 2);
+  assert(html.includes('Winter &lt;show&gt;'));
+  assert(html.includes('19:30 local'));
+  assert(html.includes('href="/live"'));
+  assert(!html.includes('/news'));
+  assert(homeUpcomingHtml({ ...options, now: new Date('2031-01-01') }).includes('No upcoming shows announced.'));
+  fs.writeFileSync(file, JSON.stringify({ events: [] }));
+  assert(homeUpcomingHtml(options).includes('No upcoming shows announced.'));
 });

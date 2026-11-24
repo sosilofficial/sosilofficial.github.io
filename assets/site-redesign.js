@@ -153,25 +153,34 @@ function setupHomeGrid() {
   const anchor = document.querySelector(".home-grid-anchor");
   const intro = document.querySelector(".home-intro");
   const mailing = document.querySelector(".home-mailing");
+  const live = document.querySelector(".home-live");
   if (!canvas || !anchor || !intro || !mailing) return;
 
   const sync = () => {
     if (matchMedia("(max-width: 820px)").matches) {
-      canvas.style.removeProperty("--home-news-midpoint");
+      canvas.style.removeProperty("--home-live-midpoint");
+      mailing.style.removeProperty("top");
+      canvas.style.removeProperty("min-height");
       return;
     }
     const width = Math.ceil(anchor.getBoundingClientRect().width);
     if (width > 0) canvas.style.setProperty("--home-copy-width", `${width}px`);
+    const canvasTop = canvas.getBoundingClientRect().top;
+    const introBottom = intro.getBoundingClientRect().bottom - canvasTop;
+    const liveHeight = live?.getBoundingClientRect().height || 0;
+    const mailingTop = Math.max(innerHeight * .688, introBottom + liveHeight + 72);
+    mailing.style.top = `${mailingTop}px`;
+    canvas.style.minHeight = `${Math.max(innerHeight, mailingTop + mailing.offsetHeight + 48)}px`;
     // Equal empty space above and below the whole news block, including its text.
     const midpoint = (intro.getBoundingClientRect().bottom + mailing.getBoundingClientRect().top) / 2;
-    canvas.style.setProperty("--home-news-midpoint", `${midpoint - canvas.getBoundingClientRect().top}px`);
+    canvas.style.setProperty("--home-live-midpoint", `${midpoint - canvas.getBoundingClientRect().top}px`);
   };
 
   sync();
   if (document.fonts?.ready) document.fonts.ready.then(sync);
   if ("ResizeObserver" in window) {
     const observer = new ResizeObserver(sync);
-    for (const element of [anchor, intro, mailing, canvas]) observer.observe(element);
+    for (const element of [anchor, intro, mailing, canvas, live].filter(Boolean)) observer.observe(element);
   }
   window.addEventListener("resize", sync, { passive: true });
 }

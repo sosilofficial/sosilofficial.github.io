@@ -83,13 +83,15 @@ const sitemap = fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8");
 if (!sitemap.includes("https://sosilofficial.github.io/notes/") || sitemap.includes("/gibberish")) failures.push("sitemap.xml: Notes 공개 URL 설정 오류");
 if (!sitemap.includes("https://sosilofficial.github.io/works/discography/") || sitemap.includes("https://sosilofficial.github.io/works/</loc>")) failures.push("sitemap.xml: Works 공개 URL 설정 오류");
 
+if (!sitemap.includes("https://sosilofficial.github.io/live/") || sitemap.includes("/news/") || sitemap.includes("/works/live/")) failures.push("sitemap.xml: retired routes remain or live missing");
 const home = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
 if (home.includes("sosil-archive.rezigitar.chatgpt.site/admin") || />edit<\/a>/.test(home)) failures.push("index.html: 이전 edit 링크가 남아 있습니다");
 if (!home.includes('href="/notes"') || !home.includes('href="/works/discography"')) failures.push("index.html: 주요 navigation 경로 오류");
 if (!home.includes('/assets/site-redesign.css') || !home.includes('/assets/site-redesign.js')) failures.push("index.html: 리디자인 자산 연결 오류");
 if (!home.includes('https://www.youtube.com/watch?v=zZtQdgaWjBI')) failures.push("index.html: 홈 앨범 YouTube 링크 오류");
 if (!home.includes('method="get" target="_blank"') || !home.includes('name="emailAddress"') || !home.includes('/viewform') || /formResponse|data-mailing-form|mailing-status|sending\.\.\.|thank you\./i.test(home)) failures.push("index.html: Mailing List Google Form 동작 오류");
-if (!home.includes('class="home-news"') || !home.includes('<h2>latest news</h2>')) failures.push("index.html: 홈 latest news 영역이 없습니다");
+if (!home.includes('class="home-live"') || !home.includes('id="home-live-heading">upcoming live</h2>')) failures.push("index.html: 홈 upcoming live 영역이 없습니다");
+if (!home.includes('href="/live"') || home.includes('href="/news"')) failures.push("Home navigation must include Live instead of News");
 if (home.includes("i make music,<br>and moving images.")) failures.push("index.html: 삭제한 홈 소개 문구가 남아 있습니다");
 if (!/site-redesign\.css\?v=[a-f0-9]{12}/.test(home) || !/site-redesign\.js\?v=[a-f0-9]{12}/.test(home)) failures.push("index.html: 자산 cache version이 content hash가 아닙니다");
 
@@ -100,7 +102,7 @@ if (/\d{4}-\d{2}-\d{2}\s+\d{2}:/.test(noteList)) failures.push("notes/index.html
 
 const discographyIndex = fs.readFileSync(path.join(ROOT, "works", "discography", "index.html"), "utf8");
 const worksSubnav = discographyIndex.match(/<nav class="subnav" aria-label="works 하위 메뉴">([\s\S]*?)<\/nav>/)?.[1] || "";
-for (const href of ["/works/discography", "/works/videos", "/works/live", "/works/others"]) {
+for (const href of ["/works/discography", "/works/videos", "/works/others"]) {
   if (!worksSubnav.includes(`href="${href}"`)) failures.push(`works/discography/index.html: Works 하위 메뉴 누락 ${href}`);
 }
 

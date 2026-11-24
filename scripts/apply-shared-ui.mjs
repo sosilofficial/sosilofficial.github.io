@@ -14,7 +14,7 @@ const STYLE = `<style id="shared-ui-style">
 
 /* readable content */
 .home-intro p,
-.home-news > a:not(.small-link),
+.home-live > a:not(.small-link),
 .mailing-copy,
 .home-mailing input,
 .release-grid strong,
@@ -83,10 +83,10 @@ const STYLE = `<style id="shared-ui-style">
 .info-aside nav,
 .contact-page h1,
 .contact-page dt,
-.home-news h2,
+.home-live h2,
 .home-mailing h2,
-.home-news p,
-.home-news .small-link {
+.home-live p,
+.home-live .small-link {
   font-family: var(--font-ui);
 }
 
