@@ -20,6 +20,8 @@ published: true
 body_format: "plain"
 ---
 
+2026.11.06 | SSE PBR FEST (w/ 사가 SAGA, 김초원 Kim Chowon) @DDP
+2026.10.31 | i recorded this last night<3 (w/ 최제니 Choi Jenny, Chunky and The Pink Noise) @Spin and Grind
 2026.08.29 | Patchroom Festival @Steam Punk Rock 
 2026.08.05 | Club Wednesday (w/ 김초원 Kim Chowon, 윤숭 & 이형주 Yoonsoong & Lee Hyungju) @Unplugged Hongdae
 2026.06.26 | grain of pastoral (w/ archie, SURYEON) @Senggi Studio
