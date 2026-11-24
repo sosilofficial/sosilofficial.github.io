@@ -1,4 +1,25 @@
 {
   "artistId": "15665087",
-  "events": null
+  "events": [
+    {
+      "id": "109199350",
+      "datetime": "2026-12-12T15:00:00",
+      "title": "Cafe Unplugged",
+      "lineup": [],
+      "venue": "Cafe Unplugged · Mapo-gu · South Korea",
+      "url": "https://www.bandsintown.com/t/109199350?came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=ticket",
+      "label": "tickets"
+    },
+    {
+      "id": "109199372",
+      "datetime": "2026-12-12T18:00:00",
+      "title": "WELCOME TO Room.1212 | 이로 eero, 소실 Sosil, 소피 Sophy",
+      "lineup": [
+        "sophy"
+      ],
+      "venue": "WELCOME TO Room.1212 | 이로 eero, 소실 Sosil, 소피 Sophy · Mapo-gu · South Korea",
+      "url": "https://www.bandsintown.com/t/109199372?came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=ticket",
+      "label": "tickets"
+    }
+  ]
 }
