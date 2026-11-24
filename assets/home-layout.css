@@ -181,3 +181,15 @@
   .home-live .home-show-title { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
   .home-live .home-show-venue { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
+
+.home-live .home-show-ticket {
+  color: var(--ink);
+  font-weight: 700;
+  font-size: .70rem;
+  text-decoration: underline;
+  text-underline-offset: .22em;
+  text-decoration-thickness: 1px;
+  padding-block: 5px;
+}
+.home-live .home-show-ticket:hover { text-decoration-thickness: 2px; }
+.home-live .home-show-ticket:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
