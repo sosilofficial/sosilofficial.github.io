@@ -1,3 +1,4 @@
+import { upcomingHtml } from "./bandsintown.mjs";
 import fs from "node:fs";
 import { ANALYTICS_SCRIPT } from "./analytics.mjs";
 import path from "node:path";
@@ -206,7 +207,7 @@ function liveRows(item) {
     return `${heading}<div class="live-row"><time>${date}</time><span>${event}</span><small>${venue}</small></div>`;
   }).join("");
 }
-publish("/works/live", page("works / live", worksDescription, "/works/live", "works", split(`<div class="panel-headline">${worksTop("live")}</div><div class="live-log">${live.map(liveRows).join("")}</div>`, "", "live-split"), "", true));
+publish("/works/live", page("works / live", worksDescription, "/works/live", "works", split(`<div class="panel-headline">${worksTop("live")}</div><div class="live-log">${upcomingHtml()}<section aria-labelledby="live-past"><h2 class="live-section-heading" id="live-past">past</h2>${live.map(liveRows).join("")}</section></div>`, "", "live-split"), "", true));
 const othersHasDetail = (item) => Boolean(firstImage(item) || item.video || item.body || item.credit || item.credits);
 const othersIndex = (selected = "") => others.length ? `<div class="text-index others-index">${others.map((item) => {
   const inside = `<span>${esc(displayDate(item.date))}</span><strong>${esc(item.title)}</strong><small>${esc(item.type_label || item.meta || "")}</small>${sampleMark(item)}${item.note ? `<em>${esc(item.note)}</em>` : ""}`;

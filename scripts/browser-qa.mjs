@@ -247,6 +247,11 @@ try {
 
     await open(page, "/works/live");
     const liveBox = await page.locator(".live-log").boundingBox();
+    for (const id of ["live-upcoming", "live-past"]) {
+      assert(await page.locator(`#${id}`).isVisible(), `${viewport.name}: ${id} heading hidden`);
+    }
+    assert(await page.locator("#live-past + .live-row").count() === 1, "Past history is missing");
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${viewport.name}: Live page overflows`);
     assertGridMatch(releaseIndexBox, liveBox, `${viewport.name}: Works 목록 시작선`, viewport.width > 820 ? ["y"] : ["x", "y"]);
     const liveTypography = await page.locator(".live-row:has(.live-artists)").first().evaluate((row) => {
       const title = getComputedStyle(row.querySelector(".live-title"));

@@ -1,0 +1,86 @@
+import fs from 'node:fs';
+
+export const ARTIST_ID = '15665087';
+export const CACHE_FILE = 'content/works/live/upcoming.json';
+export const ARTIST_URL = `https://www.bandsintown.com/a/${ARTIST_ID}`;
+const esc = (value = '') => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+
+// API URLs can contain app_id, including inside nested ticket redirect URLs.
+// Reject any link still containing the credential after removing known parameters.
+export function publicUrl(value, secret = '') {
+  try {
+    const url = new URL(value);
+    if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password) return '';
+    for (const key of [...url.searchParams.keys()]) {
+      if (/^(app_id|api_key|apikey|access_token|token)$/i.test(key)) url.searchParams.delete(key);
+    }
+    url.hash = '';
+    let decoded = url.href;
+    for (let i = 0; i < 4; i++) {
+      if (secret && decoded.includes(secret)) return '';
+      try { decoded = decodeURIComponent(decoded); } catch { break; }
+    }
+    return url.href;
+  } catch { return ''; }
+}
+
+export function normalizeEvents(payload, secret = '') {
+  if (!Array.isArray(payload)) throw new Error('Invalid event response');
+  const seen = new Set();
+  return payload.map((event) => {
+    if (!event || !/^\d+$/.test(String(event.id)) || String(event.artist_id) !== ARTIST_ID ||
+        typeof event.datetime !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/.test(event.datetime) ||
+        !Number.isFinite(Date.parse(`${event.datetime}Z`)) ||
+        new Date(`${event.datetime}Z`).toISOString().slice(0, 19) !== event.datetime || !event.venue ||
+        !Array.isArray(event.lineup) || !Array.isArray(event.offers)) throw new Error('Invalid event response');
+    const text = (value) => typeof value === 'string' ? value.replaceAll(secret || '\0', '').trim() : '';
+    const ticket = event.offers.find((offer) => offer.type?.toLowerCase() === 'tickets' &&
+      offer.status?.toLowerCase() === 'available' && publicUrl(offer.url, secret));
+    return {
+      id: String(event.id), datetime: event.datetime,
+      title: text(event.title) || text(event.venue.name) || 'Sosil live',
+      lineup: event.lineup.map(text).filter((name) => name && !/^(sosil|소실|소실\s+sosil)$/i.test(name)),
+      venue: [text(event.venue.name), text(event.venue.city), text(event.venue.country)].filter(Boolean).join(' · '),
+      url: ticket ? publicUrl(ticket.url, secret) : `https://www.bandsintown.com/e/${event.id}`,
+      label: ticket ? 'tickets' : 'rsvp',
+    };
+  }).filter((event) => !seen.has(event.id) && seen.add(event.id))
+    .sort((a, b) => a.datetime.localeCompare(b.datetime) || a.id.localeCompare(b.id));
+}
+
+export async function syncEvents({ key, file = CACHE_FILE, fetchImpl = fetch, warn = console.warn } = {}) {
+  if (!key?.trim()) {
+    warn('::warning::BANDSINTOWN_API_KEY is missing; retaining the last successful snapshot.');
+    return false;
+  }
+  try {
+    const url = new URL(`https://rest.bandsintown.com/artists/id_${ARTIST_ID}/events/`);
+    url.searchParams.set('app_id', key.trim());
+    url.searchParams.set('date', 'upcoming');
+    const response = await fetchImpl(url, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(20000), redirect: 'error' });
+    if (!response.ok) throw new Error('API request failed');
+    const events = normalizeEvents(await response.json(), key.trim());
+    const serialized = `${JSON.stringify({ artistId: ARTIST_ID, events }, null, 2)}\n`;
+    if (serialized.includes(key.trim())) throw new Error('Unsafe response');
+    // No timestamps: unchanged responses produce no commit.
+    if (!fs.existsSync(file) || fs.readFileSync(file, 'utf8') !== serialized) {
+      fs.writeFileSync(`${file}.tmp`, serialized);
+      fs.renameSync(`${file}.tmp`, file);
+    }
+    return true;
+  } catch {
+    // Never log errors, response bodies or request URLs: they may echo the key.
+    warn('::warning::Bandsintown sync failed; retaining the last successful snapshot.');
+    return false;
+  }
+}
+
+export function upcomingHtml({ file = CACHE_FILE, now = new Date() } = {}) {
+  const snapshot = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : { events: null };
+  // A local show date has no timezone. Keep that date through the end of day
+  // everywhere on earth, avoiding early removal for international shows.
+  const today = new Date(now.getTime() - 12 * 3600000).toISOString().slice(0, 10);
+  const events = snapshot.events?.filter((event) => event.datetime.slice(0, 10) >= today) || [];
+  const rows = events.map((event) => `<div class="live-row live-upcoming-row"><time datetime="${esc(event.datetime)}">${esc(event.datetime.slice(0, 10).replaceAll('-', '.'))}<small class="live-time">${esc(event.datetime.slice(11, 16))} local</small></time><span class="live-title">${esc(event.title)}</span><span class="live-artists">${esc(event.lineup.join(', '))}</span><small class="live-venue">${esc(event.venue)}<a class="live-cta" href="${esc(publicUrl(event.url) || ARTIST_URL)}" target="_blank" rel="noopener noreferrer">${esc(event.label)}</a></small></div>`).join('');
+  return `<section aria-labelledby="live-upcoming"><h2 class="live-section-heading" id="live-upcoming">upcoming</h2>${rows || `<p class="empty-note">${snapshot.events === null ? 'Check Bandsintown for upcoming shows.' : 'No upcoming shows announced.'}</p>`}<p class="live-source"><a href="${ARTIST_URL}" target="_blank" rel="noopener noreferrer">shows on Bandsintown</a></p></section>`;
+}

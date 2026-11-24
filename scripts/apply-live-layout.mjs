@@ -161,6 +161,17 @@ const STYLE = `<style id="works-live-layout-style">
     font-weight: 400;
   }
 }
+.live-log .live-section-heading {
+  display: block;
+  font-size: .72rem;
+  font-weight: 400;
+  margin: 22px 0 14px;
+}
+.live-log section + section { margin-top: 38px; }
+.live-time, .live-cta { display: block; margin-top: 6px; }
+.live-source { font-size: .62rem; color: var(--muted); margin: 16px 0; }
+.live-upcoming-row .live-title, .live-upcoming-row .live-artists,
+.live-upcoming-row .live-venue { overflow-wrap: anywhere; }
 </style>`;
 
 function splitPerformance(raw) {
