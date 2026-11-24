@@ -1,3 +1,4 @@
+import { displayLineup } from "./bandsintown.mjs";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -208,7 +209,7 @@ html = html.replace(
   (_match, date, rawPerformance, venue) => {
     const { title, artists } = splitPerformance(rawPerformance.replace(/<[^>]+>/g, ""));
     const titleHtml = title ? `<span class="live-title">${title}</span>` : "";
-    const artistsHtml = artists ? `<span class="live-artists">${artists}</span>` : "";
+    const artistsHtml = `<span class="live-artists">${displayLineup(artists.split(",")).join(", ")}</span>`;
     const venueHtml = venue.trim() ? `<small class="live-venue">${venue.trim()}</small>` : "";
     return `<div class="live-row"><time>${date}</time>${titleHtml}${artistsHtml}${venueHtml}</div>`;
   }

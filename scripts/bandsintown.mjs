@@ -76,6 +76,13 @@ export async function syncEvents({ key, file = CACHE_FILE, fetchImpl = fetch, wa
   }
 }
 
+// Korean names sort in 가나다 order; names written only in Latin use alphabetic order.
+export function displayLineup(names = []) {
+  const canonical = names.map(name => name.trim()).filter(Boolean).map(name =>
+    /^(소실(?:\s+sosil)?|sosil(?:\s+소실)?)$/i.test(name) ? '소실 Sosil' : name);
+  return [...new Set([...canonical, '소실 Sosil'])].sort(new Intl.Collator('ko', { sensitivity: 'base' }).compare);
+}
+
 export function readUpcoming({ file = CACHE_FILE, overridesFile = OVERRIDES_FILE, now = new Date() } = {}) {
   const overrides = fs.existsSync(overridesFile) ? JSON.parse(fs.readFileSync(overridesFile, 'utf8')) : {};
   if (!overrides || Array.isArray(overrides) || typeof overrides !== 'object' ||
@@ -89,7 +96,7 @@ export function readUpcoming({ file = CACHE_FILE, overridesFile = OVERRIDES_FILE
   const events = snapshot.events?.filter((event) => event.datetime.slice(0, 10) >= today) || [];
   return { events: events.map(event => ({ ...event,
     title: overrides[event.id]?.title?.trim() || event.title,
-    lineup: overrides[event.id]?.lineup ? [...new Set(overrides[event.id].lineup.map(name => name.trim()))] : event.lineup,
+    lineup: displayLineup(overrides[event.id]?.lineup ?? event.lineup),
   })), initialized: snapshot.events !== null };
 }
 
