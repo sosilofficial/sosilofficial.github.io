@@ -28,7 +28,7 @@ body_format: "plain"
 2026.05.01 | Sosil Solo Show @Studio Zemi
 2026.04.24 | echoes of new green (w/전지선 Jeon Jisun, 수련 SURYEON) @ Unplugged Lounge
 2026.03.28 | 김진평 기획공연 (w/ Kimin (from PCR, Gorymurgy), 윰피 Eumfy, Fin Fior) @Angelism
-2026.01.25 | DELAY RELAY Festival - my slowly beating heart (w/ 유리조각소년 Glassboy, HIMINN, 김반월키 Kimbanourke)
+2026.01.25 | DELAY RELAY Festival - my slowly beating heart (w/ 유리조각소년 Glassboy, HIMINN, 김반월키 Kimbanourke) @Infinity Club
 
 2025
 
@@ -38,7 +38,7 @@ body_format: "plain"
 2025.07.19 | 음악만세 (w/ 단편선 & 이보람 Danpyunsun and Lee Boram) @Studio Sanbo
 2025.06.21 | My Lost Playground (w/잠 zzzaam, 담담구구 Damdamgugu) @Channel 1969
 2025.06.05 | Reverie is My Pony Listening Session @Cafe Silence (카페 침묵) 
-2025.05.23 | Bedroom Campfire (w/ 이아직 eeajik, 유리조각소년 Glassboy, Hanbin)
+2025.05.23 | Bedroom Campfire (w/ 이아직 eeajik, 유리조각소년 Glassboy, Hanbin) @Infinity Club
 2025.05.02 | Sosil Reverie is My Pony Release Live Session @Studio Zemi
 2025.02.23 | New Dawn 새새벽 (w/ 고슴도치클럽 Hedgedog Club, 피슈 Pishu)
 

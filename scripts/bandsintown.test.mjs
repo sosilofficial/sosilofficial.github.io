@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { ARTIST_ID, normalizeEvents, publicUrl, syncEvents, upcomingHtml, homeUpcomingHtml, readUpcoming } from './bandsintown.mjs';
+import { ARTIST_ID, normalizeEvents, publicUrl, syncEvents, upcomingHtml, homeUpcomingHtml, readUpcoming, displayLineup } from './bandsintown.mjs';
 const event = (overrides = {}) => ({ id: '42', artist_id: ARTIST_ID, datetime: '2030-12-10T19:30:00', title: 'Winter <show>', venue: { name: 'Club', city: 'Seoul', country: 'South Korea' }, lineup: ['Sosil', 'Guest & friend'], offers: [], ...overrides });
 const temporary = (t) => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sosil-live-'));
@@ -107,14 +107,21 @@ test('manual lineup survives API refresh without changing event data or resurrec
   fs.writeFileSync(overridesFile, JSON.stringify({ '42': { title: 'Authored show', lineup: ['Guest <name>', 'Other musician'] }, '999': { lineup: ['Cancelled guest'] } }));
   const options = { file, overridesFile, now: new Date('2030-12-01') };
   fs.writeFileSync(file, JSON.stringify({ events: normalizeEvents([event()]) }));
-  assert.deepEqual(readUpcoming(options).events[0].lineup, ['Guest <name>', 'Other musician']);
+  assert.deepEqual(readUpcoming(options).events[0].lineup, ['소실 Sosil', 'Guest <name>', 'Other musician']);
   assert(upcomingHtml(options).includes('Guest &lt;name&gt;'));
   assert(!upcomingHtml(options).includes('Cancelled guest'));
   await syncEvents({ key: 'test-key', file, fetchImpl: async () => ({ ok: true, json: async () => [event({ title: 'Updated show' })] }) });
   assert.equal(readUpcoming(options).events[0].title, 'Authored show');
   assert(homeUpcomingHtml(options).includes('Authored show'));
-  assert.deepEqual(readUpcoming(options).events[0].lineup, ['Guest <name>', 'Other musician']);
+  assert.deepEqual(readUpcoming(options).events[0].lineup, ['소실 Sosil', 'Guest <name>', 'Other musician']);
   assert.equal(JSON.parse(fs.readFileSync(overridesFile))['42'].lineup[0], 'Guest <name>');
   fs.writeFileSync(overridesFile, '{"42":"invalid"}');
   assert.throws(() => readUpcoming(options), /Event overrides/);
+});
+
+
+test('display lineup includes Sosil exactly once and sorts Korean names', () => {
+  assert.deepEqual(displayLineup(['사가 SAGA', '김초원 Kim Chowon', 'Sosil', '소실', '소실 Sosil']), ['김초원 Kim Chowon', '사가 SAGA', '소실 Sosil']);
+  assert.deepEqual(displayLineup(['이로 eero', '소피 Sophy']), ['소실 Sosil', '소피 Sophy', '이로 eero']);
+  assert.deepEqual(displayLineup([]), ['소실 Sosil']);
 });
