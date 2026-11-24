@@ -1,6 +1,9 @@
 name: Rebuild site from content
 
 on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
   push:
     branches: [main]
     paths:
@@ -17,10 +20,15 @@ concurrency:
 
 jobs:
   rebuild:
-    if: github.actor != 'github-actions[bot]'
+    if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     permissions:
+      pages: write
+      id-token: write
       contents: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -31,6 +39,12 @@ jobs:
         with:
           node-version: 22
 
+      - name: Test Bandsintown integration
+        run: node --test scripts/bandsintown.test.mjs
+      - name: Sync upcoming shows
+        env:
+          BANDSINTOWN_API_KEY: ${{ secrets.BANDSINTOWN_API_KEY }}
+        run: node scripts/sync-bandsintown.mjs
       - name: Rebuild and validate September 27 layout
         run: node scripts/rebuild-site.mjs
       - name: Install browser QA dependencies
@@ -50,3 +64,14 @@ jobs:
           git add -A
           git commit -m "Rebuild site from content"
           git push origin main
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Stage static site
+        run: node scripts/stage-pages.mjs
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/sosil-pages
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -13,8 +13,13 @@ jobs:
     if: (startsWith(github.event.issue.title, '[Content]') || startsWith(github.event.issue.title, '[Edit]')) && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.issue.author_association)
     runs-on: ubuntu-latest
     permissions:
+      pages: write
+      id-token: write
       contents: write
       issues: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -46,7 +51,18 @@ jobs:
           git add content . ':!.github'
           git commit -m "Apply content issue #${{ github.event.issue.number }}"
           git push origin main
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Stage static site
+        run: node scripts/stage-pages.mjs
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ runner.temp }}/sosil-pages
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
       - name: Close successful issue
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh issue close "${{ github.event.issue.number }}" --comment "사이트에 반영했습니다. GitHub Pages 배포가 이어서 진행됩니다."
+        run: gh issue close "${{ github.event.issue.number }}" --comment "사이트에 반영했습니다. GitHub Pages 배포까지 완료했습니다."
